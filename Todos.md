@@ -1,0 +1,5 @@
+- Recognize Style in custom ease mode
+- add Out In Style with curves
+- Progression line for animation preview or visual signal when it restarts
+- animierter Farbverlauf
+- Farbe von Preview auch animieren
