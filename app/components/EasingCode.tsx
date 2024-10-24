@@ -1,11 +1,14 @@
-import { useContext } from 'react';
-import { EasingContext } from '~/contexts/easing-context';
+import { useState } from 'react';
+import { useEasingStore } from '~/state/easing-store';
 import { EasingType } from '~/types-and-enums';
 
 export default function EasingCode() {
-  const {
-    state: { easingType, bezierValue, springValue, bounceValue },
-  } = useContext(EasingContext);
+  const easingType = useEasingStore((state) => state.easingType);
+  const bezierValue = useEasingStore((state) => state.bezierValue);
+  const springValue = useEasingStore((state) => state.springValue);
+  const bounceValue = useEasingStore((state) => state.bounceValue);
+  const wiggleValue = useEasingStore((state) => state.wiggleValue);
+  const [copied, setCopied] = useState(false);
 
   // TODO: bezierValue should be a string
   const value =
@@ -13,27 +16,28 @@ export default function EasingCode() {
       ? `cubic-bezier(${bezierValue.join(', ')})`
       : easingType === EasingType.SPRING
         ? springValue
-        : bounceValue;
+        : easingType === EasingType.BOUNCE
+          ? bounceValue
+          : wiggleValue;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(value).then(
       () => {
-        alert('Easing function copied to clipboard!');
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
       },
       (err) => {
-        alert('Failed to copy!');
         console.error('Could not copy text: ', err);
       },
     );
   };
 
   return (
-    <div style={{ marginBottom: '20px' }}>
-      <h3>Easing Function:</h3>
+    <div>
       <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
-        <code style={{ backgroundColor: '#f0f0f0', padding: '5px' }}>{value}</code>
+        <code className='select-all'>{value}</code>
         <button onClick={copyToClipboard} style={{ marginLeft: '10px' }}>
-          Copy to Clipboard
+          {copied ? 'Copied!' : 'Copy'}
         </button>
       </div>
     </div>

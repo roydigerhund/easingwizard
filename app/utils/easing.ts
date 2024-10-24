@@ -1,19 +1,12 @@
-import { defaultBounceFunction, defaultSpringFunction } from '~/components/EasingSelection';
 import { LinearEasingAccuracy, Point } from '~/types-and-enums';
 import { roundTo } from './numbers';
 
-export const { easingValue: defaultSpringValue } = generateLinearEasing(
-  createSpringFunction(defaultSpringFunction),
-  LinearEasingAccuracy.HIGH,
-);
-
-export const { easingValue: defaultBounceValue } = generateLinearEasing(
-  createBounceFunction(defaultBounceFunction),
-  LinearEasingAccuracy.HIGH,
-);
-
-export function generateLinearEasing(easingFunction: (t: number) => number, accuracy: LinearEasingAccuracy) {
-  const totalTime = getTotalTime(easingFunction);
+export function generateLinearEasing(
+  easingFunction: (t: number) => number,
+  accuracy: LinearEasingAccuracy,
+  fixedTotalTime?: number,
+) {
+  const totalTime = fixedTotalTime || getTotalTime(easingFunction);
   const durationMilliSeconds = Math.round(totalTime * 1000);
   // Use the getKeyTimes function to get key times
   const keyTimes =
@@ -43,79 +36,75 @@ export function generateLinearEasing(easingFunction: (t: number) => number, accu
   return { easingValue, sampledPoints, durationMilliSeconds };
 }
 
+// SPRING
+
+// Function to create the spring function based on the parameters
+export function createSpringFunction({
+  stiffness,
+  damping,
+  initialVelocity = 0,
+}: {
+  stiffness: number;
+  damping: number;
+  initialVelocity?: number;
+}) {
+  const mass = 1;
+  const w0 = Math.sqrt(stiffness / mass);
+  const zeta = damping / (2 * Math.sqrt(stiffness * mass));
+  const wd = w0 * Math.sqrt(Math.abs(1 - zeta * zeta));
+  const a = 1;
+  const b = (zeta * w0 + -initialVelocity) / wd;
+
+  return function (time: number) {
+    if (zeta < 1) {
+      // Underdamped
+      return 1 - Math.exp(-zeta * w0 * time) * (a * Math.cos(wd * time) + b * Math.sin(wd * time));
+    } else if (zeta === 1) {
+      // Critically damped
+      return 1 - Math.exp(-w0 * time) * (a + (-w0 * time + initialVelocity) * time);
+    } else {
+      // Overdamped
+      const r1 = -w0 * (zeta - Math.sqrt(zeta * zeta - 1));
+      const r2 = -w0 * (zeta + Math.sqrt(zeta * zeta - 1));
+      const c1 = (initialVelocity - r2) / (r1 - r2);
+      const c2 = 1 - c1;
+      return 1 - c1 * Math.exp(r1 * time) - c2 * Math.exp(r2 * time);
+    }
+  };
+}
+
 // BOUNCE
 
 // Function to create the bounce function based on the parameters
 export function createBounceFunction({
   bounces,
-  restitution,
-  initialHeight,
+  damping,
 }: {
   bounces: number;
-  restitution: number;
-  initialHeight: number;
+  damping: number;
 }): (t: number) => number {
-  const g = 9.81; // Acceleration due to gravity (m/s^2)
-  const times: number[] = []; // Times at which each bounce occurs
-  const heights: number[] = []; // Maximum heights for each bounce
+  const totalTime = 1; // Total time for the bounce function to settle
 
-  // Calculate the times and heights for each bounce
-  let h = initialHeight;
-  let totalTime = 0;
+  // Start at 0 and bounce to 1
+  return function (time: number) {
+    // Normalize time to a value between 0 and 1
+    let normalizedTime = time / totalTime;
+    if (normalizedTime > 1) normalizedTime = 1; // Cap normalizedTime at 1 to ensure the function doesn't exceed totalTime
 
-  for (let i = 0; i < bounces; i++) {
-    const tUp = Math.sqrt((2 * h) / g);
-    const bounceTime = 2 * tUp; // Time up and down
-    totalTime += bounceTime;
-    times.push(totalTime);
-    heights.push(h);
-
-    // Update the height for the next bounce
-    h *= restitution ** 2; // Energy loss on each bounce
-  }
-
-  // Return the bounce function
-  return function (t: number): number {
-    t = Math.max(0, Math.min(1, t)); // Clamp t between 0 and 1
-    const scaledTime = t * totalTime;
-
-    // Find which bounce we're in
-    let cumulativeTime = 0;
-    for (let i = 0; i < times.length; i++) {
-      const hMax = heights[i];
-      const tUp = Math.sqrt((2 * hMax) / g);
-      const bounceTime = 2 * tUp;
-
-      if (scaledTime <= cumulativeTime + bounceTime) {
-        const timeSinceBounceStart = scaledTime - cumulativeTime;
-
-        if (timeSinceBounceStart <= tUp) {
-          // Ascending part
-          const tAscend = timeSinceBounceStart;
-          const v0 = Math.sqrt(2 * g * hMax);
-          const y = v0 * tAscend - 0.5 * g * tAscend ** 2;
-          const progress = 1 - y / initialHeight;
-          return progress;
-        } else {
-          // Descending part
-          const tDescend = timeSinceBounceStart - tUp;
-          const y = hMax - 0.5 * g * tDescend ** 2;
-          const progress = 1 - y / initialHeight;
-          return progress;
-        }
-      }
-      cumulativeTime += bounceTime;
-    }
-
-    // After the last bounce
-    return 1;
+    // Mathematical approximation of the bounce with damping
+    const position =
+      1 -
+      Math.pow(1 - normalizedTime, 1.5) *
+        Math.abs(Math.cos(Math.pow(normalizedTime, 2) * (bounces + 0.5) * Math.PI)) *
+        Math.exp(-damping * normalizedTime);
+    return position; // Round to two decimal places
   };
 }
 
-// SPRING
+// WIGGLE
 
-// Function to create the spring function based on the parameters
-export function createSpringFunction({
+// Function to create the wiggle function based on the parameters
+export function createWiggleFunction({
   mass = 1,
   stiffness,
   damping,
@@ -129,7 +118,7 @@ export function createSpringFunction({
   const w0 = Math.sqrt(stiffness / mass);
   const zeta = damping / (2 * Math.sqrt(stiffness * mass));
   const wd = w0 * Math.sqrt(Math.abs(1 - zeta * zeta));
-  const a = 1;
+  const a = 0;
   const b = (zeta * w0 + -initialVelocity) / wd;
 
   return function (time: number) {
@@ -254,37 +243,51 @@ function getKeyTimesEvenly(totalTime: number, numPoints: number) {
   return times;
 }
 
-// Ramer–Douglas–Peucker algorithm implementation
+// Ramer–Douglas–Peucker algorithm implementation using iterative approach to save memory
 function rdp(points: { t: number; y: number }[], epsilon: number): { t: number; y: number }[] {
-  if (points.length < 3) {
-    return points;
-  }
+  console.log('rdp function executed');
+  const stack: { startIndex: number; endIndex: number }[] = [];
+  const result = [];
 
-  const firstPoint = points[0];
-  const lastPoint = points[points.length - 1];
+  const startIndex = 0;
+  const endIndex = points.length - 1;
 
-  let index = -1;
-  let maxDistance = 0;
+  stack.push({ startIndex, endIndex });
 
-  for (let i = 1; i < points.length - 1; i++) {
-    const distance = perpendicularDistance(points[i], firstPoint, lastPoint);
-    if (distance > maxDistance) {
-      index = i;
-      maxDistance = distance;
+  const marked = new Array(points.length).fill(false);
+  marked[startIndex] = true;
+  marked[endIndex] = true;
+
+  while (stack.length > 0) {
+    const { startIndex, endIndex } = stack.pop()!;
+    let maxDistance = 0;
+    let index = -1;
+
+    for (let i = startIndex + 1; i < endIndex; i++) {
+      const distance = perpendicularDistance(points[i], points[startIndex], points[endIndex]);
+      if (distance > maxDistance) {
+        maxDistance = distance;
+        index = i;
+      }
+    }
+
+    if (maxDistance > epsilon && index !== -1) {
+      marked[index] = true;
+      stack.push({ startIndex, endIndex: index });
+      stack.push({ startIndex: index, endIndex });
     }
   }
 
-  if (maxDistance > epsilon) {
-    // Recursive call
-    const left = rdp(points.slice(0, index + 1), epsilon);
-    const right = rdp(points.slice(index), epsilon);
-
-    // Combine results, remove duplicate point at index
-    return left.slice(0, left.length - 1).concat(right);
-  } else {
-    // No point is far enough to keep, return start and end points
-    return [firstPoint, lastPoint];
+  for (let i = 0; i < marked.length; i++) {
+    if (marked[i]) {
+      result.push(points[i]);
+    }
   }
+
+  // Sort the result by time
+  result.sort((a, b) => a.t - b.t);
+
+  return result;
 }
 
 // Function to calculate the perpendicular distance from a point to a line segment

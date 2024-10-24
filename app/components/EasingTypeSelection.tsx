@@ -1,80 +1,23 @@
-import { useState } from 'react';
-import { EasingState, useEasingStore } from '~/state/easing-store';
-import { AnimationType, PreviewPlayMode } from '~/types-and-enums';
-import { classNames } from '~/utils/class-names';
+import { useEasingStore } from '~/state/easing-store';
+import { EasingType } from '~/types-and-enums';
 import { humanize } from '~/utils/string';
-import Card from './Card';
 import CardHeadline from './CardHeadline';
-import EasingPreviewElement from './EasingPreviewElement';
 import IconButton from './IconButton';
 
-export default function EasingPreview() {
-  const setState = useEasingStore((state) => state.setState);
-  const previewDuration = useEasingStore((state) => state.previewDuration);
-  const previewPlayMode = useEasingStore((state) => state.previewPlayMode);
-  const previewShowLinear = useEasingStore((state) => state.previewShowLinear);
-  const previewAnimationType = useEasingStore((state) => state.previewAnimationType);
-  const [randomId, setRandomId] = useState(Math.random());
-
-  const handleChange = (state: Partial<EasingState>) => {
-    setState(state);
-    setRandomId(Math.random());
-  };
+export default function EasingTypeSelection() {
+  const easingType = useEasingStore((state) => state.easingType);
+  const setEasingType = useEasingStore((state) => state.setEasingType);
 
   return (
-    <Card className="px-6 py-5">
-      <CardHeadline>Preview</CardHeadline>
-
-      {/* Preview Elements */}
-      <div className={classNames('flex justify-between')}>
-        <EasingPreviewElement key={randomId} />
-        {/* Controls */}
-        <div style={{ marginBottom: '20px' }}>
-          <label>
-            Duration (ms):
-            <input
-              type="number"
-              value={previewDuration}
-              onChange={(e) => handleChange({ previewDuration: Number(e.target.value) })}
-              style={{ marginLeft: '10px' }}
-            />
-          </label>
-
-          <label style={{ marginLeft: '20px' }}>
-            Play Mode:
-            <select
-              value={previewPlayMode}
-              onChange={(e) => handleChange({ previewPlayMode: e.target.value as PreviewPlayMode })}
-            >
-              <option value="once">Play Once</option>
-              <option value="infinite">Play Infinite</option>
-            </select>
-          </label>
-
-          <label style={{ marginLeft: '20px' }}>
-            Show Linear:
-            <input
-              type="checkbox"
-              checked={previewShowLinear}
-              onChange={() => handleChange({ previewShowLinear: !previewShowLinear })}
-              style={{ marginLeft: '10px' }}
-            />
-          </label>
-
-          {previewPlayMode === PreviewPlayMode.ONCE && (
-            <button style={{ marginLeft: '20px' }} onClick={() => setRandomId(Math.random())}>
-              Restart
-            </button>
-          )}
-        </div>
-      </div>
-      <div className="relative mt-8 flex flex-wrap gap-4">
-        {Object.values(AnimationType).map((type) => (
+    <div>
+      <CardHeadline>Mode</CardHeadline>
+      <div className="relative flex flex-wrap gap-4">
+        {Object.values(EasingType).map((type) => (
           <IconButton
             key={type}
             text={humanize(type)}
-            isActive={previewAnimationType === type}
-            onClick={() => handleChange({ previewAnimationType: type })}
+            isActive={easingType === type}
+            onClick={() => setEasingType(type)}
             icon={
               <svg width="24" height="24" viewBox="0 0 30 30">
                 <path
@@ -87,6 +30,6 @@ export default function EasingPreview() {
           />
         ))}
       </div>
-    </Card>
+    </div>
   );
 }

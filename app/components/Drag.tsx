@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { classNames } from '~/utils/class-names';
 
 type DragElement = {
   active: boolean;
@@ -14,7 +15,7 @@ type DragProps = {
   minY?: number;
   maxY?: number;
   onChange: (x: number, y: number) => void;
-  className?: string;
+  className: string;
 };
 
 export default function Drag(props: DragProps) {
@@ -75,15 +76,27 @@ export default function Drag(props: DragProps) {
   }
 
   return (
-    <circle
-      className={className}
-      cx={x}
-      cy={y}
-      r={3}
-      strokeWidth={2}
+    <g
+      className={classNames('relative group cursor-move', className)}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerMove={handlePointerMove}
-    />
+    >
+      <circle
+        className={classNames(
+          'opacity-0 stroke-current',
+          'transition-[stroke-width,opacity]',
+          'ease-in duration-[300ms]',
+          'group-hover:duration-[1500ms] group-hover:ease-spring',
+          'group-hover:stroke-[6] group-hover:opacity-50',
+        )}
+        cx={x}
+        cy={y}
+        r={2}
+        strokeWidth={2}
+        fill="none"
+      />
+      <circle className={classNames('fill-zinc-950 stroke-current')} cx={x} cy={y} r={3} strokeWidth={1} />
+    </g>
   );
 }

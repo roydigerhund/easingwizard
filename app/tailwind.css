@@ -2,45 +2,83 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* --svg-line-gradient-from: theme('colors.blue.500');
+  --svg-line-gradient-via: theme('colors.purple.500');
+  --svg-line-gradient-to: theme('colors.pink.500'); */
+  --svg-line-gradient-from: #5e18f5;
+  --svg-line-gradient-via: #50aaf8;
+  --svg-line-gradient-to: #6ae5b5;
+
+  @media (prefers-color-scheme: dark) {
+    /* --svg-line-gradient-from: theme('colors.blue.600');
+    --svg-line-gradient-via: theme('colors.purple.600');
+    --svg-line-gradient-to: theme('colors.pink.600'); */
+    --svg-line-gradient-from: #5e18f5;
+    --svg-line-gradient-via: #50aaf8;
+    --svg-line-gradient-to: #6ae5b5;
+  }
+}
+
 html,
 body {
-  @apply bg-white dark:bg-gray-950;
+  @apply bg-zinc-950;
 
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
   }
 }
 
-@keyframes moveAnimation {
+.animate-shooting-star {
+  animation: infinite both cubic-bezier(0.55, 0.085, 0.68, 0.53) shooting-star;
+}
+
+@keyframes shooting-star {
   0% {
-    transform: translateX(0);
+    transform: translateY(0);
+    opacity: 0;
+  }
+  75% {
+    opacity: 1;
   }
   100% {
-    transform: translateX(100px);
+    transform: translateY(-100svh);
+    opacity: 1;
+  }
+}
+
+@keyframes moveAnimation {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
   }
 }
 @keyframes widthAnimation {
   0% {
-    transform: scaleX(1);
+    width: 64px;
   }
   100% {
-    transform: scaleX(2);
+    width: 192px;
   }
 }
 @keyframes heightAnimation {
   0% {
-    transform: scaleY(1);
+    height: 64px;
   }
   100% {
-    transform: scaleY(2);
+    height: 192px;
   }
 }
 @keyframes scaleAnimation {
   0% {
     transform: scale(1);
+    border-width: 1px;
   }
   100% {
-    transform: scale(2);
+    transform: scale(3);
+    border-width: 0.33px;
   }
 }
 @keyframes rotateAnimation {
@@ -73,5 +111,13 @@ body {
   }
   100% {
     transform: rotateY(360deg);
+  }
+}
+@keyframes shapeAnimation {
+  0% {
+    border-radius: 0;
+  }
+  100% {
+    border-radius: 50%;
   }
 }

@@ -1,12 +1,13 @@
 export type Point = {
   x: number;
   y: number;
-}
+};
 
 export enum EasingType {
   BEZIER = 'bezier',
   SPRING = 'spring',
   BOUNCE = 'bounce',
+  WIGGLE = 'wiggle',
 }
 
 export enum BezierStyle {
@@ -44,6 +45,13 @@ export enum BounceCurve {
   RELAXED = 'relaxed',
 }
 
+// TODO: Add more wiggle curves
+export enum WiggleCurve {
+  DEFAULT = 'default',
+  LOOSE = 'loose',
+  TIGHT = 'tight',
+}
+
 export enum AnimationType {
   MOVE = 'move',
   WIDTH = 'width',
@@ -53,11 +61,7 @@ export enum AnimationType {
   OPACITY = 'opacity',
   ROTATE_X = 'rotateX',
   ROTATE_Y = 'rotateY',
-}
-
-export enum PreviewLayout {
-  HORIZONTAL = 'horizontal',
-  VERTICAL = 'vertical',
+  SHAPE = 'shape',
 }
 
 export enum PreviewPlayMode {

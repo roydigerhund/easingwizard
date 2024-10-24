@@ -1,18 +1,16 @@
-import { useContext } from 'react';
-import { EasingContext } from '~/contexts/easing-context';
+import { useEasingStore } from '~/state/easing-store';
 import { BezierValue } from '~/types-and-enums';
 import { roundTo } from '~/utils/numbers';
 import Drag from './Drag';
 import EditorBase from './EditorBase';
+import EditorBaseLine from './EditorBaseLine';
 
 export default function BezierEditor() {
-  const {
-    state: { bezierValue },
-    saveState,
-  } = useContext(EasingContext);
+  const bezierValue = useEasingStore((state) => state.bezierValue);
+  const setState = useEasingStore((state) => state.setState);
 
   const onChange = (value: BezierValue) => {
-    saveState({ bezierValue: value });
+    setState({ bezierValue: value });
     onChange(value);
   };
 
@@ -20,35 +18,18 @@ export default function BezierEditor() {
     <div className="col-span-2">
       <EditorBase>
         {/* Bezier Curve */}
-        <svg
-          className="absolute inset-0 z-20 overflow-visible from-blue-500 to-pink-500 dark:from-blue-600 dark:to-pink-600"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-          fill="none"
-          stroke="url(#curve-gradient)"
-          strokeLinecap="round"
-        >
-          <defs>
-            <linearGradient id="curve-gradient">
-              <stop offset="0%" stopColor="var(--tw-gradient-from)" />
-              <stop offset="100%" stopColor="var(--tw-gradient-to)" />
-            </linearGradient>
-            <filter id="f1" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation={4} />
-            </filter>
-          </defs>
+        <EditorBaseLine>
           <path
             d={`M0,100 C${bezierValue[0] * 100},${100 - bezierValue[1] * 100} ${bezierValue[2] * 100},${100 - bezierValue[3] * 100} 100,0`}
             strokeWidth="2"
           />
           <path
-            className="opacity-50 dark:opacity-100"
+            className="opacity-100"
             d={`M0,100 C${bezierValue[0] * 100},${100 - bezierValue[1] * 100} ${bezierValue[2] * 100},${100 - bezierValue[3] * 100} 100,0`}
             strokeWidth="6"
             filter='url("#f1")'
           />
-        </svg>
+        </EditorBaseLine>
         {/* Handle Lines */}
         <svg
           className="absolute inset-0 z-30 overflow-visible"
@@ -59,7 +40,7 @@ export default function BezierEditor() {
           strokeWidth="1"
         >
           <line
-            className="text-blue-500 dark:text-blue-600"
+            className="text-[--svg-line-gradient-from]"
             x1={0}
             y1={100}
             x2={bezierValue[0] * 100}
@@ -67,7 +48,7 @@ export default function BezierEditor() {
             stroke="currentColor"
           />
           <line
-            className="text-pink-500 dark:text-pink-600"
+            className="text-[--svg-line-gradient-to]"
             x1={100}
             y1={0}
             x2={bezierValue[2] * 100}
@@ -84,7 +65,7 @@ export default function BezierEditor() {
           fill="none"
         >
           <Drag
-            className="fill-white dark:fill-gray-950 stroke-blue-500 dark:stroke-blue-600"
+            className="text-[--svg-line-gradient-from]"
             minX={0}
             minY={-100}
             maxX={100}
@@ -96,7 +77,7 @@ export default function BezierEditor() {
             }
           />
           <Drag
-            className="fill-white dark:fill-gray-950 stroke-pink-500 dark:stroke-pink-600"
+            className="text-[--svg-line-gradient-to]"
             minX={0}
             minY={-100}
             maxX={100}
