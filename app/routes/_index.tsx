@@ -1,5 +1,6 @@
 import type { MetaFunction } from '@remix-run/node';
 import { useState } from 'react';
+import BezierComparison from '~/components/BezierComparison';
 import BezierEditor from '~/components/BezierEditor';
 import BounceEditor from '~/components/BounceEditor';
 import Card from '~/components/Card';
@@ -7,7 +8,6 @@ import CardHeadline from '~/components/CardHeadline';
 import EasingCode from '~/components/EasingCode';
 import EasingPreview from '~/components/EasingPreview';
 import EasingSelection from '~/components/EasingSelection';
-import EasingTypeSelection from '~/components/EasingTypeSelection';
 import EasingTypeSelectionCopy from '~/components/EasingTypeSelection copy';
 import SpringEditor from '~/components/SpringEditor';
 import WiggleEditor from '~/components/WiggleEditor';
@@ -62,7 +62,10 @@ export default function Index() {
           Create and customize CSS easing functions with magical precision.
         </p>
       </header>
-      <div className='flex justify-center'>
+      <div className="flex justify-center">
+        <BezierComparison />
+      </div>
+      <div className="flex justify-center">
         <EasingTypeSelectionCopy />
       </div>
       <div className="grid grid-cols-3 justify-center gap-8">
@@ -71,34 +74,16 @@ export default function Index() {
           {/* <EasingTypeSelection /> */}
           <EasingSelection />
         </Card>
-        <Card className="px-6 py-5">
-          <CardHeadline>Customize</CardHeadline>
+        <Card className="z-10 py-5">
+          <div className="px-6">
+            <CardHeadline>Customize</CardHeadline>
+          </div>
           {easingType === EasingType.BEZIER && <BezierEditor />}
           {easingType === EasingType.SPRING && <SpringEditor />}
           {easingType === EasingType.BOUNCE && <BounceEditor />}
           {easingType === EasingType.WIGGLE && <WiggleEditor />}
         </Card>
         <EasingPreview />
-      </div>
-      <Card className="px-6 py-5">
-        <CardHeadline>Code</CardHeadline>
-        <EasingCode />
-      </Card>
-      <Card className="px-6 py-5">
-        <EasingTypeSelection />
-        <EasingSelection />
-      </Card>
-      <div className="grid grid-cols-6 justify-center gap-8">
-        <Card className="col-span-2 px-6 py-5">
-          <CardHeadline>Customize</CardHeadline>
-          {easingType === EasingType.BEZIER && <BezierEditor />}
-          {easingType === EasingType.SPRING && <SpringEditor />}
-          {easingType === EasingType.BOUNCE && <BounceEditor />}
-          {easingType === EasingType.WIGGLE && <WiggleEditor />}
-        </Card>
-        <div className="col-span-4">
-          <EasingPreview />
-        </div>
       </div>
       <Card className="px-6 py-5">
         <CardHeadline>Code</CardHeadline>

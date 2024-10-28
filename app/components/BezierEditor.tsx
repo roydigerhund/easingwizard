@@ -11,7 +11,6 @@ export default function BezierEditor() {
 
   const onChange = (value: BezierValue) => {
     setState({ bezierValue: value });
-    onChange(value);
   };
 
   return (
@@ -91,12 +90,12 @@ export default function BezierEditor() {
         </svg>
       </EditorBase>
       <input
-        className="mt-4"
+        className="mt-8"
         value={bezierValue.join(', ')}
         onChange={(e) => {
           const values = e.target.value.split(', ').map(parseFloat);
           // TODO: Validate values
-          onChange(values as [number, number, number, number]);
+          onChange(values as BezierValue);
         }}
       />
     </div>

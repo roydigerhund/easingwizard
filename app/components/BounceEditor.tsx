@@ -41,7 +41,7 @@ export default function BounceEditor() {
         </EditorBaseLine>
       </EditorBase>
 
-      <div className="flex flex-col gap-4" style={{ marginBottom: '20px' }}>
+      <div className="flex flex-col gap-4 pt-12" style={{ marginBottom: '20px' }}>
         <label style={{ marginLeft: '10px' }}>
           Bounces:
           <input

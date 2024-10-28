@@ -10,6 +10,7 @@ export default function EditorBaseLine({ children }: { children: ReactNode }) {
       fill="none"
       stroke="url(#curve-gradient)"
       strokeLinecap="round"
+      strokeLinejoin="round"
     >
       <defs>
         <linearGradient id="curve-gradient">

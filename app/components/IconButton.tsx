@@ -16,8 +16,19 @@ export default function IconButton({ isActive, text, icon, onClick }: Props) {
       )}
       onClick={onClick}
     >
-      <span className={classNames(isActive ? 'fill-[url(#curve-gradient)]' : 'fill-current')}>{icon}</span>
-      <span className={classNames('tracking-widest text-xs uppercase')}>{text}</span>
+      <svg
+        viewBox="0 0 100 100"
+        strokeWidth={8}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={classNames(
+          'h-6 w-6 overflow-visible',
+          isActive ? 'stroke-[url(#curve-gradient)]' : 'stroke-current',
+        )}
+      >
+        {icon}
+      </svg>
+      <span className={classNames('text-xs uppercase tracking-widest')}>{text}</span>
     </button>
   );
 }

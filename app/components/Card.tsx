@@ -7,7 +7,7 @@ type Props = {
 
 export default function Card({ className, children }: Props) {
   return (
-    <div className={classNames('relative rounded-xl backdrop-blur-sm', className)}>
+    <div className={classNames('relative rounded-xl p-px backdrop-blur-sm', className)}>
       {children}
       <div
         className="absolute inset-0 pointer-events-none rounded-xl"

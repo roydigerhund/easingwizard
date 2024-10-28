@@ -4,7 +4,7 @@ export type Point = {
 };
 
 export enum EasingType {
-  BEZIER = 'bezier',
+  BEZIER = 'bézier',
   SPRING = 'spring',
   BOUNCE = 'bounce',
   WIGGLE = 'wiggle',
@@ -17,7 +17,6 @@ export enum BezierStyle {
 }
 
 export enum BezierCurve {
-  DEFAULT = 'default',
   SINE = 'sine',
   QUAD = 'quad',
   CUBIC = 'cubic',

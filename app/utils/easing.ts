@@ -25,8 +25,8 @@ export function generateLinearEasing(
     easingValues.push([0, 100].includes(timePercentage) ? `${value}` : `${value} ${timePercentage}%`);
 
     sampledPoints.push({
-      x: (time / totalTime) * 100, // SVG width
-      y: 100 - value * 100, // SVG height scaling (invert y-axis)
+      x: timePercentage,
+      y: roundTo(100 - value * 100, 2), // SVG height scaling (invert y-axis)
     });
   }
 

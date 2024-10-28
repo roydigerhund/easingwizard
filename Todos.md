@@ -3,3 +3,4 @@
 - Progression line for animation preview or visual signal when it restarts
 - animierter Farbverlauf
 - Farbe von Preview auch animieren
+- bei Wiggle immer die Once Animation nehmen und die Zeit nicht hochskalieren
