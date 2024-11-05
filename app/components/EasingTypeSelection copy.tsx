@@ -30,7 +30,7 @@ export default function EasingTypeSelectionCopy() {
           >
             <span
               className={classNames(
-                'absolute -z-10 rounded-full p-0.5 inset-0 bg-gradient-to-tr from-[--svg-line-gradient-from] via-[--svg-line-gradient-via] to-[--svg-line-gradient-to]',
+                'absolute -z-10 rounded-full p-0.5 inset-0 bg-gradient-to-tr from-grdt-from via-grdt-via to-grdt-to',
                 easingType !== type && 'opacity-0',
               )}
               style={{

@@ -77,7 +77,7 @@ export default function Drag(props: DragProps) {
 
   return (
     <g
-      className={classNames('relative group cursor-move', className)}
+      className={classNames('relative group cursor-grab active:cursor-grabbing', className)}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerMove={handlePointerMove}

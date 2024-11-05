@@ -3,6 +3,8 @@ import {
   defaultBezierFunction,
   defaultBounceFunction,
   defaultBounceValue,
+  defaultOvershootFunction,
+  defaultOvershootValue,
   defaultSpringFunction,
   defaultSpringValue,
   defaultWiggleFunction,
@@ -15,6 +17,8 @@ import {
   BezierValue,
   BounceCurve,
   EasingType,
+  OvershootCurve,
+  OvershootStyle,
   PreviewPlayMode,
   SpringCurve,
   WiggleCurve,
@@ -28,11 +32,17 @@ export type EasingState = {
   bezierStyle: BezierStyle;
   bezierCurve: BezierCurve;
   bezierValue: BezierValue;
+  // Overeshoot
+  overshootStyle: OvershootStyle;
+  overshootCurve: OvershootCurve;
+  overshootDamping: number;
+  overshootMass: number;
+  overshootValue: string;
   // Spring
   springCurve: SpringCurve;
   springStiffness: number;
   springDamping: number;
-  springInitialVelocity: number;
+  springMass: number;
   springValue: string;
   // Bounce
   bounceCurve: BounceCurve;
@@ -41,15 +51,17 @@ export type EasingState = {
   bounceValue: string;
   // Wiggle
   wiggleCurve: WiggleCurve;
-  wiggleStiffness: number;
   wiggleDamping: number;
-  wiggleInitialVelocity: number;
+  wiggleWiggles: number;
   wiggleValue: string;
   // Preview
   previewDuration: number;
   previewPlayMode: PreviewPlayMode;
   previewAnimationType: AnimationType;
   previewShowLinear: boolean;
+  // Editor
+  editorExtraSpaceTop: boolean;
+  editorExtraSpaceBottom: boolean;
 };
 
 type EasingAction = {
@@ -58,16 +70,24 @@ type EasingAction = {
 };
 
 const defaultBezierState = {
-  bezierStyle: BezierStyle.IN,
-  bezierCurve: BezierCurve.SINE,
+  bezierStyle: BezierStyle.IN_OUT,
+  bezierCurve: BezierCurve.CUBIC,
   bezierValue: defaultBezierFunction,
+};
+
+const defaultOvershootState = {
+  overshootStyle: OvershootStyle.OUT,
+  overshootCurve: OvershootCurve.DEFAULT,
+  overshootDamping: defaultOvershootFunction.damping,
+  overshootMass: defaultOvershootFunction.mass,
+  overshootValue: defaultOvershootValue,
 };
 
 const defaultSpringState = {
   springCurve: SpringCurve.DEFAULT,
   springStiffness: defaultSpringFunction.stiffness,
   springDamping: defaultSpringFunction.damping,
-  springInitialVelocity: defaultSpringFunction.initialVelocity,
+  springMass: defaultSpringFunction.mass,
   springValue: defaultSpringValue,
 };
 
@@ -80,9 +100,8 @@ const defaultBounceState = {
 
 const defaultWiggleState = {
   wiggleCurve: WiggleCurve.DEFAULT,
-  wiggleStiffness: defaultWiggleFunction.stiffness,
   wiggleDamping: defaultWiggleFunction.damping,
-  wiggleInitialVelocity: defaultWiggleFunction.initialVelocity,
+  wiggleWiggles: defaultWiggleFunction.wiggles,
   wiggleValue: defaultWiggleValue,
 };
 
@@ -93,7 +112,10 @@ const defaultEasingContext: EasingState = {
   previewPlayMode: PreviewPlayMode.INFINITE,
   previewAnimationType: AnimationType.MOVE,
   previewShowLinear: false,
+  editorExtraSpaceTop: false,
+  editorExtraSpaceBottom: false,
   ...defaultBezierState,
+  ...defaultOvershootState,
   ...defaultSpringState,
   ...defaultBounceState,
   ...defaultWiggleState,
@@ -104,16 +126,19 @@ export const useEasingStore = create<EasingState & EasingAction>((set) => ({
   setEasingType: (easingType: EasingType) => {
     switch (easingType) {
       case EasingType.BEZIER:
-        set({ easingType, ...defaultBezierState });
+        set({ easingType, ...defaultBezierState, editorExtraSpaceTop: false, editorExtraSpaceBottom: false });
+        break;
+      case EasingType.OVERSHOOT:
+        set({ easingType, ...defaultBezierState, editorExtraSpaceTop: false, editorExtraSpaceBottom: false });
         break;
       case EasingType.SPRING:
-        set({ easingType, ...defaultSpringState });
+        set({ easingType, ...defaultSpringState, editorExtraSpaceTop: false, editorExtraSpaceBottom: false });
         break;
       case EasingType.BOUNCE:
-        set({ easingType, ...defaultBounceState });
+        set({ easingType, ...defaultBounceState, editorExtraSpaceTop: false, editorExtraSpaceBottom: false });
         break;
       case EasingType.WIGGLE:
-        set({ easingType, ...defaultWiggleState });
+        set({ easingType, ...defaultWiggleState, editorExtraSpaceTop: false, editorExtraSpaceBottom: false });
         break;
     }
   },

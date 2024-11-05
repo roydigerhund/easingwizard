@@ -22,7 +22,7 @@ export default function IconButton({ isActive, text, icon, onClick }: Props) {
         strokeLinecap="round"
         strokeLinejoin="round"
         className={classNames(
-          'h-6 w-6 overflow-visible',
+          'size-6 overflow-visible',
           isActive ? 'stroke-[url(#curve-gradient)]' : 'stroke-current',
         )}
       >

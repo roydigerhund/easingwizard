@@ -14,9 +14,9 @@ export default function EditorBaseLine({ children }: { children: ReactNode }) {
     >
       <defs>
         <linearGradient id="curve-gradient">
-          <stop offset="0%" stopColor="var(--svg-line-gradient-from)" />
-          <stop offset="50%" stopColor="var(--svg-line-gradient-via)" />
-          <stop offset="100%" stopColor="var(--svg-line-gradient-to)" />
+          <stop offset="0%" stopColor="var(--grdt-from)" />
+          <stop offset="50%" stopColor="var(--grdt-via)" />
+          <stop offset="100%" stopColor="var(--grdt-to)" />
         </linearGradient>
         <filter id="f1" x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur in="SourceGraphic" stdDeviation={4} />

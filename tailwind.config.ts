@@ -4,6 +4,11 @@ export default {
   content: ['./app/**/{**,.client,.server}/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
+      colors: {
+        "grdt-from": "#5e18f5",
+        "grdt-via": "#50aaf8",
+        "grdt-to": "#6ae5b5",
+      },
       fontFamily: {
         sans: [
           '"Inter"',

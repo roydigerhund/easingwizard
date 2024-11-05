@@ -8,12 +8,14 @@ export enum EasingType {
   SPRING = 'spring',
   BOUNCE = 'bounce',
   WIGGLE = 'wiggle',
+  OVERSHOOT = 'overshoot',
 }
 
 export enum BezierStyle {
   IN = 'in',
   OUT = 'out',
   IN_OUT = 'inOut',
+  OUT_IN = 'outIn',
 }
 
 export enum BezierCurve {
@@ -25,9 +27,23 @@ export enum BezierCurve {
   EXPO = 'expo',
   CIRC = 'circ',
   BACK = 'back',
+  ANTICIPATE = 'anticipate',
 }
 
 export type BezierValue = [number, number, number, number];
+
+export enum OvershootStyle {
+  IN = 'in',
+  OUT = 'out',
+  IN_OUT = 'inOut',
+}
+
+// TODO Add more overshoot curves
+export enum OvershootCurve {
+  DEFAULT = 'default',
+  OVERSHOOT = 'overshoot',
+  ANTICIPATE = 'anticipate',
+}
 
 // TODO: Add more spring curves
 export enum SpringCurve {
@@ -64,8 +80,8 @@ export enum AnimationType {
 }
 
 export enum PreviewPlayMode {
-  ONCE = 'once',
   INFINITE = 'infinite',
+  ONCE = 'once',
 }
 
 export enum LinearEasingAccuracy {
@@ -73,5 +89,4 @@ export enum LinearEasingAccuracy {
   MEDIUM = 'MEDIUM',
   HIGH = 'HIGH',
   ULTRA = 'ULTRA',
-  EVENLY = 'EVENLY',
 }

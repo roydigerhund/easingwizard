@@ -4,39 +4,39 @@ import { LinearEasingAccuracy } from '~/types-and-enums';
 import { createSpringFunction, generateLinearEasing } from '~/utils/easing';
 import EditorBase from './EditorBase';
 import EditorBaseLine from './EditorBaseLine';
+import InputGroup from './InputGroup';
+import Slider from './Slider';
+import StepSlider from './StepSlider';
 
 export default function SpringEditor() {
   const springStiffness = useEasingStore((state) => state.springStiffness);
   const springDamping = useEasingStore((state) => state.springDamping);
-  const springInitialVelocity = useEasingStore((state) => state.springInitialVelocity);
+  const springMass = useEasingStore((state) => state.springMass);
   const setState = useEasingStore((state) => state.setState);
   const [accuracy, setAccuracy] = useState(LinearEasingAccuracy.HIGH);
   const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
-  const [duration, setDuration] = useState(1000); // In milliseconds
 
   useEffect(() => {
     // Recalculate when parameters change
-    const { easingValue, sampledPoints, durationMilliSeconds } = generateLinearEasing(
+    const { easingValue, sampledPoints } = generateLinearEasing(
       createSpringFunction({
         stiffness: springStiffness,
         damping: springDamping,
-        initialVelocity: springInitialVelocity,
+        mass: springMass,
       }),
       accuracy,
     );
     setPoints(sampledPoints);
-    setDuration(durationMilliSeconds);
     setState({ springValue: easingValue });
-  }, [springStiffness, springDamping, springInitialVelocity, accuracy, setState]);
+  }, [springStiffness, springDamping, springMass, accuracy, setState]);
 
   return (
-    <div className="col-span-2">
+    <div className="relative col-span-2">
       <EditorBase>
         {/* Spring Curve */}
         <EditorBaseLine>
           <polyline strokeWidth="2" points={points.map((point) => `${point.x},${point.y / 2 + 50}`).join(' ')} />
           <polyline
-            className="opacity-100"
             strokeWidth="6"
             points={points.map((point) => `${point.x},${point.y / 2 + 50}`).join(' ')}
             filter='url("#f1")'
@@ -44,63 +44,38 @@ export default function SpringEditor() {
         </EditorBaseLine>
       </EditorBase>
 
-      <div className="flex flex-col gap-4" style={{ marginBottom: '20px' }}>
-        <label style={{ marginLeft: '10px' }}>
-          Stiffness:
-          <input
-            type="range"
-            value={springStiffness}
-            onChange={(e) => setState({ springStiffness: parseFloat(e.target.value) })}
-            step="1"
-            min="50"
-            max="250"
-          />
-        </label>
-        <label style={{ marginLeft: '10px' }}>
-          Damping:
-          <input
-            type="range"
-            value={springDamping}
-            onChange={(e) => setState({ springDamping: parseFloat(e.target.value) })}
-            step="1"
-            min="1"
-            max="100"
-          />
-        </label>
-        <label style={{ marginLeft: '10px' }}>
-          Initial Velocity:
-          <input
-            type="range"
-            value={springInitialVelocity}
-            onChange={(e) => setState({ springInitialVelocity: parseFloat(e.target.value) })}
-            step="1"
-            min="-50"
-            max="50"
-          />
-        </label>
-        <label style={{ marginLeft: '10px' }}>
-          Accuracy:
-          <select value={accuracy} onChange={(e) => setAccuracy(e.target.value as LinearEasingAccuracy)}>
-            {Object.values(LinearEasingAccuracy).map((accuracy) => (
-              <option key={accuracy} value={accuracy}>
-                {accuracy}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-
-      <div style={{ marginBottom: '20px' }}>
-        <label>
-          Duration (ms):
-          <input
-            type="number"
-            value={duration}
-            onChange={(e) => setDuration(parseInt(e.target.value, 10))}
-            step="100"
-          />
-        </label>
-      </div>
+      <InputGroup>
+        <Slider
+          label="Mass"
+          value={springMass}
+          onChange={(value) => setState({ springMass: value })}
+          min={1}
+          max={5}
+          step={0.1}
+        />
+        <Slider
+          label="Stiffness"
+          value={springStiffness}
+          onChange={(value) => setState({ springStiffness: value })}
+          min={1}
+          max={500}
+          step={1}
+        />
+        <Slider
+          label="Damping"
+          value={springDamping}
+          onChange={(value) => setState({ springDamping: value })}
+          min={5}
+          max={25}
+          step={1}
+        />
+        <StepSlider
+          label="Accuracy"
+          value={accuracy}
+          options={Object.values(LinearEasingAccuracy).map((value) => value)}
+          onChange={(value) => setAccuracy(value)}
+        />
+      </InputGroup>
     </div>
   );
 }

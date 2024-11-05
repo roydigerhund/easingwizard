@@ -1,28 +1,25 @@
-import { LinearEasingAccuracy, Point } from '~/types-and-enums';
+import { LinearEasingAccuracy, OvershootStyle, Point } from '~/types-and-enums';
 import { roundTo } from './numbers';
 
 export function generateLinearEasing(
   easingFunction: (t: number) => number,
   accuracy: LinearEasingAccuracy,
   fixedTotalTime?: number,
+  endValue?: number,
 ) {
-  const totalTime = fixedTotalTime || getTotalTime(easingFunction);
-  const durationMilliSeconds = Math.round(totalTime * 1000);
+  const totalTime = fixedTotalTime || getTotalTime(easingFunction, endValue);
   // Use the getKeyTimes function to get key times
-  const keyTimes =
-    accuracy === LinearEasingAccuracy.EVENLY
-      ? getKeyTimesEvenly(totalTime, 100)
-      : getKeyTimes(easingFunction, totalTime, accuracy);
+  const keyTimes = getKeyTimes(easingFunction, totalTime, accuracy);
 
   // Sample the bounce function at key times
   const easingValues: string[] = [];
   const sampledPoints: Point[] = [];
 
   for (const time of keyTimes) {
-    const value = roundTo(easingFunction(time), 3);
     const timePercentage = roundTo((time / totalTime) * 100, 2);
+    const value = roundTo(easingFunction(time), 3);
 
-    easingValues.push([0, 100].includes(timePercentage) ? `${value}` : `${value} ${timePercentage}%`);
+    easingValues.push([0, 100].includes(timePercentage) ? `${Math.round(value)}` : `${value} ${timePercentage}%`);
 
     sampledPoints.push({
       x: timePercentage,
@@ -33,7 +30,69 @@ export function generateLinearEasing(
   // Generate the CSS linear easing function
   const easingValue = `linear(${easingValues.join(', ')})`;
 
-  return { easingValue, sampledPoints, durationMilliSeconds };
+  return { easingValue, sampledPoints };
+}
+
+// OVERSHOOT
+export function createOvershootFunction({
+  damping,
+  mass,
+  style,
+}: {
+  damping: number; // Controls the X position of the overshoot
+  mass: number; // Controls the Y extension of the overshoot
+  style: OvershootStyle; // Style of easing
+}): (t: number) => number {
+  // Adjust overshoot amount based on mass
+  const overshoot = Math.min(Math.max(mass, 1), 10); // You can adjust this scaling as needed
+
+  const normalizedDamping = Math.min(Math.max(damping, 50), 200) / 100; // Clamp stiffness between 50 and 200 and normalize
+  // Adjust time based on stiffness
+  const adjustTime = (t: number): number => {
+    // Non-linear time adjustment
+    if (style === OvershootStyle.IN_OUT) {
+      if (t < 0.5) {
+        return Math.pow(t * 2, 1 / normalizedDamping) / 2;
+      } else {
+        return 1 - Math.pow((1 - t) * 2, 1 / normalizedDamping) / 2;
+      }
+    } else {
+      return Math.pow(t, 1 / normalizedDamping);
+    }
+  };
+
+  // Base easing functions with adjusted time and overshoot
+  const easeIn = (t: number): number => {
+    const tAdjusted = adjustTime(t);
+    return tAdjusted * tAdjusted * ((overshoot + 1) * tAdjusted - overshoot);
+  };
+
+  const easeOut = (t: number): number => {
+    // use easeIn function to get the easeOut function by flipping the time
+    return 1 - easeIn(1 - t);
+  };
+
+  const easeInOut = (t: number): number => {
+    let tAdjusted = adjustTime(t) * 2;
+    if (tAdjusted < 1) {
+      return 0.5 * (tAdjusted * tAdjusted * ((overshoot * 1.525 + 1) * tAdjusted - overshoot * 1.525));
+    } else {
+      tAdjusted -= 2;
+      return 0.5 * (tAdjusted * tAdjusted * ((overshoot * 1.525 + 1) * tAdjusted + overshoot * 1.525) + 2);
+    }
+  };
+
+  // Return the appropriate function based on the style
+  switch (style) {
+    case OvershootStyle.IN:
+      return easeIn;
+    case OvershootStyle.OUT:
+      return easeOut;
+    case OvershootStyle.IN_OUT:
+      return easeInOut;
+    default:
+      throw new Error("Invalid style. Must be 'IN', 'OUT', or 'IN_OUT'.");
+  }
 }
 
 // SPRING
@@ -41,36 +100,52 @@ export function generateLinearEasing(
 // Function to create the spring function based on the parameters
 export function createSpringFunction({
   stiffness,
+  mass,
   damping,
-  initialVelocity = 0,
 }: {
   stiffness: number;
+  mass: number;
   damping: number;
-  initialVelocity?: number;
-}) {
-  const mass = 1;
-  const w0 = Math.sqrt(stiffness / mass);
-  const zeta = damping / (2 * Math.sqrt(stiffness * mass));
-  const wd = w0 * Math.sqrt(Math.abs(1 - zeta * zeta));
-  const a = 1;
-  const b = (zeta * w0 + -initialVelocity) / wd;
+}): (t: number) => number {
+  const k = stiffness; // Spring constant
+  const m = mass; // Mass
+  const c = damping; // Damping coefficient
 
-  return function (time: number) {
-    if (zeta < 1) {
-      // Underdamped
-      return 1 - Math.exp(-zeta * w0 * time) * (a * Math.cos(wd * time) + b * Math.sin(wd * time));
-    } else if (zeta === 1) {
-      // Critically damped
-      return 1 - Math.exp(-w0 * time) * (a + (-w0 * time + initialVelocity) * time);
-    } else {
-      // Overdamped
-      const r1 = -w0 * (zeta - Math.sqrt(zeta * zeta - 1));
-      const r2 = -w0 * (zeta + Math.sqrt(zeta * zeta - 1));
-      const c1 = (initialVelocity - r2) / (r1 - r2);
-      const c2 = 1 - c1;
-      return 1 - c1 * Math.exp(r1 * time) - c2 * Math.exp(r2 * time);
-    }
-  };
+  const omega0 = Math.sqrt(k / m); // Natural angular frequency
+  const zeta = c / (2 * Math.sqrt(k * m)); // Damping ratio
+
+  if (zeta < 1) {
+    // Under-damped case
+    const omegaD = omega0 * Math.sqrt(1 - zeta * zeta); // Damped angular frequency
+    const sinCoeff = zeta / Math.sqrt(1 - zeta * zeta);
+
+    return (t: number): number => {
+      const envelope = Math.exp(-zeta * omega0 * t);
+      const cosTerm = Math.cos(omegaD * t);
+      const sinTerm = sinCoeff * Math.sin(omegaD * t);
+      const x = 1 - envelope * (cosTerm + sinTerm);
+      return x;
+    };
+  } else if (zeta === 1) {
+    // Critically damped case
+    return (t: number): number => {
+      const envelope = Math.exp(-omega0 * t);
+      const x = 1 - envelope * (1 + omega0 * t);
+      return x;
+    };
+  } else {
+    // Over-damped case
+    const omega1 = omega0 * Math.sqrt(zeta * zeta - 1);
+    const C1 = (omega1 + zeta * omega0) / (2 * omega1);
+    const C2 = 1 - C1;
+
+    return (t: number): number => {
+      const expTerm1 = Math.exp((-zeta * omega0 + omega1) * t);
+      const expTerm2 = Math.exp((-zeta * omega0 - omega1) * t);
+      const x = 1 - C1 * expTerm1 - C2 * expTerm2;
+      return x;
+    };
+  }
 }
 
 // BOUNCE
@@ -105,67 +180,78 @@ export function createBounceFunction({
 
 // Function to create the wiggle function based on the parameters
 export function createWiggleFunction({
-  mass = 1,
-  stiffness,
+  wiggles,
   damping,
-  initialVelocity = 0,
 }: {
-  mass?: number;
-  stiffness: number;
-  damping: number;
-  initialVelocity?: number;
-}) {
-  const w0 = Math.sqrt(stiffness / mass);
-  const zeta = damping / (2 * Math.sqrt(stiffness * mass));
-  const wd = w0 * Math.sqrt(Math.abs(1 - zeta * zeta));
-  const a = 0;
-  const b = (zeta * w0 + -initialVelocity) / wd;
+  wiggles: number; // Natural angular frequency
+  damping: number; // Damping ratio
+}): (t: number) => number {
+  const totalTime = 1; // Total time for the wiggle function to settle
+  const normalizedDampingRatio = Math.min(Math.max(damping / 100, 0), 0.2); // Clamp damping ratio between 0 and 1
 
-  return function (time: number) {
-    if (zeta < 1) {
-      // Underdamped
-      return 1 - Math.exp(-zeta * w0 * time) * (a * Math.cos(wd * time) + b * Math.sin(wd * time));
-    } else if (zeta === 1) {
-      // Critically damped
-      return 1 - Math.exp(-w0 * time) * (a + (-w0 * time + initialVelocity) * time);
-    } else {
-      // Overdamped
-      const r1 = -w0 * (zeta - Math.sqrt(zeta * zeta - 1));
-      const r2 = -w0 * (zeta + Math.sqrt(zeta * zeta - 1));
-      const c1 = (initialVelocity - r2) / (r1 - r2);
-      const c2 = 1 - c1;
-      return 1 - c1 * Math.exp(r1 * time) - c2 * Math.exp(r2 * time);
+  const omega0 = (wiggles * Math.PI) / totalTime;
+  const zeta = normalizedDampingRatio;
+  const omegaD = omega0 * Math.sqrt(1 - zeta * zeta);
+
+  // Amplitude normalization
+  const tMax = Math.atan(omegaD / (zeta * omega0)) / omegaD;
+  const A = 1 / (Math.exp(-zeta * omega0 * tMax) * Math.sin(omegaD * tMax));
+
+  return (t: number): number => {
+    if (t < 0 || t > totalTime) {
+      return 0; // Outside the time interval
     }
+
+    // Original wiggle function
+    const envelope = Math.exp(-zeta * omega0 * t);
+    const wiggle = A * envelope * Math.sin(omegaD * t);
+
+    // Easing envelope function (e.g., Hann window)
+    const easingEnvelope = 0.5 * (1 + Math.cos(Math.PI * (t / totalTime)));
+
+    // Combine wiggle and easing envelope
+    const x = wiggle * easingEnvelope;
+
+    return x;
   };
 }
 
 // Function to estimate the total time for the animation to settle
-function getTotalTime(springFunc: (t: number) => number) {
+function getTotalTime(springFunc: (t: number) => number, endValue?: number): number {
   let time = 0;
   const dt = 0.016; // Start with 60 FPS time step
   let value = springFunc(time);
   let velocity = 1;
-  const epsilon = 0.0001; // Threshold for settling
+  const epsilon = 0.005; // Threshold for settling
 
-  while (Math.abs(velocity) > epsilon) {
+  let endFrames = 0;
+
+  while (Math.abs(velocity) > epsilon || endFrames < 25) {
     time += dt;
     const newValue = springFunc(time);
     velocity = (newValue - value) / dt;
     value = newValue;
 
-    // Avoid infinite loops after 25 seconds
+    if (Math.abs(velocity) < epsilon) {
+      endFrames++;
+    } else {
+      endFrames = 0;
+    }
+
+    // Avoid infinite loops after 100 seconds
     if (time > 25) {
       break;
     }
   }
 
   // if value is not 1, we need to continue until it reaches 1 (rounded to 2 decimal places)
-  while (roundTo(value, 3) !== 1) {
+  while (roundTo(value, 2) !== (endValue ?? 1)) {
     time += dt;
-    value = roundTo(springFunc(time), 3);
+    value = roundTo(springFunc(time), 2);
   }
 
-  return time;
+  // round to step of 100ms
+  return Math.round(time * 10) / 10;
 }
 
 // Function to get key times (times of peaks, troughs, and inflection points)
@@ -225,22 +311,6 @@ function getKeyTimes(springFunc: (t: number) => number, totalTime: number, accur
   const keyTimes = reducedPoints.map((point) => point.t).sort((a, b) => a - b);
 
   return keyTimes;
-}
-
-// Function to get key times evenly
-function getKeyTimesEvenly(totalTime: number, numPoints: number) {
-  const times = [];
-
-  // For underdamped, we can calculate peaks at specific intervals
-  const numSamples = numPoints;
-  const dt = totalTime / numSamples;
-
-  for (let i = 0; i <= numSamples; i++) {
-    const t = i * dt;
-    times.push(t);
-  }
-
-  return times;
 }
 
 // Ramer–Douglas–Peucker algorithm implementation using iterative approach to save memory

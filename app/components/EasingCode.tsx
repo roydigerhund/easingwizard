@@ -5,6 +5,7 @@ import { EasingType } from '~/types-and-enums';
 export default function EasingCode() {
   const easingType = useEasingStore((state) => state.easingType);
   const bezierValue = useEasingStore((state) => state.bezierValue);
+  const overshootValue = useEasingStore((state) => state.overshootValue);
   const springValue = useEasingStore((state) => state.springValue);
   const bounceValue = useEasingStore((state) => state.bounceValue);
   const wiggleValue = useEasingStore((state) => state.wiggleValue);
@@ -14,11 +15,13 @@ export default function EasingCode() {
   const value =
     easingType === EasingType.BEZIER
       ? `cubic-bezier(${bezierValue.join(', ')})`
-      : easingType === EasingType.SPRING
-        ? springValue
-        : easingType === EasingType.BOUNCE
-          ? bounceValue
-          : wiggleValue;
+      : easingType === EasingType.OVERSHOOT
+        ? overshootValue
+        : easingType === EasingType.SPRING
+          ? springValue
+          : easingType === EasingType.BOUNCE
+            ? bounceValue
+            : wiggleValue;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(value).then(
@@ -35,7 +38,7 @@ export default function EasingCode() {
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
-        <code className='select-all'>{value}</code>
+        <code className="selection:text-grdt-to select-all text-zinc-300 selection:bg-none">{value}</code>
         <button onClick={copyToClipboard} style={{ marginLeft: '10px' }}>
           {copied ? 'Copied!' : 'Copy'}
         </button>

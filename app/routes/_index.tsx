@@ -1,6 +1,4 @@
 import type { MetaFunction } from '@remix-run/node';
-import { useState } from 'react';
-import BezierComparison from '~/components/BezierComparison';
 import BezierEditor from '~/components/BezierEditor';
 import BounceEditor from '~/components/BounceEditor';
 import Card from '~/components/Card';
@@ -9,8 +7,10 @@ import EasingCode from '~/components/EasingCode';
 import EasingPreview from '~/components/EasingPreview';
 import EasingSelection from '~/components/EasingSelection';
 import EasingTypeSelectionCopy from '~/components/EasingTypeSelection copy';
+import OvershootEditor from '~/components/OvershootEditor';
 import SpringEditor from '~/components/SpringEditor';
 import WiggleEditor from '~/components/WiggleEditor';
+import { shootingStars } from '~/data/shooting-stars';
 import { useEasingStore } from '~/state/easing-store';
 import { EasingType } from '~/types-and-enums';
 import { classNames } from '~/utils/class-names';
@@ -27,17 +27,6 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   const easingType = useEasingStore((state) => state.easingType);
-
-  const [shootingStars] = useState(
-    Array(200)
-      .fill(null)
-      .map((_, i) => ({
-        key: i,
-        xPosition: Math.round(Math.random() * 1000) / 10,
-        animationDelay: Math.round(Math.random() * 100) / 10 - 25,
-        animationDuration: Math.round(Math.random() * 20) + 15,
-      })),
-  );
 
   return (
     <div className="relative z-0 mx-auto flex max-w-7xl flex-col items-stretch gap-12 px-4 py-12">
@@ -63,9 +52,6 @@ export default function Index() {
         </p>
       </header>
       <div className="flex justify-center">
-        <BezierComparison />
-      </div>
-      <div className="flex justify-center">
         <EasingTypeSelectionCopy />
       </div>
       <div className="grid grid-cols-3 justify-center gap-8">
@@ -79,6 +65,7 @@ export default function Index() {
             <CardHeadline>Customize</CardHeadline>
           </div>
           {easingType === EasingType.BEZIER && <BezierEditor />}
+          {easingType === EasingType.OVERSHOOT && <OvershootEditor />}
           {easingType === EasingType.SPRING && <SpringEditor />}
           {easingType === EasingType.BOUNCE && <BounceEditor />}
           {easingType === EasingType.WIGGLE && <WiggleEditor />}

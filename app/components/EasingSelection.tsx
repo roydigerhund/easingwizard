@@ -2,12 +2,27 @@ import {
   bezierFunctions,
   bezierStyleFunctions,
   bounceFunctions,
+  overshootFunctions,
   springFunctions,
   wiggleFunctions,
 } from '~/data/easing';
-import { bounceCalculations, springCalculations, wiggleCalculations } from '~/generated/linear-easings';
+import {
+  bounceCalculations,
+  overshootCalculations,
+  springCalculations,
+  wiggleCalculations,
+} from '~/generated/linear-easings';
 import { useEasingStore } from '~/state/easing-store';
-import { BezierCurve, BezierStyle, BounceCurve, EasingType, SpringCurve, WiggleCurve } from '~/types-and-enums';
+import {
+  BezierCurve,
+  BezierStyle,
+  BounceCurve,
+  EasingType,
+  OvershootCurve,
+  OvershootStyle,
+  SpringCurve,
+  WiggleCurve,
+} from '~/types-and-enums';
 import { humanize } from '~/utils/string';
 import IconButton from './IconButton';
 
@@ -15,16 +30,30 @@ export default function EasingSelection() {
   const easingType = useEasingStore((state) => state.easingType);
   const bezierStyle = useEasingStore((state) => state.bezierStyle);
   const bezierCurve = useEasingStore((state) => state.bezierCurve);
+  const overshootStyle = useEasingStore((state) => state.overshootStyle);
+  const overshootCurve = useEasingStore((state) => state.overshootCurve);
   const springCurve = useEasingStore((state) => state.springCurve);
   const bounceCurve = useEasingStore((state) => state.bounceCurve);
   const wiggleCurve = useEasingStore((state) => state.wiggleCurve);
   const setState = useEasingStore((state) => state.setState);
 
   const onBezierValueChange = (style: BezierStyle, curve: BezierCurve) => {
+    const value = bezierFunctions[style][curve]!;
     setState({
-      bezierValue: bezierFunctions[style][curve],
+      bezierValue: value,
       bezierStyle: style,
       bezierCurve: curve,
+      editorExtraSpaceTop: Math.max(value[1], value[3]) > 1,
+      editorExtraSpaceBottom: Math.min(value[1], value[3]) < 0,
+    });
+  };
+
+  const onOvershootValueChange = (style: OvershootStyle, curve: OvershootCurve) => {
+    setState({
+      overshootStyle: style,
+      overshootDamping: overshootFunctions[style][curve].damping,
+      overshootMass: overshootFunctions[style][curve].mass,
+      overshootCurve: curve,
     });
   };
 
@@ -32,7 +61,7 @@ export default function EasingSelection() {
     setState({
       springStiffness: springFunctions[curve].stiffness,
       springDamping: springFunctions[curve].damping,
-      springInitialVelocity: springFunctions[curve].initialVelocity,
+      springMass: springFunctions[curve].mass,
       springCurve: curve,
     });
   };
@@ -47,9 +76,8 @@ export default function EasingSelection() {
 
   const onWiggleValueChange = (curve: WiggleCurve) => {
     setState({
-      wiggleStiffness: wiggleFunctions[curve].stiffness,
       wiggleDamping: wiggleFunctions[curve].damping,
-      wiggleInitialVelocity: wiggleFunctions[curve].initialVelocity,
+      wiggleWiggles: wiggleFunctions[curve].wiggles,
       wiggleCurve: curve,
     });
   };
@@ -66,7 +94,11 @@ export default function EasingSelection() {
                   key={style}
                   isActive={bezierStyle === style}
                   onClick={() => {
-                    onBezierValueChange(style as BezierStyle, bezierCurve);
+                    if (bezierCurve in bezierFunctions[style as BezierStyle]) {
+                      onBezierValueChange(style as BezierStyle, bezierCurve);
+                    } else {
+                      onBezierValueChange(style as BezierStyle, BezierCurve.SINE);
+                    }
                   }}
                   text={humanize(style)}
                   icon={
@@ -97,6 +129,60 @@ export default function EasingSelection() {
               icon={
                 <path
                   d={`M0,100 C${values[0] * 100},${100 - values[1] * 100} ${values[2] * 100},${100 - values[3] * 100} 100,0`}
+                />
+              }
+            />
+          ))}
+        </div>
+      )}
+      {easingType === EasingType.OVERSHOOT && (
+        <>
+          <div className="flex flex-wrap gap-4">
+            {Object.keys(overshootFunctions).map((style) => {
+              return (
+                <IconButton
+                  key={style}
+                  isActive={overshootStyle === style}
+                  onClick={() => {
+                    if (overshootCurve in overshootFunctions[style as OvershootStyle]) {
+                      onOvershootValueChange(style as OvershootStyle, overshootCurve);
+                    } else {
+                      onOvershootValueChange(style as OvershootStyle, OvershootCurve.DEFAULT);
+                    }
+                  }}
+                  text={humanize(style)}
+                  icon={
+                    <polyline
+                      points={overshootCalculations[style as OvershootStyle].default.sampledPoints
+                        .map((point) => `${point.x},${point.y}`)
+                        .join(' ')}
+                    />
+                  }
+                />
+              );
+            })}
+          </div>
+          <hr
+            className="my-5 border-t border-zinc-700"
+            style={{
+              maskImage: 'linear-gradient(to right,rgba(0,0,0,1),rgba(0,0,0,0.1))',
+            }}
+          />
+        </>
+      )}
+      {easingType === EasingType.OVERSHOOT && (
+        <div className="flex flex-wrap gap-4">
+          {Object.keys(overshootFunctions[overshootStyle]).map((curve) => (
+            <IconButton
+              key={curve}
+              isActive={overshootCurve === curve}
+              onClick={() => onOvershootValueChange(overshootStyle, curve as OvershootCurve)}
+              text={humanize(curve)}
+              icon={
+                <polyline
+                  points={overshootCalculations[overshootStyle][curve as OvershootCurve].sampledPoints
+                    .map((point) => `${point.x},${point.y}`)
+                    .join(' ')}
                 />
               }
             />
@@ -152,7 +238,7 @@ export default function EasingSelection() {
               icon={
                 <polyline
                   points={wiggleCalculations[curve as WiggleCurve].sampledPoints
-                    .map((point) => `${point.x},${point.y / 2 + 50}`)
+                    .map((point) => `${point.x},${point.y / 2}`)
                     .join(' ')}
                 />
               }

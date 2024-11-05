@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useEasingStore } from '~/state/easing-store';
 import { LinearEasingAccuracy } from '~/types-and-enums';
-import { createWiggleFunction, generateLinearEasing } from '~/utils/easing';
+import { createOvershootFunction, generateLinearEasing } from '~/utils/easing';
 import EditorBase from './EditorBase';
 import EditorBaseLine from './EditorBaseLine';
 import InputGroup from './InputGroup';
 import Slider from './Slider';
 import StepSlider from './StepSlider';
 
-export default function WiggleEditor() {
-  const wiggleDamping = useEasingStore((state) => state.wiggleDamping);
-  const wiggleWiggles = useEasingStore((state) => state.wiggleWiggles);
+export default function OvershootEditor() {
+  const overshootStyle = useEasingStore((state) => state.overshootStyle);
+  const overshootDamping = useEasingStore((state) => state.overshootDamping);
+  const overshootMass = useEasingStore((state) => state.overshootMass);
   const setState = useEasingStore((state) => state.setState);
   const [accuracy, setAccuracy] = useState(LinearEasingAccuracy.HIGH);
   const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
@@ -18,28 +19,27 @@ export default function WiggleEditor() {
   useEffect(() => {
     // Recalculate when parameters change
     const { easingValue, sampledPoints } = generateLinearEasing(
-      createWiggleFunction({
-        // stiffness: wiggleStiffness,
-        damping: wiggleDamping,
-        wiggles: wiggleWiggles,
+      createOvershootFunction({
+        damping: overshootDamping,
+        mass: overshootMass,
+        style: overshootStyle,
       }),
       accuracy,
       1,
-      0,
     );
     setPoints(sampledPoints);
-    setState({ wiggleValue: easingValue });
-  }, [wiggleDamping, wiggleWiggles, accuracy, setState]);
+    setState({ overshootValue: easingValue });
+  }, [overshootDamping, overshootMass, overshootStyle, accuracy, setState]);
 
   return (
     <div className="col-span-2">
       <EditorBase>
-        {/* Wiggle Curve */}
+        {/* Overshoot Curve */}
         <EditorBaseLine>
-          <polyline strokeWidth="2" points={points.map((point) => `${point.x},${point.y / 2}`).join(' ')} />
+          <polyline strokeWidth="2" points={points.map((point) => `${point.x},${point.y / 2 + 25}`).join(' ')} />
           <polyline
             strokeWidth="6"
-            points={points.map((point) => `${point.x},${point.y / 2}`).join(' ')}
+            points={points.map((point) => `${point.x},${point.y / 2 + 25}`).join(' ')}
             filter='url("#f1")'
           />
         </EditorBaseLine>
@@ -47,20 +47,20 @@ export default function WiggleEditor() {
 
       <InputGroup>
         <Slider
-          label="Wiggles"
-          value={wiggleWiggles}
-          onChange={(value) => setState({ wiggleWiggles: value })}
+          label="Mass"
+          value={overshootMass}
+          onChange={(value) => setState({ overshootMass: value })}
           min={1}
-          max={10}
-          step={1}
+          max={5}
+          step={0.1}
         />
         <Slider
           label="Damping"
-          value={wiggleDamping}
-          onChange={(value) => setState({ wiggleDamping: value })}
-          min={0}
-          max={20}
-          step={0.1}
+          value={overshootDamping}
+          onChange={(value) => setState({ overshootDamping: value })}
+          min={50}
+          max={100}
+          step={1}
         />
 
         <StepSlider
