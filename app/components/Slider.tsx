@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { classNames } from '~/utils/class-names';
+import { shortTransition } from '~/utils/common-classes';
 
 type Props = {
   className?: string;
@@ -12,50 +13,88 @@ type Props = {
 };
 
 export default function Slider({ className, label, value, onChange, min, max, step }: Props) {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.style.setProperty('--value', value.toString());
-      inputRef.current.style.setProperty('--min', min.toString());
-      inputRef.current.style.setProperty('--max', max.toString());
+  const toFixedPrecision = step.toString().split('.')[1]?.length || 0;
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement | HTMLInputElement>, isTextInput?: boolean) => {
+    const isShiftPressed = e.shiftKey;
+    if ((e.key === 'ArrowLeft' && !isTextInput) || e.key === 'ArrowDown') {
+      onChange(parseFloat(Math.max(value - step * (isShiftPressed ? 10 : 1), min).toFixed(toFixedPrecision)));
+      e.preventDefault();
+    } else if ((e.key === 'ArrowRight' && !isTextInput) || e.key === 'ArrowUp') {
+      onChange(parseFloat(Math.min(value + step * (isShiftPressed ? 10 : 1), max).toFixed(toFixedPrecision)));
+      e.preventDefault();
     }
-  }, [value, min, max]);
+  };
 
   return (
     <div className="group/all flex">
-      <label className={classNames(className, 'group flex grow')}>
+      <div className={classNames(className, 'group flex grow')}>
         <button
           tabIndex={-1}
-          className="mr-6 flex w-16 cursor-default items-center font-light tracking-wide text-zinc-500 transition-all duration-200 ease-in-out group-focus-within/all:text-zinc-400 group-hover/all:text-zinc-400"
-          onClick={() => inputRef.current?.focus()}
+          className={classNames(
+            'mr-6 flex w-16 cursor-default items-center font-light tracking-wide text-zinc-500 group-focus-within/all:text-zinc-100 group-hover/all:text-zinc-100',
+            shortTransition,
+          )}
+          onClick={() => buttonRef.current?.focus()}
         >
           {label}
         </button>
-        <input
-          ref={inputRef}
-          className="styled-slider slider-progress grow transition-all duration-200 ease-in-out"
-          type="range"
-          value={value}
-          onChange={(e) => {
-            onChange(parseFloat(e.target.value));
-            if (document.activeElement !== e.target) {
-              e.target.focus();
-            }
-          }}
-          onMouseUp={(e) => e.currentTarget.focus()}
-          step={step}
-          min={min}
-          max={max}
-        />
-      </label>
+        <div
+          className={classNames(
+            'relative h-10 grow rounded-xl',
+            'shadow-element_inactive hover:shadow-element_focused focus-within:shadow-element_focused',
+            'ease-out-sine transition-all duration-300 will-change-transform',
+          )}
+        >
+          <input
+            tabIndex={-1}
+            type="range"
+            min={min}
+            max={max}
+            step={step}
+            value={value}
+            onChange={(e) => {
+              onChange(parseFloat(e.target.value));
+              buttonRef.current?.focus();
+            }}
+            onClick={() => buttonRef.current?.focus()}
+            className={classNames('styled-slider', 'absolute inset-0 cursor-ew-resize rounded-xl px-2', 'opacity-0')}
+          />
+          <div className="pointer-events-none absolute inset-x-3 inset-y-0">
+            <div
+              className="absolute -inset-x-1.5 inset-y-1.5 w-full rounded-l-lg bg-zinc-900"
+              style={{
+                clipPath: `inset(0 ${100 - ((value - min) / (max - min)) * 100}% 0 0)`,
+              }}
+            />
+            <button
+              ref={buttonRef}
+              className={classNames(
+                'absolute bottom-1.5 top-1.5 w-1 rounded-full bg-zinc-100 outline-none',
+                '-translate-x-1/2',
+              )}
+              value={value}
+              onKeyDown={handleKeyDown}
+              onClick={() => buttonRef.current?.focus()}
+              style={{
+                left: `${((value - min) / (max - min)) * 100}%`,
+              }}
+            />
+          </div>
+        </div>
+      </div>
       <input
         className={classNames(
-          'ml-3 w-16 rounded-md border border-zinc-800 bg-transparent text-center text-zinc-300 transition-all duration-200 ease-in-out hover:border-zinc-700',
-          'focus:ring-grdt-to focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-950',
+          'ml-3 w-16 rounded-xl bg-transparent text-center text-zinc-100',
+          'ease-out-sine transition-all duration-300 will-change-transform',
+          'outline-none',
+          'shadow-element_inactive hover:shadow-element_focused focus:shadow-element_focused',
         )}
         value={value}
         onChange={(e) => onChange(parseFloat(e.target.value))}
+        onKeyDown={(e) => handleKeyDown(e, true)}
       />
     </div>
   );

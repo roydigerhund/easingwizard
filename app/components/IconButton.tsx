@@ -1,34 +1,51 @@
 import { classNames } from '~/utils/class-names';
 
 type Props = {
-  text: string;
-  icon: React.ReactNode;
-  isActive: boolean;
+  className?: string;
+  label: string;
+  isActive?: boolean;
   onClick: () => void;
+  children: React.ReactNode;
 };
 
-export default function IconButton({ isActive, text, icon, onClick }: Props) {
+export default function IconButton({ className, label, isActive, onClick, children }: Props) {
   return (
     <button
       className={classNames(
-        'relative z-0 flex items-center gap-2 rounded-xl border px-4 py-2.5',
-        isActive ? 'border-zinc-500 text-zinc-300' : 'border-zinc-800 text-zinc-500 hover:text-zinc-300',
+        className,
+        'group relative flex size-10 items-center justify-center',
+        isActive ? 'text-zinc-100' : 'text-zinc-500',
+        'shadow-element_inactive hover:shadow-element_focused focus:shadow-element_focused',
+        'rounded-xl outline-none',
+        'ease-out-sine transition-all duration-300 will-change-transform',
       )}
-      onClick={onClick}
+      onClick={() => onClick()}
     >
-      <svg
-        viewBox="0 0 100 100"
-        strokeWidth={8}
-        strokeLinecap="round"
-        strokeLinejoin="round"
+      {children}
+      <span
         className={classNames(
-          'size-6 overflow-visible',
-          isActive ? 'stroke-[url(#curve-gradient)]' : 'stroke-current',
+          'absolute inset-0 rounded-xl',
+          'ease-out-sine transition-all duration-100',
+          'group-hover:ease-in-sine group-hover:duration-200',
+          'group-focus:ease-in-sine group-focus:duration-200',
+          isActive
+            ? 'shadow-element_border_active group-hover:shadow-element_border_inactive group-focus:shadow-element_border_inactive'
+            : 'shadow-element_border_inactive',
+        )}
+      />
+      <span
+        className={classNames(
+          'will-change-transform',
+          'opacity-0 group-hover:opacity-100',
+          'translate-y-2 group-hover:translate-y-0',
+          'pointer-events-none absolute bottom-full mb-2',
+          'rounded-md border border-zinc-700 bg-zinc-950 px-2 py-1',
+          'whitespace-nowrap text-base text-zinc-100',
+          'ease-overshoot transition-all duration-300',
         )}
       >
-        {icon}
-      </svg>
-      <span className={classNames('text-xs uppercase tracking-widest')}>{text}</span>
+        {label}
+      </span>
     </button>
   );
 }

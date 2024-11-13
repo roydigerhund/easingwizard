@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { classNames } from '~/utils/class-names';
+import { shortTransition } from '~/utils/common-classes';
 
 type Props<T> = {
   className?: string;
@@ -20,7 +21,10 @@ export default function StepSlider<T>({ className, label, value, options, onChan
     <label className={classNames(className, 'group flex py-1')}>
       <button
         tabIndex={-1}
-        className="mr-6 flex w-16 cursor-default items-center font-light tracking-wide text-zinc-500 transition-all duration-200 ease-in-out group-focus-within:text-zinc-400 group-hover:text-zinc-400"
+        className={classNames(
+          'mr-6 flex w-16 cursor-default items-center font-light tracking-wide text-zinc-500 group-focus-within:text-zinc-400 group-hover:text-zinc-400',
+          shortTransition,
+        )}
         onClick={() => inputRef.current?.focus()}
       >
         {label}
@@ -28,7 +32,7 @@ export default function StepSlider<T>({ className, label, value, options, onChan
       <span className="relative z-0 grid grow items-center justify-items-start">
         <input
           ref={inputRef}
-          className="styled-step-slider relative z-30 col-span-full row-span-full w-full transition-all duration-200 ease-in-out"
+          className={classNames('styled-step-slider relative z-30 col-span-full row-span-full w-full')}
           type="range"
           value={indexValue}
           onChange={(e) => {
@@ -43,25 +47,25 @@ export default function StepSlider<T>({ className, label, value, options, onChan
           max={max}
         />
         <span
-          className="relative z-20 col-span-full row-span-full h-0.5 rounded-md bg-white"
+          className="relative z-10 col-span-full row-span-full h-0.5 rounded-lg bg-zinc-100"
           style={{ width: `${(indexValue / max) * 100}%` }}
         />
-        <span className="relative z-10 col-span-full row-span-full flex w-full items-center justify-between">
+        <span className="relative z-20 col-span-full row-span-full flex w-full items-center justify-between">
           {options.map((option) => (
             <span
               key={option + ''}
               className={classNames(
                 'h-4 w-4 rounded-full',
                 indexValue === options.indexOf(option)
-                  ? 'bg-white'
+                  ? 'bg-zinc-100'
                   : indexValue > options.indexOf(option)
-                    ? 'bg-none'
+                    ? 'border-4 border-zinc-950 bg-zinc-400'
                     : 'bg-zinc-800',
               )}
             />
           ))}
         </span>
-        <span className="relative col-span-full row-span-full h-0.5 w-full rounded-md bg-zinc-800" />
+        <span className="relative col-span-full row-span-full h-0.5 w-full rounded-lg bg-zinc-800" />
       </span>
     </label>
   );

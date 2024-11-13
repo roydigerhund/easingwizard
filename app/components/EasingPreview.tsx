@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useEasingStore } from '~/state/easing-store';
 import { AnimationType, PreviewPlayMode } from '~/types-and-enums';
-import { classNames } from '~/utils/class-names';
 import { humanize } from '~/utils/string';
 import Card from './Card';
 import CardHeadline from './CardHeadline';
@@ -9,9 +8,20 @@ import EasingPreviewElement from './EasingPreviewElement';
 import IconButton from './IconButton';
 import InputGroup from './InputGroup';
 import MeshBase from './MeshBase';
-import SelectGroup from './SelectGroup';
 import Slider from './Slider';
-import Toggle from './Toggle';
+import CloneIcon from './icons/CloneIcon';
+import HeightIcon from './icons/HeightIcon';
+import InfinityIcon from './icons/InfinityIcon';
+import MoveXIcon from './icons/MoveXIcon';
+import MoveYIcon from './icons/MoveYIcon';
+import OpacityIcon from './icons/OpacityIcon';
+import PlayIcon from './icons/PlayIcon';
+import RotateIcon from './icons/RotateIcon';
+import RotateXIcon from './icons/RotateXIcon';
+import RotateYIcon from './icons/RotateYIcon';
+import ScaleIcon from './icons/ScaleIcon';
+import ShapeIcon from './icons/ShapeIcon';
+import WidthIcon from './icons/WidthIcon';
 
 export default function EasingPreview() {
   const setState = useEasingStore((state) => state.setState);
@@ -21,6 +31,7 @@ export default function EasingPreview() {
   const previewAnimationType = useEasingStore((state) => state.previewAnimationType);
   const [counter, setCounter] = useState(0);
   const [hidePreviewElement, setHidePreviewElement] = useState(false);
+  const [previewHasRestarted, setPreviewHasRestarted] = useState(false);
 
   useEffect(() => {
     // hide preview during duration change
@@ -29,6 +40,16 @@ export default function EasingPreview() {
     }, 500);
     return () => clearTimeout(timeout);
   }, [previewDuration]);
+
+  useEffect(() => {
+    // hide preview during duration change
+    if (previewHasRestarted) {
+      const timeout = setTimeout(() => {
+        setPreviewHasRestarted(false);
+      }, previewDuration);
+      return () => clearTimeout(timeout);
+    }
+  }, [previewHasRestarted, previewDuration]);
 
   return (
     <Card className="z-10 py-5">
@@ -39,6 +60,41 @@ export default function EasingPreview() {
       <MeshBase>{!hidePreviewElement && <EasingPreviewElement counter={counter} />}</MeshBase>
 
       <InputGroup>
+        <div className="flex justify-between">
+          <IconButton
+            label="Show Linear Comparison"
+            isActive={previewShowLinear}
+            onClick={() => setState({ previewShowLinear: !previewShowLinear })}
+          >
+            <CloneIcon className="size-7" />
+          </IconButton>
+          <div className="flex gap-2">
+            {previewPlayMode === PreviewPlayMode.ONCE && (
+              <IconButton
+                label="Play Again"
+                isActive={previewHasRestarted}
+                onClick={() => {
+                  setCounter((prev) => prev + 1);
+                  setPreviewHasRestarted(true);
+                }}
+              >
+                <PlayIcon className="size-7" />
+              </IconButton>
+            )}
+            <IconButton
+              label="Play Preview Infinite"
+              isActive={previewPlayMode === PreviewPlayMode.INFINITE}
+              onClick={() =>
+                setState({
+                  previewPlayMode:
+                    previewPlayMode === PreviewPlayMode.ONCE ? PreviewPlayMode.INFINITE : PreviewPlayMode.ONCE,
+                })
+              }
+            >
+              <InfinityIcon className="size-7" />
+            </IconButton>
+          </div>
+        </div>
         <Slider
           label="Duration"
           value={previewDuration}
@@ -51,45 +107,40 @@ export default function EasingPreview() {
           max={2000}
           step={50}
         />
-        <SelectGroup
-          label="Play Mode"
-          value={previewPlayMode}
-          options={Object.values(PreviewPlayMode).map((value) => ({ label: humanize(value), value }))}
-          onChange={(value) => setState({ previewPlayMode: value })}
-        />
-        <Toggle
-          label="Show Linear"
-          value={previewShowLinear}
-          onChange={(value) => setState({ previewShowLinear: value })}
-        />
-      </InputGroup>
-      {/* Preview Elements */}
-      <div className={classNames('mt-8 flex justify-between')}>
-        {/* Controls */}
-        <div style={{ marginBottom: '20px' }}>
-          {previewPlayMode === PreviewPlayMode.ONCE && (
-            <button style={{ marginLeft: '20px' }} onClick={() => setCounter((prev) => prev + 1)}>
-              Restart
-            </button>
-          )}
+        <div className="relative grid grid-cols-5 gap-4 self-start">
+          {Object.values(AnimationType).map((type) => (
+            <IconButton
+              key={type}
+              label={humanize(type)}
+              isActive={previewAnimationType === type}
+              onClick={() => {
+                if (type !== previewAnimationType) {
+                  setCounter(0);
+                }
+                if (type === previewAnimationType && previewPlayMode === PreviewPlayMode.ONCE) {
+                  setCounter((prev) => prev + 1);
+                }
+                setState({ previewAnimationType: type });
+              }}
+            >
+              {icons[type]}
+            </IconButton>
+          ))}
         </div>
-      </div>
-      <div className="relative mt-8 flex flex-wrap gap-4">
-        {Object.values(AnimationType).map((type) => (
-          <IconButton
-            key={type}
-            text={humanize(type)}
-            isActive={previewAnimationType === type}
-            onClick={() => {
-              if (previewAnimationType !== type) {
-                setCounter(0);
-              }
-              setState({ previewAnimationType: type });
-            }}
-            icon={<path d="M0,100 C25,75 75,25 100,0" />}
-          />
-        ))}
-      </div>
+      </InputGroup>
     </Card>
   );
 }
+
+const icons: Record<AnimationType, React.ReactNode> = {
+  [AnimationType.MOVE_X]: <MoveXIcon className="size-7" />,
+  [AnimationType.MOVE_Y]: <MoveYIcon className="size-7" />,
+  [AnimationType.WIDTH]: <WidthIcon className="size-7" />,
+  [AnimationType.HEIGHT]: <HeightIcon className="size-7" />,
+  [AnimationType.SCALE]: <ScaleIcon className="size-7" />,
+  [AnimationType.ROTATE]: <RotateIcon className="size-7" />,
+  [AnimationType.OPACITY]: <OpacityIcon className="size-7" />,
+  [AnimationType.ROTATE_X]: <RotateXIcon className="size-7" />,
+  [AnimationType.ROTATE_Y]: <RotateYIcon className="size-7" />,
+  [AnimationType.SHAPE]: <ShapeIcon className="size-7" />,
+};

@@ -68,7 +68,8 @@ export enum WiggleCurve {
 }
 
 export enum AnimationType {
-  MOVE = 'move',
+  MOVE_X = 'moveX',
+  MOVE_Y = 'moveY',
   WIDTH = 'width',
   HEIGHT = 'height',
   SCALE = 'scale',

@@ -1,5 +1,9 @@
-import { LinearEasingAccuracy, OvershootStyle, Point } from '~/types-and-enums';
+import { BezierValue, LinearEasingAccuracy, OvershootStyle, Point } from '~/types-and-enums';
 import { roundTo } from './numbers';
+
+export function createCubicBezierString(value: BezierValue): string {
+  return `cubic-bezier(${value.join(', ')})`;
+}
 
 export function generateLinearEasing(
   easingFunction: (t: number) => number,

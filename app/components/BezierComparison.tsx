@@ -1,19 +1,16 @@
 import { useMemo, useState } from 'react';
+import { bezierEasings } from '~/data/easing';
 import { LinearEasingAccuracy } from '~/types-and-enums';
 import { classNames } from '~/utils/class-names';
 import { generateLinearEasing } from '~/utils/easing';
+import { humanize } from '~/utils/string';
 import EditorBase from './EditorBase';
 import EditorBaseLine from './EditorBaseLine';
 import MeshBase from './MeshBase';
-import { bezierEasings } from '~/data/easing';
-import { humanize } from '~/utils/string';
-
 
 const types = Object.keys(bezierEasings) as (keyof typeof bezierEasings)[];
 const options = types.flatMap((type) => Object.values(bezierEasings[type]));
 const names = types.flatMap((type) => Object.keys(bezierEasings[type]).map((name) => humanize(`${type}_${name}`)));
-
-console.log('options', options);
 
 export default function BezierComparison() {
   const [bezierValue, setBezierValue] = useState(bezierEasings.in.sine.bezierValue);
@@ -99,11 +96,11 @@ export default function BezierComparison() {
         <MeshBase>
           <div className="absolute inset-0 z-10 grid items-center justify-items-center">
             <div
-              className="col-span-full row-span-full size-1/4 rounded-xl !border-none bg-grdt-from"
+              className="bg-grdt-from col-span-full row-span-full size-1/4 rounded-xl !border-none"
               style={animationStyles(bezierValue.join(', '))}
             />
             <div
-              className="col-span-full row-span-full size-1/4 rounded-xl border border-grdt-to opacity-50"
+              className="border-grdt-to col-span-full row-span-full size-1/4 rounded-xl border opacity-50"
               style={animationStyles('linear')}
             />
           </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useEasingStore } from '~/state/easing-store';
-import { EasingType, PreviewPlayMode } from '~/types-and-enums';
+import { AnimationType, EasingType, PreviewPlayMode } from '~/types-and-enums';
 import { classNames } from '~/utils/class-names';
 
 export default function EasingPreviewElement({ counter }: { counter: number }) {
@@ -25,17 +25,22 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
     }
   }, [clicked]);
 
-  // TODO: bezierValue should be a string
-  const value =
-    easingType === EasingType.BEZIER
-      ? `cubic-bezier(${bezierValue.join(', ')})`
-      : easingType === EasingType.OVERSHOOT
-        ? overshootValue
-        : easingType === EasingType.SPRING
-          ? springValue
-          : easingType === EasingType.BOUNCE
-            ? bounceValue
-            : wiggleValue;
+  const getValue = () => {
+    switch (easingType) {
+      case EasingType.BEZIER:
+        return bezierValue;
+      case EasingType.OVERSHOOT:
+        return overshootValue;
+      case EasingType.SPRING:
+        return springValue;
+      case EasingType.BOUNCE:
+        return bounceValue;
+      case EasingType.WIGGLE:
+        return wiggleValue;
+    }
+  };
+
+  const value = getValue();
 
   const animationStyles = (easing: string) => ({
     animationDuration: `${previewDuration * (previewPlayMode === PreviewPlayMode.INFINITE ? 4 : 1)}ms`,
@@ -52,25 +57,46 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
   return (
     <div
       className={classNames(
-        'absolute inset-0 z-10 grid items-center justify-items-center',
+        'absolute inset-0 z-20 grid items-center justify-items-center',
         // TODO let the element wiggle, turn turquoise and explode when clicked
         clicked && 'opacity-50',
       )}
+      style={{
+        // settings for 3d perspective
+        perspective: '250px',
+        perspectiveOrigin: '50% 50%',
+        transformStyle: 'preserve-3d',
+      }}
     >
-      <button
+      <div
+        role="button"
         tabIndex={-1}
-        className="bg-grdt-from col-span-full row-span-full size-1/4 cursor-help rounded-xl !border-none"
+        className="bg-grdt-from relative col-span-full row-span-full size-1/4 cursor-help rounded-xl !border-none"
         style={animationStyles(value)}
         onClick={() => setClicked(!clicked)}
+        onKeyUp={(e) => e.key === 'Enter' && setClicked(!clicked)}
       />
 
       <div
         className={classNames(
-          'border-grdt-to pointer-events-none col-span-full row-span-full size-1/4 rounded-xl border',
+          'pointer-events-none col-span-full row-span-full grid size-full items-center justify-items-center',
           previewShowLinear ? 'opacity-50' : 'opacity-0',
         )}
-        style={animationStyles('linear')}
-      />
+        style={{
+          // settings for 3d perspective
+          perspective: '250px',
+          perspectiveOrigin: '50% 50%',
+          transformStyle: 'preserve-3d',
+        }}
+      >
+        <div
+          className={classNames(
+            'border-grdt-to rounded-xl border',
+            [AnimationType.ROTATE_X, AnimationType.ROTATE_Y].includes(previewAnimationType) ? 'size-3/6' : 'size-1/4',
+          )}
+          style={animationStyles('linear')}
+        />
+      </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { classNames } from '~/utils/class-names';
+import { shortTransition } from '~/utils/common-classes';
 
 type Props = {
   className?: string;
@@ -15,7 +16,10 @@ export default function Toggle({ className, label, value, onChange }: Props) {
     <div className={classNames(className, 'group/all relative flex')}>
       <button
         tabIndex={-1}
-        className="mr-6 flex grow cursor-default items-center font-light tracking-wide text-zinc-500 transition-all duration-200 ease-in-out group-focus-within/all:text-zinc-400 group-hover/all:text-zinc-400"
+        className={classNames(
+          'mr-6 flex grow cursor-default items-center font-light tracking-wide text-zinc-500 group-focus-within/all:text-zinc-100 group-hover/all:text-zinc-100',
+          shortTransition,
+        )}
         onClick={() => inputRef.current?.focus()}
       >
         {label}
@@ -33,18 +37,33 @@ export default function Toggle({ className, label, value, onChange }: Props) {
         <span className="sr-only">{label}</span>
         <span
           className={classNames(
-            'relative block h-7 w-14 cursor-pointer rounded-full border border-zinc-800 transition-all duration-200 ease-in-out',
-            'group-focus-within:ring-grdt-to group-focus-within:ring-2 group-focus-within:ring-offset-2 group-focus-within:ring-offset-zinc-950',
-            value && 'bg-zinc-800',
+            'relative block h-7 w-14 cursor-pointer rounded-full',
+            'shadow-element_inactive group-hover:shadow-element_focused group-focus-within:shadow-element_focused',
+            'ease-out-sine transition-all duration-300 will-change-transform',
           )}
         >
           <span
             className={classNames(
-              'absolute top-0.5 mx-0.5 block h-[1.375rem] w-[1.375rem] rounded-full transition-all duration-200 ease-in-out',
-              value ? 'group-active:left-[1.375rem] group-active:w-7' : 'group-active:w-7',
+              'absolute inset-0 rounded-full',
+              'ease-out-sine transition-all duration-100',
+              'group-hover:ease-in-sine group-hover:duration-200',
+              'group-focus:ease-in-sine group-focus:duration-200',
+              value
+                ? 'shadow-element_border_active group-hover:shadow-element_border_inactive group-focus:shadow-element_border_inactive'
+                : 'shadow-element_border_inactive',
+            )}
+          />
+          <span
+            className={classNames('absolute inset-1.5 rounded-full bg-zinc-900', value ? 'opacity-100' : 'opacity-0', shortTransition)}
+          />
+          <span
+            className={classNames(
+              'absolute top-1 mx-1 block h-5 w-5 rounded-full',
+              shortTransition,
+              value ? 'group-active:left-5 group-active:w-7' : 'group-active:w-7',
               value ? 'left-7' : 'left-0',
               value ? 'origin-right' : 'origin-left',
-              value ? 'bg-white' : 'bg-zinc-500',
+              value ? 'bg-zinc-100' : 'bg-zinc-500',
             )}
           />
         </span>

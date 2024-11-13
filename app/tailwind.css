@@ -6,6 +6,8 @@
   --grdt-from: #5e18f5;
   --grdt-via: #50aaf8;
   --grdt-to: #6ae5b5;
+  --border-active: #a1a1aa;
+  --border-inactive: #27272a;
 }
 
 html,
@@ -15,26 +17,11 @@ body {
 
 /* STYLED SLIDER */
 input[type='range'].styled-slider {
-  height: 2.375rem;
   -webkit-appearance: none;
   appearance: none;
-  cursor: ew-resize;
-  @apply rounded-md border border-zinc-800 bg-zinc-950 p-0.5;
-  --slider-bg: transparent;
-  --slider-progress-bg: theme(colors.zinc.800);
-  --slider-thumb-bg: #ffffff;
+  background: transparent;
 }
 
-/*progress support*/
-input[type='range'].styled-slider.slider-progress {
-  --range: calc(var(--max) - var(--min));
-  --ratio: calc((var(--value) - var(--min)) / var(--range));
-  --sx: calc(0.5 * 0.5rem + var(--ratio) * (100% - 0.5rem));
-}
-
-input[type='range'].styled-slider:hover {
-  @apply border-zinc-700;
-}
 
 input[type='range'].styled-slider:focus {
   outline: none;
@@ -44,56 +31,13 @@ input[type='range'].styled-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 0.5rem;
   height: 2rem;
-  border-radius: 1rem;
-  background: var(--slider-thumb-bg);
-  border: none;
-  box-shadow: none;
-  margin-top: 0;
-  transition: all 200ms ease-in-out;
+  background: #ffffff;
 }
 
 input[type='range'].styled-slider::-moz-range-thumb {
   width: 0.5rem;
   height: 2rem;
-  border-radius: 1rem;
-  background: var(--slider-thumb-bg);
-  border: none;
-  box-shadow: none;
-  transition: all 200ms ease-in-out;
-}
-
-input[type='range'].styled-slider:focus::-webkit-slider-thumb {
-  @apply ring-grdt-to ring-2 ring-offset-2 ring-offset-zinc-950;
-}
-
-input[type='range'].styled-slider:focus::-moz-range-thumb {
-  @apply ring-grdt-to ring-2 ring-offset-2 ring-offset-zinc-950;
-}
-
-input[type='range'].styled-slider::-webkit-slider-runnable-track {
-  height: 2rem;
-  border: none;
-  border-radius: 0.25rem;
-  background: var(--slider-bg);
-  box-shadow: none;
-}
-input[type='range'].styled-slider::-moz-range-track {
-  height: 2rem;
-  border: none;
-  border-radius: 0.25rem;
-  background: var(--slider-bg);
-  box-shadow: none;
-}
-
-input[type='range'].styled-slider.slider-progress::-webkit-slider-runnable-track {
-  background:
-    linear-gradient(var(--slider-progress-bg), var(--slider-progress-bg)) 0 / var(--sx) 100% no-repeat,
-    var(--slider-bg);
-}
-input[type='range'].styled-slider.slider-progress::-moz-range-track {
-  background:
-    linear-gradient(var(--slider-progress-bg), var(--slider-progress-bg)) 0 / var(--sx) 100% no-repeat,
-    var(--slider-bg);
+  background: #ffffff;
 }
 
 /* STYLED STEP SLIDER */
@@ -105,10 +49,6 @@ input[type='range'].styled-step-slider {
   background: transparent;
   --slider-bg: transparent;
   --slider-thumb-bg: #ffffff;
-}
-
-input[type='range'].styled-step-slider:hover {
-  @apply border-zinc-700;
 }
 
 input[type='range'].styled-step-slider:focus {
@@ -163,12 +103,20 @@ input[type='range'].styled-step-slider:focus::-moz-range-thumb {
 }
 
 /* ANIMATE ONCE */
-@keyframes moveAnimationOnce {
+@keyframes moveXAnimationOnce {
   0% {
     transform: translateX(-100%);
   }
   100% {
     transform: translateX(100%);
+  }
+}
+@keyframes moveYAnimationOnce {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
   }
 }
 @keyframes widthAnimationOnce {
@@ -193,7 +141,7 @@ input[type='range'].styled-step-slider:focus::-moz-range-thumb {
     border-width: 1px;
   }
   100% {
-    transform: scale(3);
+    transform: scale(2);
     border-width: 0.33px;
   }
 }
@@ -218,7 +166,8 @@ input[type='range'].styled-step-slider:focus::-moz-range-thumb {
     transform: rotateX(0deg);
   }
   100% {
-    transform: rotateX(90deg);
+    /* 179.9 instead of 180 prevents a rotation in the wrong direction when the curve first goes into negative values */
+    transform: rotateX(179.9deg);
   }
 }
 @keyframes rotateYAnimationOnce {
@@ -226,7 +175,8 @@ input[type='range'].styled-step-slider:focus::-moz-range-thumb {
     transform: rotateY(0deg);
   }
   100% {
-    transform: rotateY(90deg);
+    /* 179.9 instead of 180 prevents a rotation in the wrong direction when the curve first goes into negative values */
+    transform: rotateY(179.9deg);
   }
 }
 @keyframes shapeAnimationOnce {
@@ -238,12 +188,20 @@ input[type='range'].styled-step-slider:focus::-moz-range-thumb {
   }
 }
 /* ANIMATE ONCE REVERSE */
-@keyframes moveAnimationOnceReverse {
+@keyframes moveXAnimationOnceReverse {
   0% {
     transform: translateX(100%);
   }
   100% {
     transform: translateX(-100%);
+  }
+}
+@keyframes moveYAnimationOnceReverse {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(-100%);
   }
 }
 @keyframes widthAnimationOnceReverse {
@@ -264,7 +222,7 @@ input[type='range'].styled-step-slider:focus::-moz-range-thumb {
 }
 @keyframes scaleAnimationOnceReverse {
   0% {
-    transform: scale(3);
+    transform: scale(2);
     border-width: 0.33px;
   }
   100% {
@@ -290,7 +248,8 @@ input[type='range'].styled-step-slider:focus::-moz-range-thumb {
 }
 @keyframes rotateXAnimationOnceReverse {
   0% {
-    transform: rotateX(90deg);
+    /* 179.9 instead of 180 prevents a rotation in the wrong direction when the curve first goes into negative values */
+    transform: rotateX(179.9deg);
   }
   100% {
     transform: rotateX(0deg);
@@ -298,7 +257,8 @@ input[type='range'].styled-step-slider:focus::-moz-range-thumb {
 }
 @keyframes rotateYAnimationOnceReverse {
   0% {
-    transform: rotateY(90deg);
+    /* 179.9 instead of 180 prevents a rotation in the wrong direction when the curve first goes into negative values */
+    transform: rotateY(179.9deg);
   }
   100% {
     transform: rotateY(0deg);
@@ -313,7 +273,7 @@ input[type='range'].styled-step-slider:focus::-moz-range-thumb {
   }
 }
 /* ANIMATE INFINITE */
-@keyframes moveAnimationInfinite {
+@keyframes moveXAnimationInfinite {
   0%,
   12.5%,
   87.5%,
@@ -323,6 +283,18 @@ input[type='range'].styled-step-slider:focus::-moz-range-thumb {
   37.5%,
   62.5% {
     transform: translateX(100%);
+  }
+}
+@keyframes moveYAnimationInfinite {
+  0%,
+  12.5%,
+  87.5%,
+  100% {
+    transform: translateY(-100%);
+  }
+  37.5%,
+  62.5% {
+    transform: translateY(100%);
   }
 }
 @keyframes widthAnimationInfinite {
@@ -359,7 +331,7 @@ input[type='range'].styled-step-slider:focus::-moz-range-thumb {
   }
   37.5%,
   62.5% {
-    transform: scale(3);
+    transform: scale(2);
     border-width: 0.33px;
   }
 }
@@ -396,7 +368,8 @@ input[type='range'].styled-step-slider:focus::-moz-range-thumb {
   }
   37.5%,
   62.5% {
-    transform: rotateX(90deg);
+    /* 179.9 instead of 180 prevents a rotation in the wrong direction when the curve first goes into negative values */
+    transform: rotateX(179.9deg);
   }
 }
 @keyframes rotateYAnimationInfinite {
@@ -408,7 +381,8 @@ input[type='range'].styled-step-slider:focus::-moz-range-thumb {
   }
   37.5%,
   62.5% {
-    transform: rotateY(90deg);
+    /* 179.9 instead of 180 prevents a rotation in the wrong direction when the curve first goes into negative values */
+    transform: rotateY(179.9deg);
   }
 }
 @keyframes shapeAnimationInfinite {
@@ -425,12 +399,20 @@ input[type='range'].styled-step-slider:focus::-moz-range-thumb {
 }
 
 /* ANIMATE WIGGLE ONCE */
-@keyframes moveAnimationWiggleOnce {
+@keyframes moveXAnimationWiggleOnce {
   0% {
     transform: translateX(0%);
   }
   100% {
     transform: translateX(100%);
+  }
+}
+@keyframes moveYAnimationWiggleOnce {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(100%);
   }
 }
 @keyframes widthAnimationWiggleOnce {
@@ -455,7 +437,7 @@ input[type='range'].styled-step-slider:focus::-moz-range-thumb {
     border-width: 1px;
   }
   100% {
-    transform: scale(3);
+    transform: scale(2);
     border-width: 0.33px;
   }
 }
@@ -480,7 +462,8 @@ input[type='range'].styled-step-slider:focus::-moz-range-thumb {
     transform: rotateX(0deg);
   }
   100% {
-    transform: rotateX(90deg);
+    /* 179.9 instead of 180 prevents a rotation in the wrong direction when the curve first goes into negative values */
+    transform: rotateX(179.9deg);
   }
 }
 @keyframes rotateYAnimationWiggleOnce {
@@ -488,7 +471,8 @@ input[type='range'].styled-step-slider:focus::-moz-range-thumb {
     transform: rotateY(0deg);
   }
   100% {
-    transform: rotateY(90deg);
+    /* 179.9 instead of 180 prevents a rotation in the wrong direction when the curve first goes into negative values */
+    transform: rotateY(179.9deg);
   }
 }
 @keyframes shapeAnimationWiggleOnce {
@@ -500,13 +484,22 @@ input[type='range'].styled-step-slider:focus::-moz-range-thumb {
   }
 }
 /* ANIMATE WIGGLE INFINITE */
-@keyframes moveAnimationWiggleInfinite {
+@keyframes moveXAnimationWiggleInfinite {
   0%,
   25% {
     transform: translateX(0%);
   }
   100% {
     transform: translateX(100%);
+  }
+}
+@keyframes moveYAnimationWiggleInfinite {
+  0%,
+  25% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(100%);
   }
 }
 @keyframes widthAnimationWiggleInfinite {
@@ -534,7 +527,7 @@ input[type='range'].styled-step-slider:focus::-moz-range-thumb {
     border-width: 1px;
   }
   100% {
-    transform: scale(3);
+    transform: scale(2);
     border-width: 0.33px;
   }
 }
@@ -562,7 +555,8 @@ input[type='range'].styled-step-slider:focus::-moz-range-thumb {
     transform: rotateX(0deg);
   }
   100% {
-    transform: rotateX(90deg);
+    /* 179.9 instead of 180 prevents a rotation in the wrong direction when the curve first goes into negative values */
+    transform: rotateX(179.9deg);
   }
 }
 @keyframes rotateYAnimationWiggleInfinite {
@@ -571,7 +565,8 @@ input[type='range'].styled-step-slider:focus::-moz-range-thumb {
     transform: rotateY(0deg);
   }
   100% {
-    transform: rotateY(90deg);
+    /* 179.9 instead of 180 prevents a rotation in the wrong direction when the curve first goes into negative values */
+    transform: rotateY(179.9deg);
   }
 }
 @keyframes shapeAnimationWiggleInfinite {

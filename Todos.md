@@ -1,6 +1,8 @@
 - Recognize Style in custom ease mode
-- add Out In Style with curves
 - Progression line for animation preview or visual signal when it restarts
-- animierter Farbverlauf
-- Farbe von Preview auch animieren
-- bei Wiggle immer die Once Animation nehmen und die Zeit nicht hochskalieren
+
+- timings in preview
+- check all colors
+- responsive design
+- input validation
+- Spring/Wiggle/etc Rotate 3D in wrong direction

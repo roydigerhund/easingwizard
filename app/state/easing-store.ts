@@ -23,6 +23,7 @@ import {
   SpringCurve,
   WiggleCurve,
 } from '~/types-and-enums';
+import { createCubicBezierString } from '~/utils/easing';
 
 export type EasingState = {
   // General
@@ -31,7 +32,8 @@ export type EasingState = {
   // Bezier
   bezierStyle: BezierStyle;
   bezierCurve: BezierCurve;
-  bezierValue: BezierValue;
+  bezierRawValue: BezierValue;
+  bezierValue: string;
   // Overeshoot
   overshootStyle: OvershootStyle;
   overshootCurve: OvershootCurve;
@@ -72,7 +74,8 @@ type EasingAction = {
 const defaultBezierState = {
   bezierStyle: BezierStyle.IN_OUT,
   bezierCurve: BezierCurve.CUBIC,
-  bezierValue: defaultBezierFunction,
+  bezierRawValue: defaultBezierFunction,
+  bezierValue: createCubicBezierString(defaultBezierFunction),
 };
 
 const defaultOvershootState = {
@@ -110,7 +113,7 @@ const defaultEasingContext: EasingState = {
   animationDuration: 750,
   previewDuration: 750,
   previewPlayMode: PreviewPlayMode.INFINITE,
-  previewAnimationType: AnimationType.MOVE,
+  previewAnimationType: AnimationType.MOVE_X,
   previewShowLinear: false,
   editorExtraSpaceTop: false,
   editorExtraSpaceBottom: false,

@@ -1,5 +1,6 @@
 import { useEasingStore } from '~/state/easing-store';
 import { BezierValue } from '~/types-and-enums';
+import { createCubicBezierString } from '~/utils/easing';
 import { roundTo } from '~/utils/numbers';
 import Drag from './Drag';
 import EditorBase from './EditorBase';
@@ -9,13 +10,13 @@ import Slider from './Slider';
 import Toggle from './Toggle';
 
 export default function BezierEditor() {
-  const bezierValue = useEasingStore((state) => state.bezierValue);
+  const bezierRawValue = useEasingStore((state) => state.bezierRawValue);
   const editorExtraSpaceTop = useEasingStore((state) => state.editorExtraSpaceTop);
   const editorExtraSpaceBottom = useEasingStore((state) => state.editorExtraSpaceBottom);
   const setState = useEasingStore((state) => state.setState);
 
   const onChange = (value: BezierValue) => {
-    setState({ bezierValue: value });
+    setState({ bezierRawValue: value, bezierValue: createCubicBezierString(value) });
   };
 
   return (
@@ -24,11 +25,11 @@ export default function BezierEditor() {
         {/* Bezier Curve */}
         <EditorBaseLine>
           <path
-            d={`M0,100 C${bezierValue[0] * 100},${100 - bezierValue[1] * 100} ${bezierValue[2] * 100},${100 - bezierValue[3] * 100} 100,0`}
+            d={`M0,100 C${bezierRawValue[0] * 100},${100 - bezierRawValue[1] * 100} ${bezierRawValue[2] * 100},${100 - bezierRawValue[3] * 100} 100,0`}
             strokeWidth="2"
           />
           <path
-            d={`M0,100 C${bezierValue[0] * 100},${100 - bezierValue[1] * 100} ${bezierValue[2] * 100},${100 - bezierValue[3] * 100} 100,0`}
+            d={`M0,100 C${bezierRawValue[0] * 100},${100 - bezierRawValue[1] * 100} ${bezierRawValue[2] * 100},${100 - bezierRawValue[3] * 100} 100,0`}
             strokeWidth="6"
             filter='url("#f1")'
           />
@@ -46,16 +47,16 @@ export default function BezierEditor() {
             className="text-grdt-from"
             x1={0}
             y1={100}
-            x2={bezierValue[0] * 100}
-            y2={100 - bezierValue[1] * 100}
+            x2={bezierRawValue[0] * 100}
+            y2={100 - bezierRawValue[1] * 100}
             stroke="currentColor"
           />
           <line
             className="text-grdt-to"
             x1={100}
             y1={0}
-            x2={bezierValue[2] * 100}
-            y2={100 - bezierValue[3] * 100}
+            x2={bezierRawValue[2] * 100}
+            y2={100 - bezierRawValue[3] * 100}
             stroke="currentColor"
           />
         </svg>
@@ -73,10 +74,10 @@ export default function BezierEditor() {
             minY={-100}
             maxX={100}
             maxY={200}
-            x={bezierValue[0] * 100}
-            y={100 - bezierValue[1] * 100}
+            x={bezierRawValue[0] * 100}
+            y={100 - bezierRawValue[1] * 100}
             onChange={(x, y) =>
-              onChange([roundTo(x / 100, 3), roundTo(1 - y / 100, 3), bezierValue[2], bezierValue[3]])
+              onChange([roundTo(x / 100, 3), roundTo(1 - y / 100, 3), bezierRawValue[2], bezierRawValue[3]])
             }
           />
           <Drag
@@ -85,10 +86,10 @@ export default function BezierEditor() {
             minY={-100}
             maxX={100}
             maxY={200}
-            x={bezierValue[2] * 100}
-            y={100 - bezierValue[3] * 100}
+            x={bezierRawValue[2] * 100}
+            y={100 - bezierRawValue[3] * 100}
             onChange={(x, y) =>
-              onChange([bezierValue[0], bezierValue[1], roundTo(x / 100, 3), roundTo(1 - y / 100, 3)])
+              onChange([bezierRawValue[0], bezierRawValue[1], roundTo(x / 100, 3), roundTo(1 - y / 100, 3)])
             }
           />
         </svg>
@@ -107,32 +108,32 @@ export default function BezierEditor() {
         />
         <Slider
           label="X1"
-          value={bezierValue[0]}
-          onChange={(value) => setState({ bezierValue: [value, bezierValue[1], bezierValue[2], bezierValue[3]] })}
+          value={bezierRawValue[0]}
+          onChange={(value) => onChange([value, bezierRawValue[1], bezierRawValue[2], bezierRawValue[3]])}
           min={0}
           max={1}
           step={0.01}
         />
         <Slider
           label="Y1"
-          value={bezierValue[1]}
-          onChange={(value) => setState({ bezierValue: [bezierValue[0], value, bezierValue[2], bezierValue[3]] })}
+          value={bezierRawValue[1]}
+          onChange={(value) => onChange([bezierRawValue[0], value, bezierRawValue[2], bezierRawValue[3]])}
           min={-1}
           max={2}
           step={0.01}
         />
         <Slider
           label="X2"
-          value={bezierValue[2]}
-          onChange={(value) => setState({ bezierValue: [bezierValue[0], bezierValue[1], value, bezierValue[3]] })}
+          value={bezierRawValue[2]}
+          onChange={(value) => onChange([bezierRawValue[0], bezierRawValue[1], value, bezierRawValue[3]])}
           min={0}
           max={1}
           step={0.01}
         />
         <Slider
           label="Y2"
-          value={bezierValue[3]}
-          onChange={(value) => setState({ bezierValue: [bezierValue[0], bezierValue[1], bezierValue[2], value] })}
+          value={bezierRawValue[3]}
+          onChange={(value) => onChange([bezierRawValue[0], bezierRawValue[1], bezierRawValue[2], value])}
           min={-1}
           max={2}
           step={0.01}

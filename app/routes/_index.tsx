@@ -6,7 +6,7 @@ import CardHeadline from '~/components/CardHeadline';
 import EasingCode from '~/components/EasingCode';
 import EasingPreview from '~/components/EasingPreview';
 import EasingSelection from '~/components/EasingSelection';
-import EasingTypeSelectionCopy from '~/components/EasingTypeSelection copy';
+import EasingTypeSelection from '~/components/EasingTypeSelection';
 import OvershootEditor from '~/components/OvershootEditor';
 import SpringEditor from '~/components/SpringEditor';
 import WiggleEditor from '~/components/WiggleEditor';
@@ -52,12 +52,11 @@ export default function Index() {
         </p>
       </header>
       <div className="flex justify-center">
-        <EasingTypeSelectionCopy />
+        <EasingTypeSelection />
       </div>
       <div className="grid grid-cols-3 justify-center gap-8">
         <Card className="px-6 py-5">
           <CardHeadline>Presets</CardHeadline>
-          {/* <EasingTypeSelection /> */}
           <EasingSelection />
         </Card>
         <Card className="z-10 py-5">

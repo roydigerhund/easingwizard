@@ -6,5 +6,5 @@ type Props = {
 };
 
 export default function InputGroup({ className, children }: Props) {
-  return <div className={classNames('relative z-10 flex flex-col gap-6 px-4 py-4 mt-4', className)}>{children}</div>;
+  return <div className={classNames('relative z-10 mt-4 flex flex-col gap-6 px-6 py-5', className)}>{children}</div>;
 }

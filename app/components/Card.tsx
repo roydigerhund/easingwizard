@@ -7,13 +7,13 @@ type Props = {
 
 export default function Card({ className, children }: Props) {
   return (
-    <div className={classNames('relative rounded-xl p-px backdrop-blur-sm', className)}>
+    <div className={classNames('relative rounded-xl p-px bg-zinc-950/25 backdrop-blur-sm', className)}>
       {children}
       <div
         className="absolute inset-0 pointer-events-none rounded-xl"
         style={{
           padding: '1px',
-          background: 'linear-gradient(135deg,hsla(0,0%,100%,.2),transparent 100%)',
+          background: 'linear-gradient(135deg,hsla(0,0%,100%,.15),transparent 100%)',
           mask: 'linear-gradient(#000,#000) content-box,linear-gradient(#000,#000)',
           maskComposite: 'exclude',
         }}

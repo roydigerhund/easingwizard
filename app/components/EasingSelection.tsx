@@ -24,7 +24,8 @@ import {
   WiggleCurve,
 } from '~/types-and-enums';
 import { humanize } from '~/utils/string';
-import IconButton from './IconButton';
+import IconTextButton from './IconTextButton';
+import { createCubicBezierString } from '~/utils/easing';
 
 export default function EasingSelection() {
   const easingType = useEasingStore((state) => state.easingType);
@@ -40,7 +41,8 @@ export default function EasingSelection() {
   const onBezierValueChange = (style: BezierStyle, curve: BezierCurve) => {
     const value = bezierFunctions[style][curve]!;
     setState({
-      bezierValue: value,
+      bezierRawValue: value,
+      bezierValue: createCubicBezierString(value),
       bezierStyle: style,
       bezierCurve: curve,
       editorExtraSpaceTop: Math.max(value[1], value[3]) > 1,
@@ -90,7 +92,7 @@ export default function EasingSelection() {
             {Object.keys(bezierFunctions).map((style) => {
               const values = bezierStyleFunctions[style as BezierStyle];
               return (
-                <IconButton
+                <IconTextButton
                   key={style}
                   isActive={bezierStyle === style}
                   onClick={() => {
@@ -121,7 +123,7 @@ export default function EasingSelection() {
       {easingType === EasingType.BEZIER && (
         <div className="flex flex-wrap gap-4">
           {Object.entries(bezierFunctions[bezierStyle]).map(([curve, values]) => (
-            <IconButton
+            <IconTextButton
               key={curve}
               isActive={bezierCurve === curve}
               onClick={() => onBezierValueChange(bezierStyle, curve as BezierCurve)}
@@ -140,7 +142,7 @@ export default function EasingSelection() {
           <div className="flex flex-wrap gap-4">
             {Object.keys(overshootFunctions).map((style) => {
               return (
-                <IconButton
+                <IconTextButton
                   key={style}
                   isActive={overshootStyle === style}
                   onClick={() => {
@@ -173,7 +175,7 @@ export default function EasingSelection() {
       {easingType === EasingType.OVERSHOOT && (
         <div className="flex flex-wrap gap-4">
           {Object.keys(overshootFunctions[overshootStyle]).map((curve) => (
-            <IconButton
+            <IconTextButton
               key={curve}
               isActive={overshootCurve === curve}
               onClick={() => onOvershootValueChange(overshootStyle, curve as OvershootCurve)}
@@ -192,7 +194,7 @@ export default function EasingSelection() {
       {easingType === EasingType.SPRING && (
         <div className="flex flex-wrap gap-4">
           {Object.keys(springFunctions).map((curve) => (
-            <IconButton
+            <IconTextButton
               key={curve}
               isActive={springCurve === curve}
               onClick={() => onSpringValueChange(curve as SpringCurve)}
@@ -211,7 +213,7 @@ export default function EasingSelection() {
       {easingType === EasingType.BOUNCE && (
         <div className="flex flex-wrap gap-4">
           {Object.keys(bounceFunctions).map((curve) => (
-            <IconButton
+            <IconTextButton
               key={curve}
               isActive={bounceCurve === curve}
               onClick={() => onBounceValueChange(curve as BounceCurve)}
@@ -230,7 +232,7 @@ export default function EasingSelection() {
       {easingType === EasingType.WIGGLE && (
         <div className="flex flex-wrap gap-4">
           {Object.keys(wiggleFunctions).map((curve) => (
-            <IconButton
+            <IconTextButton
               key={curve}
               isActive={wiggleCurve === curve}
               onClick={() => onWiggleValueChange(curve as WiggleCurve)}
