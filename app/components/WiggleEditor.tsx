@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useEasingStore } from '~/state/easing-store';
+import { EasingState, useEasingStore } from '~/state/easing-store';
 import { LinearEasingAccuracy } from '~/types-and-enums';
 import { createWiggleFunction, generateLinearEasing } from '~/utils/easing';
 import EditorBase from './EditorBase';
@@ -31,6 +31,10 @@ export default function WiggleEditor() {
     setState({ wiggleValue: easingValue });
   }, [wiggleDamping, wiggleWiggles, accuracy, setState]);
 
+  const handleChange = (state: Partial<EasingState>) => {
+    setState({ ...state, wiggleIsCustom: true });
+  };
+
   return (
     <div className="col-span-2">
       <EditorBase>
@@ -49,7 +53,7 @@ export default function WiggleEditor() {
         <Slider
           label="Wiggles"
           value={wiggleWiggles}
-          onChange={(value) => setState({ wiggleWiggles: value })}
+          onChange={(value) => handleChange({ wiggleWiggles: value })}
           min={1}
           max={10}
           step={1}
@@ -57,7 +61,7 @@ export default function WiggleEditor() {
         <Slider
           label="Damping"
           value={wiggleDamping}
-          onChange={(value) => setState({ wiggleDamping: value })}
+          onChange={(value) => handleChange({ wiggleDamping: value })}
           min={0}
           max={20}
           step={0.1}

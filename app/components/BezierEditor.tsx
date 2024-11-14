@@ -15,8 +15,8 @@ export default function BezierEditor() {
   const editorExtraSpaceBottom = useEasingStore((state) => state.editorExtraSpaceBottom);
   const setState = useEasingStore((state) => state.setState);
 
-  const onChange = (value: BezierValue) => {
-    setState({ bezierRawValue: value, bezierValue: createCubicBezierString(value) });
+  const handleChange = (value: BezierValue) => {
+    setState({ bezierRawValue: value, bezierValue: createCubicBezierString(value), bezierIsCustom: true });
   };
 
   return (
@@ -77,7 +77,7 @@ export default function BezierEditor() {
             x={bezierRawValue[0] * 100}
             y={100 - bezierRawValue[1] * 100}
             onChange={(x, y) =>
-              onChange([roundTo(x / 100, 3), roundTo(1 - y / 100, 3), bezierRawValue[2], bezierRawValue[3]])
+              handleChange([roundTo(x / 100, 3), roundTo(1 - y / 100, 3), bezierRawValue[2], bezierRawValue[3]])
             }
           />
           <Drag
@@ -89,7 +89,7 @@ export default function BezierEditor() {
             x={bezierRawValue[2] * 100}
             y={100 - bezierRawValue[3] * 100}
             onChange={(x, y) =>
-              onChange([bezierRawValue[0], bezierRawValue[1], roundTo(x / 100, 3), roundTo(1 - y / 100, 3)])
+              handleChange([bezierRawValue[0], bezierRawValue[1], roundTo(x / 100, 3), roundTo(1 - y / 100, 3)])
             }
           />
         </svg>
@@ -109,7 +109,7 @@ export default function BezierEditor() {
         <Slider
           label="X1"
           value={bezierRawValue[0]}
-          onChange={(value) => onChange([value, bezierRawValue[1], bezierRawValue[2], bezierRawValue[3]])}
+          onChange={(value) => handleChange([value, bezierRawValue[1], bezierRawValue[2], bezierRawValue[3]])}
           min={0}
           max={1}
           step={0.01}
@@ -117,7 +117,7 @@ export default function BezierEditor() {
         <Slider
           label="Y1"
           value={bezierRawValue[1]}
-          onChange={(value) => onChange([bezierRawValue[0], value, bezierRawValue[2], bezierRawValue[3]])}
+          onChange={(value) => handleChange([bezierRawValue[0], value, bezierRawValue[2], bezierRawValue[3]])}
           min={-1}
           max={2}
           step={0.01}
@@ -125,7 +125,7 @@ export default function BezierEditor() {
         <Slider
           label="X2"
           value={bezierRawValue[2]}
-          onChange={(value) => onChange([bezierRawValue[0], bezierRawValue[1], value, bezierRawValue[3]])}
+          onChange={(value) => handleChange([bezierRawValue[0], bezierRawValue[1], value, bezierRawValue[3]])}
           min={0}
           max={1}
           step={0.01}
@@ -133,7 +133,7 @@ export default function BezierEditor() {
         <Slider
           label="Y2"
           value={bezierRawValue[3]}
-          onChange={(value) => onChange([bezierRawValue[0], bezierRawValue[1], bezierRawValue[2], value])}
+          onChange={(value) => handleChange([bezierRawValue[0], bezierRawValue[1], bezierRawValue[2], value])}
           min={-1}
           max={2}
           step={0.01}

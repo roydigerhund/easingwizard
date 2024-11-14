@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useEasingStore } from '~/state/easing-store';
+import { EasingState, useEasingStore } from '~/state/easing-store';
 import { LinearEasingAccuracy } from '~/types-and-enums';
 import { createOvershootFunction, generateLinearEasing } from '~/utils/easing';
 import EditorBase from './EditorBase';
@@ -31,6 +31,10 @@ export default function OvershootEditor() {
     setState({ overshootValue: easingValue });
   }, [overshootDamping, overshootMass, overshootStyle, accuracy, setState]);
 
+  const handleChange = (state: Partial<EasingState>) => {
+    setState({ ...state, overshootIsCustom: true });
+  };
+
   return (
     <div className="col-span-2">
       <EditorBase>
@@ -49,7 +53,7 @@ export default function OvershootEditor() {
         <Slider
           label="Mass"
           value={overshootMass}
-          onChange={(value) => setState({ overshootMass: value })}
+          onChange={(value) => handleChange({ overshootMass: value })}
           min={1}
           max={5}
           step={0.1}
@@ -57,7 +61,7 @@ export default function OvershootEditor() {
         <Slider
           label="Damping"
           value={overshootDamping}
-          onChange={(value) => setState({ overshootDamping: value })}
+          onChange={(value) => handleChange({ overshootDamping: value })}
           min={50}
           max={100}
           step={1}

@@ -43,12 +43,12 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
   const value = getValue();
 
   const animationStyles = (easing: string) => ({
-    animationDuration: `${previewDuration * (previewPlayMode === PreviewPlayMode.INFINITE ? 4 : 1)}ms`,
+    animationDuration: `${previewDuration * (previewPlayMode === PreviewPlayMode.INFINITE ? (easingType === EasingType.WIGGLE ? 2 : 4) : 1)}ms`,
     animationIterationCount: previewPlayMode === PreviewPlayMode.INFINITE ? 'infinite' : '1',
     animationTimingFunction: easing,
     animationName:
       easingType === EasingType.WIGGLE
-        ? `${previewAnimationType}AnimationWiggle${previewPlayMode === PreviewPlayMode.INFINITE ? 'Infinite' : 'Once'}`
+        ? `${previewAnimationType}AnimationWiggle${previewPlayMode === PreviewPlayMode.INFINITE ? 'Infinite' : 'Once'}${previewPlayMode === PreviewPlayMode.ONCE && counter % 2 === 1 ? 'Reverse' : ''}`
         : `${previewAnimationType}Animation${previewPlayMode === PreviewPlayMode.INFINITE ? 'Infinite' : 'Once'}${previewPlayMode === PreviewPlayMode.ONCE && counter % 2 === 1 ? 'Reverse' : ''}`,
     animationFillMode: 'both',
     animationPlayState: clicked ? 'paused' : 'running',
@@ -71,7 +71,7 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
       <div
         role="button"
         tabIndex={-1}
-        className="bg-grdt-from relative col-span-full row-span-full size-1/4 cursor-help rounded-xl !border-none"
+        className="bg-grdt-from col-span-full row-span-full size-1/4 cursor-help rounded-xl !border-none"
         style={animationStyles(value)}
         onClick={() => setClicked(!clicked)}
         onKeyUp={(e) => e.key === 'Enter' && setClicked(!clicked)}
@@ -80,11 +80,11 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
       <div
         className={classNames(
           'pointer-events-none col-span-full row-span-full grid size-full items-center justify-items-center',
-          previewShowLinear ? 'opacity-50' : 'opacity-0',
+          previewShowLinear && easingType !== EasingType.WIGGLE ? 'opacity-50' : 'opacity-0',
         )}
         style={{
           // settings for 3d perspective
-          perspective: '250px',
+          perspective: '500px',
           perspectiveOrigin: '50% 50%',
           transformStyle: 'preserve-3d',
         }}

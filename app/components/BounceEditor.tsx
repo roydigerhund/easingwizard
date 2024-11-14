@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useEasingStore } from '~/state/easing-store';
+import { EasingState, useEasingStore } from '~/state/easing-store';
 import { LinearEasingAccuracy } from '~/types-and-enums';
 import { createBounceFunction, generateLinearEasing } from '~/utils/easing';
 import EditorBase from './EditorBase';
@@ -29,6 +29,10 @@ export default function BounceEditor() {
     setState({ bounceValue: easingValue });
   }, [accuracy, setState, bounceFunc]);
 
+  const handleChange = (state: Partial<EasingState>) => {
+    setState({ ...state, bounceIsCustom: true });
+  };
+
   return (
     <div className="col-span-2">
       <EditorBase>
@@ -47,7 +51,7 @@ export default function BounceEditor() {
         <Slider
           label="Bounces"
           value={bounceBounces}
-          onChange={(value) => setState({ bounceBounces: value })}
+          onChange={(value) => handleChange({ bounceBounces: value })}
           min={1}
           max={10}
           step={1}
@@ -55,7 +59,7 @@ export default function BounceEditor() {
         <Slider
           label="Damping"
           value={bounceDamping}
-          onChange={(value) => setState({ bounceDamping: value })}
+          onChange={(value) => handleChange({ bounceDamping: value })}
           min={-2}
           max={2}
           step={0.1}

@@ -1,6 +1,8 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { classNames } from '~/utils/class-names';
 import { shortTransition } from '~/utils/common-classes';
+import { checkCommaRegex, floatSafeModulo, trailingZeroRegex } from '~/utils/numbers';
+import { isNil } from '~/utils/string';
 
 type Props = {
   className?: string;
@@ -14,6 +16,10 @@ type Props = {
 
 export default function Slider({ className, label, value, onChange, min, max, step }: Props) {
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const [valuePrefix, setValuePrefix] = useState<string | undefined>();
+  const [hasTrailingComma, setHasTrailingComma] = useState(false);
+  const [trailingZeros, setTrailingZeros] = useState<string | undefined>();
+  const [isEmpty, setIsEmpty] = useState(false);
 
   const toFixedPrecision = step.toString().split('.')[1]?.length || 0;
 
@@ -21,11 +27,55 @@ export default function Slider({ className, label, value, onChange, min, max, st
     const isShiftPressed = e.shiftKey;
     if ((e.key === 'ArrowLeft' && !isTextInput) || e.key === 'ArrowDown') {
       onChange(parseFloat(Math.max(value - step * (isShiftPressed ? 10 : 1), min).toFixed(toFixedPrecision)));
+      resetConditions();
       e.preventDefault();
     } else if ((e.key === 'ArrowRight' && !isTextInput) || e.key === 'ArrowUp') {
       onChange(parseFloat(Math.min(value + step * (isShiftPressed ? 10 : 1), max).toFixed(toFixedPrecision)));
+      resetConditions();
       e.preventDefault();
     }
+  };
+
+  const resetConditions = () => {
+    setHasTrailingComma(false);
+    setTrailingZeros(undefined);
+    setValuePrefix(undefined);
+    setIsEmpty(false);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const valuesPrecision = value.split('.')[1]?.length || value.split(',')[1]?.length || 0;
+
+    if (valuesPrecision > toFixedPrecision) return;
+
+    resetConditions();
+
+    if (value === '') {
+      // allows deletion of last remainig number
+      setIsEmpty(true);
+      return;
+    }
+    if (value === '-') {
+      // allows negative numbers without existing value
+      setValuePrefix('-');
+      return;
+    }
+    let parsed = parseFloat(value) || 0;
+
+    parsed = Math.min(Math.max(parsed, min), max);
+
+    if (step && floatSafeModulo(parsed, step) !== 0) {
+      parsed = parseFloat((Math.round(parsed / step) * step).toFixed(toFixedPrecision));
+    }
+    if (checkCommaRegex(value) && toFixedPrecision) setHasTrailingComma(true);
+    if (value.match(trailingZeroRegex) && toFixedPrecision) {
+      const match = trailingZeroRegex.exec(value);
+      const valuesPrecision = value.split('.')[1]?.length || 0;
+      const additionalZeros = toFixedPrecision - valuesPrecision + 1;
+      if (match && match[1]) setTrailingZeros(match[1].substring(0, additionalZeros));
+    }
+    onChange(parsed);
   };
 
   return (
@@ -92,8 +142,16 @@ export default function Slider({ className, label, value, onChange, min, max, st
           'outline-none',
           'shadow-element_inactive hover:shadow-element_focused focus:shadow-element_focused',
         )}
-        value={value}
-        onChange={(e) => onChange(parseFloat(e.target.value))}
+        value={
+          isEmpty
+            ? ''
+            : valuePrefix
+              ? valuePrefix
+              : Number.isNaN(value) || isNil(value)
+                ? `${valuePrefix || ''}`
+                : `${valuePrefix || ''}${value}${hasTrailingComma ? '.' : ''}${trailingZeros || ''}`
+        }
+        onChange={handleChange}
         onKeyDown={(e) => handleKeyDown(e, true)}
       />
     </div>

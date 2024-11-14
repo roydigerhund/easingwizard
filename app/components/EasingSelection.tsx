@@ -31,11 +31,16 @@ export default function EasingSelection() {
   const easingType = useEasingStore((state) => state.easingType);
   const bezierStyle = useEasingStore((state) => state.bezierStyle);
   const bezierCurve = useEasingStore((state) => state.bezierCurve);
+  const bezierIsCustom = useEasingStore((state) => state.bezierIsCustom);
   const overshootStyle = useEasingStore((state) => state.overshootStyle);
+  const overshootIsCustom = useEasingStore((state) => state.overshootIsCustom);
   const overshootCurve = useEasingStore((state) => state.overshootCurve);
   const springCurve = useEasingStore((state) => state.springCurve);
+  const springIsCustom = useEasingStore((state) => state.springIsCustom);
   const bounceCurve = useEasingStore((state) => state.bounceCurve);
+  const bounceIsCustom = useEasingStore((state) => state.bounceIsCustom);
   const wiggleCurve = useEasingStore((state) => state.wiggleCurve);
+  const wiggleIsCustom = useEasingStore((state) => state.wiggleIsCustom);
   const setState = useEasingStore((state) => state.setState);
 
   const onBezierValueChange = (style: BezierStyle, curve: BezierCurve) => {
@@ -45,6 +50,7 @@ export default function EasingSelection() {
       bezierValue: createCubicBezierString(value),
       bezierStyle: style,
       bezierCurve: curve,
+      bezierIsCustom: false,
       editorExtraSpaceTop: Math.max(value[1], value[3]) > 1,
       editorExtraSpaceBottom: Math.min(value[1], value[3]) < 0,
     });
@@ -56,6 +62,7 @@ export default function EasingSelection() {
       overshootDamping: overshootFunctions[style][curve].damping,
       overshootMass: overshootFunctions[style][curve].mass,
       overshootCurve: curve,
+      overshootIsCustom: false,
     });
   };
 
@@ -65,6 +72,7 @@ export default function EasingSelection() {
       springDamping: springFunctions[curve].damping,
       springMass: springFunctions[curve].mass,
       springCurve: curve,
+      springIsCustom: false,
     });
   };
 
@@ -73,6 +81,7 @@ export default function EasingSelection() {
       bounceBounces: bounceFunctions[curve].bounces,
       bounceDamping: bounceFunctions[curve].damping,
       bounceCurve: curve,
+      bounceIsCustom: false,
     });
   };
 
@@ -81,6 +90,7 @@ export default function EasingSelection() {
       wiggleDamping: wiggleFunctions[curve].damping,
       wiggleWiggles: wiggleFunctions[curve].wiggles,
       wiggleCurve: curve,
+      wiggleIsCustom: false,
     });
   };
 
@@ -94,7 +104,7 @@ export default function EasingSelection() {
               return (
                 <IconTextButton
                   key={style}
-                  isActive={bezierStyle === style}
+                  isActive={!bezierIsCustom && bezierStyle === style}
                   onClick={() => {
                     if (bezierCurve in bezierFunctions[style as BezierStyle]) {
                       onBezierValueChange(style as BezierStyle, bezierCurve);
@@ -125,7 +135,7 @@ export default function EasingSelection() {
           {Object.entries(bezierFunctions[bezierStyle]).map(([curve, values]) => (
             <IconTextButton
               key={curve}
-              isActive={bezierCurve === curve}
+              isActive={!bezierIsCustom && bezierCurve === curve}
               onClick={() => onBezierValueChange(bezierStyle, curve as BezierCurve)}
               text={humanize(curve)}
               icon={
@@ -144,7 +154,7 @@ export default function EasingSelection() {
               return (
                 <IconTextButton
                   key={style}
-                  isActive={overshootStyle === style}
+                  isActive={!overshootIsCustom && overshootStyle === style}
                   onClick={() => {
                     if (overshootCurve in overshootFunctions[style as OvershootStyle]) {
                       onOvershootValueChange(style as OvershootStyle, overshootCurve);
@@ -177,7 +187,7 @@ export default function EasingSelection() {
           {Object.keys(overshootFunctions[overshootStyle]).map((curve) => (
             <IconTextButton
               key={curve}
-              isActive={overshootCurve === curve}
+              isActive={!overshootIsCustom && overshootCurve === curve}
               onClick={() => onOvershootValueChange(overshootStyle, curve as OvershootCurve)}
               text={humanize(curve)}
               icon={
@@ -196,7 +206,7 @@ export default function EasingSelection() {
           {Object.keys(springFunctions).map((curve) => (
             <IconTextButton
               key={curve}
-              isActive={springCurve === curve}
+              isActive={!springIsCustom && springCurve === curve}
               onClick={() => onSpringValueChange(curve as SpringCurve)}
               text={humanize(curve)}
               icon={
@@ -215,7 +225,7 @@ export default function EasingSelection() {
           {Object.keys(bounceFunctions).map((curve) => (
             <IconTextButton
               key={curve}
-              isActive={bounceCurve === curve}
+              isActive={!bounceIsCustom && bounceCurve === curve}
               onClick={() => onBounceValueChange(curve as BounceCurve)}
               text={humanize(curve)}
               icon={
@@ -234,7 +244,7 @@ export default function EasingSelection() {
           {Object.keys(wiggleFunctions).map((curve) => (
             <IconTextButton
               key={curve}
-              isActive={wiggleCurve === curve}
+              isActive={!wiggleIsCustom && wiggleCurve === curve}
               onClick={() => onWiggleValueChange(curve as WiggleCurve)}
               text={humanize(curve)}
               icon={

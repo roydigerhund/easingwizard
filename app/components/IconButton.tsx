@@ -4,22 +4,26 @@ type Props = {
   className?: string;
   label: string;
   isActive?: boolean;
+  disabled?: boolean;
   onClick: () => void;
   children: React.ReactNode;
 };
 
-export default function IconButton({ className, label, isActive, onClick, children }: Props) {
+export default function IconButton({ className, label, isActive, disabled, onClick, children }: Props) {
   return (
     <button
       className={classNames(
         className,
         'group relative flex size-10 items-center justify-center',
         isActive ? 'text-zinc-100' : 'text-zinc-500',
-        'shadow-element_inactive hover:shadow-element_focused focus:shadow-element_focused',
+        'shadow-element_inactive',
+        !disabled && 'hover:shadow-element_focused focus:shadow-element_focused',
+        disabled && 'cursor-not-allowed',
         'rounded-xl outline-none',
         'ease-out-sine transition-all duration-300 will-change-transform',
       )}
-      onClick={() => onClick()}
+      onClick={() => !disabled && onClick()}
+      disabled={disabled}
     >
       {children}
       <span

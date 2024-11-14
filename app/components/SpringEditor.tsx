@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useEasingStore } from '~/state/easing-store';
+import { EasingState, useEasingStore } from '~/state/easing-store';
 import { LinearEasingAccuracy } from '~/types-and-enums';
 import { createSpringFunction, generateLinearEasing } from '~/utils/easing';
 import EditorBase from './EditorBase';
@@ -30,6 +30,10 @@ export default function SpringEditor() {
     setState({ springValue: easingValue });
   }, [springStiffness, springDamping, springMass, accuracy, setState]);
 
+  const handleChange = (state: Partial<EasingState>) => {
+    setState({ ...state, springIsCustom: true });
+  };
+
   return (
     <div className="relative col-span-2">
       <EditorBase>
@@ -48,7 +52,7 @@ export default function SpringEditor() {
         <Slider
           label="Mass"
           value={springMass}
-          onChange={(value) => setState({ springMass: value })}
+          onChange={(value) => handleChange({ springMass: value })}
           min={1}
           max={5}
           step={0.1}
@@ -56,7 +60,7 @@ export default function SpringEditor() {
         <Slider
           label="Stiffness"
           value={springStiffness}
-          onChange={(value) => setState({ springStiffness: value })}
+          onChange={(value) => handleChange({ springStiffness: value })}
           min={1}
           max={500}
           step={1}
@@ -64,7 +68,7 @@ export default function SpringEditor() {
         <Slider
           label="Damping"
           value={springDamping}
-          onChange={(value) => setState({ springDamping: value })}
+          onChange={(value) => handleChange({ springDamping: value })}
           min={5}
           max={25}
           step={1}

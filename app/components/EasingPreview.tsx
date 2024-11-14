@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useEasingStore } from '~/state/easing-store';
-import { AnimationType, PreviewPlayMode } from '~/types-and-enums';
+import { AnimationType, EasingType, PreviewPlayMode } from '~/types-and-enums';
 import { humanize } from '~/utils/string';
 import Card from './Card';
 import CardHeadline from './CardHeadline';
@@ -25,6 +25,7 @@ import WidthIcon from './icons/WidthIcon';
 
 export default function EasingPreview() {
   const setState = useEasingStore((state) => state.setState);
+  const easingType = useEasingStore((state) => state.easingType);
   const previewDuration = useEasingStore((state) => state.previewDuration);
   const previewPlayMode = useEasingStore((state) => state.previewPlayMode);
   const previewShowLinear = useEasingStore((state) => state.previewShowLinear);
@@ -51,6 +52,8 @@ export default function EasingPreview() {
     }
   }, [previewHasRestarted, previewDuration]);
 
+  const allowPreviewShowLinear = easingType !== EasingType.WIGGLE;
+
   return (
     <Card className="z-10 py-5">
       <div className="px-6">
@@ -63,7 +66,8 @@ export default function EasingPreview() {
         <div className="flex justify-between">
           <IconButton
             label="Show Linear Comparison"
-            isActive={previewShowLinear}
+            disabled={!allowPreviewShowLinear}
+            isActive={previewShowLinear && allowPreviewShowLinear}
             onClick={() => setState({ previewShowLinear: !previewShowLinear })}
           >
             <CloneIcon className="size-7" />
