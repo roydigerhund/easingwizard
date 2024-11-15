@@ -1,23 +1,35 @@
+import { useState } from 'react';
 import { classNames } from '~/utils/class-names';
 
 type Props = {
   text: string;
   icon: React.ReactNode;
-  isActive: boolean;
+  isActive?: boolean;
+  isStaticButton?: boolean;
+  toast?: string;
   onClick: () => void;
 };
 
-export default function IconTextButton({ isActive, text, icon, onClick }: Props) {
+export default function IconTextButton({ isActive, isStaticButton, text, icon, toast, onClick }: Props) {
+  const [showToast, setShowToast] = useState(false);
+
+  const handleClick = () => {
+    onClick();
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 1000);
+  };
+
   return (
     <button
       className={classNames(
         'group relative z-0 flex items-center gap-2 rounded-xl px-4 py-2.5',
-        isActive ? 'text-zinc-100' : 'text-zinc-500',
+        isActive || isStaticButton ? 'text-zinc-100' : 'text-zinc-500 hover:text-zinc-400',
         'ease-out-sine transition-all duration-300 will-change-transform',
         'rounded-xl outline-none',
-        'shadow-element_inactive hover:shadow-element_focused focus:shadow-element_focused',
+        'shadow-element_inactive hover:shadow-element_focused focus:shadow-element_focused active:shadow-element_pressed',
+        '[--shadow-retract:-0.6rem]',
       )}
-      onClick={onClick}
+      onClick={handleClick}
     >
       <span
         className={classNames(
@@ -40,6 +52,22 @@ export default function IconTextButton({ isActive, text, icon, onClick }: Props)
         {icon}
       </svg>
       <span className={classNames('text-xs uppercase tracking-widest')}>{text}</span>
+      {toast && (
+        <span
+          className={classNames(
+            'will-change-transform',
+            'pointer-events-none',
+            'absolute bottom-full left-1/2 mb-2 -translate-x-1/2',
+            'rounded-md border border-zinc-700 bg-zinc-950 px-2 py-1',
+            'whitespace-nowrap text-base text-zinc-100',
+            'ease-overshoot transition-all duration-300',
+            showToast ? 'opacity-100' : 'opacity-0',
+            showToast ? 'translate-y-0' : 'translate-y-2',
+          )}
+        >
+          {toast}
+        </span>
+      )}
     </button>
   );
 }

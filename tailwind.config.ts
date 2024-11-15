@@ -10,8 +10,9 @@ export default {
         "grdt-to": "#6ae5b5",
       },
       boxShadow: {
-        element_inactive: '0 0 0 -0.25rem transparent,inset 0 0 0 0 transparent,0 0 0 1px var(--border-inactive)',
-        element_focused: '0 0 2rem -0.25rem var(--grdt-to),inset 0 0 0 2px var(--grdt-to),0 0 0 1px transparent',
+        element_inactive: '0 0 0 var(--shadow-retract, -0.25rem) transparent,inset 0 0 0 0 transparent,0 0 0 1px var(--border-inactive)',
+        element_focused: '0 0 2rem var(--shadow-retract, -0.25rem) var(--grdt-to),inset 0 0 0 2px var(--grdt-to),0 0 0 1px transparent',
+        element_pressed: '0 0 1rem var(--shadow-retract, -0.25rem) var(--grdt-to),inset 0 0 0 2px var(--grdt-to),0 0 0 1px transparent',
         element_border_inactive: '0 0 0 1px transparent',
         element_border_active: "0 0 0 1px var(--border-active)"
       },
@@ -26,6 +27,7 @@ export default {
           '"Segoe UI Symbol"',
           '"Noto Color Emoji"',
         ],
+        monospace: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'],
       },
       transitionTimingFunction: {
         "in-sine": "cubic-bezier(0.13, 0, 0.39, 0)",

@@ -71,12 +71,17 @@ export type EasingState = {
   editorExtraSpaceBottom: boolean;
 };
 
+type EasingStateBlock<Prefix extends string> = {
+  [Key in keyof EasingState as Key extends `${Prefix}${string}` ? Key : never]: EasingState[Key];
+};
+
 type EasingAction = {
   setEasingType: (easingType: EasingType) => void;
   setState: (state: Partial<EasingState>) => void;
+  getCurrentState: () => EasingState;
 };
 
-const defaultBezierState = {
+const defaultBezierState: EasingStateBlock<'bezier'> = {
   bezierStyle: BezierStyle.IN_OUT,
   bezierCurve: BezierCurve.CUBIC,
   bezierRawValue: defaultBezierFunction,
@@ -84,7 +89,9 @@ const defaultBezierState = {
   bezierIsCustom: false,
 };
 
-const defaultOvershootState = {
+export const bezierStateKeys = Object.keys(defaultBezierState) as (keyof EasingState)[];
+
+const defaultOvershootState: EasingStateBlock<'overshoot'> = {
   overshootStyle: OvershootStyle.OUT,
   overshootCurve: OvershootCurve.DEFAULT,
   overshootDamping: defaultOvershootFunction.damping,
@@ -93,7 +100,9 @@ const defaultOvershootState = {
   overshootIsCustom: false,
 };
 
-const defaultSpringState = {
+export const overshootStateKeys = Object.keys(defaultOvershootState) as (keyof EasingState)[];
+
+const defaultSpringState: EasingStateBlock<'spring'> = {
   springCurve: SpringCurve.DEFAULT,
   springStiffness: defaultSpringFunction.stiffness,
   springDamping: defaultSpringFunction.damping,
@@ -102,7 +111,9 @@ const defaultSpringState = {
   springIsCustom: false,
 };
 
-const defaultBounceState = {
+export const springStateKeys = Object.keys(defaultSpringState) as (keyof EasingState)[];
+
+const defaultBounceState: EasingStateBlock<'bounce'> = {
   bounceCurve: BounceCurve.DEFAULT,
   bounceBounces: defaultBounceFunction.bounces,
   bounceDamping: defaultBounceFunction.damping,
@@ -110,7 +121,9 @@ const defaultBounceState = {
   bounceIsCustom: false,
 };
 
-const defaultWiggleState = {
+export const bounceStateKeys = Object.keys(defaultBounceState) as (keyof EasingState)[];
+
+const defaultWiggleState: EasingStateBlock<'wiggle'> = {
   wiggleCurve: WiggleCurve.DEFAULT,
   wiggleDamping: defaultWiggleFunction.damping,
   wiggleWiggles: defaultWiggleFunction.wiggles,
@@ -118,7 +131,9 @@ const defaultWiggleState = {
   wiggleIsCustom: false,
 };
 
-const defaultEasingContext: EasingState = {
+export const wiggleStateKeys = Object.keys(defaultWiggleState) as (keyof EasingState)[];
+
+const defaultRestState = {
   easingType: EasingType.BEZIER,
   animationDuration: 750,
   previewDuration: 750,
@@ -127,6 +142,12 @@ const defaultEasingContext: EasingState = {
   previewShowLinear: false,
   editorExtraSpaceTop: false,
   editorExtraSpaceBottom: false,
+};
+
+export const restStateKeys = Object.keys(defaultRestState) as (keyof EasingState)[];
+
+const defaultEasingContext: EasingState = {
+  ...defaultRestState,
   ...defaultBezierState,
   ...defaultOvershootState,
   ...defaultSpringState,
@@ -134,7 +155,7 @@ const defaultEasingContext: EasingState = {
   ...defaultWiggleState,
 };
 
-export const useEasingStore = create<EasingState & EasingAction>((set) => ({
+export const useEasingStore = create<EasingState & EasingAction>((set, get) => ({
   ...defaultEasingContext,
   setEasingType: (easingType: EasingType) => {
     switch (easingType) {
@@ -160,4 +181,5 @@ export const useEasingStore = create<EasingState & EasingAction>((set) => ({
     }
   },
   setState: (state: Partial<EasingState>) => set(state),
+  getCurrentState: () => get(),
 }));

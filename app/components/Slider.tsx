@@ -21,6 +21,7 @@ export default function Slider({ className, label, value, onChange, min, max, st
   const [trailingZeros, setTrailingZeros] = useState<string | undefined>();
   const [isEmpty, setIsEmpty] = useState(false);
 
+  const clampedValue = Math.min(Math.max(value, min), max);
   const toFixedPrecision = step.toString().split('.')[1]?.length || 0;
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement | HTMLInputElement>, isTextInput?: boolean) => {
@@ -94,8 +95,9 @@ export default function Slider({ className, label, value, onChange, min, max, st
         <div
           className={classNames(
             'relative h-10 grow rounded-xl',
-            'shadow-element_inactive hover:shadow-element_focused focus-within:shadow-element_focused',
+            'shadow-element_inactive hover:shadow-element_focused focus-within:shadow-element_focused active:shadow-element_pressed',
             'ease-out-sine transition-all duration-300 will-change-transform',
+            '[--shadow-retract:-0.6rem]',
           )}
         >
           <input
@@ -116,7 +118,7 @@ export default function Slider({ className, label, value, onChange, min, max, st
             <div
               className="absolute -inset-x-1.5 inset-y-1.5 w-full rounded-l-lg bg-zinc-900"
               style={{
-                clipPath: `inset(0 ${100 - ((value - min) / (max - min)) * 100}% 0 0)`,
+                clipPath: `inset(0 ${100 - ((clampedValue - min) / (max - min)) * 100}% 0 0)`,
               }}
             />
             <button
@@ -129,7 +131,7 @@ export default function Slider({ className, label, value, onChange, min, max, st
               onKeyDown={handleKeyDown}
               onClick={() => buttonRef.current?.focus()}
               style={{
-                left: `${((value - min) / (max - min)) * 100}%`,
+                left: `${((clampedValue - min) / (max - min)) * 100}%`,
               }}
             />
           </div>
@@ -140,7 +142,8 @@ export default function Slider({ className, label, value, onChange, min, max, st
           'ml-3 w-16 rounded-xl bg-transparent text-center text-zinc-100',
           'ease-out-sine transition-all duration-300 will-change-transform',
           'outline-none',
-          'shadow-element_inactive hover:shadow-element_focused focus:shadow-element_focused',
+          'shadow-element_inactive hover:shadow-element_focused focus:shadow-element_focused active:shadow-element_pressed',
+          '[--shadow-retract:-0.4rem]',
         )}
         value={
           isEmpty

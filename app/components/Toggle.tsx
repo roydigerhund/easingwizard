@@ -38,7 +38,7 @@ export default function Toggle({ className, label, value, onChange }: Props) {
         <span
           className={classNames(
             'relative block h-7 w-14 cursor-pointer rounded-full',
-            'shadow-element_inactive group-hover:shadow-element_focused group-focus-within:shadow-element_focused',
+            'shadow-element_inactive group-hover:shadow-element_focused group-focus-within:shadow-element_focused group-active:shadow-element_pressed',
             'ease-out-sine transition-all duration-300 will-change-transform',
           )}
         >

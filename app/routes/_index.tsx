@@ -8,6 +8,7 @@ import EasingPreview from '~/components/EasingPreview';
 import EasingSelection from '~/components/EasingSelection';
 import EasingTypeSelection from '~/components/EasingTypeSelection';
 import OvershootEditor from '~/components/OvershootEditor';
+import Share from '~/components/Share';
 import SpringEditor from '~/components/SpringEditor';
 import WiggleEditor from '~/components/WiggleEditor';
 import { shootingStars } from '~/data/shooting-stars';
@@ -71,10 +72,13 @@ export default function Index() {
         </Card>
         <EasingPreview />
       </div>
-      <Card className="px-6 py-5">
-        <CardHeadline>Code</CardHeadline>
-        <EasingCode />
-      </Card>
+      <div className="grid grid-cols-3 gap-8">
+        <Card className="col-span-2 px-6 py-5">
+          <CardHeadline>Code</CardHeadline>
+          <EasingCode />
+        </Card>
+        <Share />
+      </div>
     </div>
   );
 }

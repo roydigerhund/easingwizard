@@ -15,7 +15,7 @@ export default function StepSlider<T>({ className, label, value, options, onChan
 
   const min = 0;
   const max = options.length - 1;
-  const indexValue = options.findIndex((option) => option === value);
+  const indexValue = options.findIndex((option) => option === value) || 0;
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement | HTMLInputElement>, isTextInput?: boolean) => {
     if ((e.key === 'ArrowLeft' && !isTextInput) || e.key === 'ArrowDown') {
@@ -71,6 +71,7 @@ export default function StepSlider<T>({ className, label, value, options, onChan
               'ease-out-sine transition-shadow duration-300 will-change-transform',
               'outline-none',
               'shadow-element_inactive group-hover/input:shadow-element_focused focus:shadow-element_focused',
+              '[--shadow-retract:-0.05rem]',
             )}
             value={indexValue}
             onKeyDown={handleKeyDown}

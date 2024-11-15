@@ -2,6 +2,11 @@ import { useState } from 'react';
 import { useEasingStore } from '~/state/easing-store';
 import { EasingType } from '~/types-and-enums';
 import { classNames } from '~/utils/class-names';
+import ClipboardIcon from './icons/ClipboardIcon';
+import CSSIcon from './icons/CSSIcon';
+import TailwindCSSIcon from './icons/TailwindCSSIcon';
+import IconTextButton from './IconTextButton';
+import TabBarButton from './TabBarButton';
 
 export enum CodeType {
   CSS = 'CSS',
@@ -15,7 +20,7 @@ export default function EasingCode() {
   const springValue = useEasingStore((state) => state.springValue);
   const bounceValue = useEasingStore((state) => state.bounceValue);
   const wiggleValue = useEasingStore((state) => state.wiggleValue);
-  const [copied, setCopied] = useState(false);
+
   const [codeType, setCodeType] = useState(CodeType.CSS);
 
   const getValue = () => {
@@ -46,42 +51,44 @@ export default function EasingCode() {
 
   const transformedValue = transformValue();
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(value).then(
-      () => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      },
-      (err) => {
-        console.error('Could not copy text: ', err);
-      },
-    );
-  };
-
   return (
-    <div>
-      {Object.values(CodeType).map((type) => (
-        <button
-          key={type}
-          onClick={() => setCodeType(type)}
-          className={`${codeType === type ? 'text-zinc-300' : 'text-zinc-500'} rounded-md px-3 py-1`}
-        >
-          {type}
-        </button>
-      ))}
-      <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
+    <>
+      <div className="flex items-start justify-between">
+        <div className="flex gap-6">
+          {Object.values(CodeType).map((type) => (
+            <TabBarButton key={type} onClick={() => setCodeType(type)} isActive={codeType === type} icon={icons[type]}>
+              {type}
+            </TabBarButton>
+          ))}
+        </div>
+        <IconTextButton
+          text="Copy to Clipboard"
+          icon={<ClipboardIcon className="size-6" />}
+          onClick={() => navigator.clipboard.writeText(transformedValue)}
+          isStaticButton
+          toast="Copied!"
+        />
+      </div>
+      <div className="mt-6 flex flex-col items-start gap-4">
         <code
           className={classNames(
-            'selection:text-grdt-to select-all text-zinc-300 selection:bg-none',
             codeType === CodeType.TAILWIND_CSS && 'break-all',
+            'font-monospace selection:text-grdt-to select-all text-zinc-300 selection:bg-none',
+            'w-full rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-950 p-4',
+            'transition-all duration-300 ease-in-out',
+            'shadow-[0_0_0_1px_var(--tw-shadow-color)] shadow-zinc-950',
+            'hover:text-zinc-100 hover:shadow-zinc-700',
+            'focus:text-zinc-100 focus:shadow-zinc-700',
           )}
         >
           {transformedValue}
         </code>
-        <button onClick={copyToClipboard} style={{ marginLeft: '10px' }}>
-          {copied ? 'Copied!' : 'Copy'}
-        </button>
       </div>
-    </div>
+    </>
   );
 }
+
+const icons: Record<CodeType, React.ReactNode> = {
+  [CodeType.CSS]: <CSSIcon className="size-6" />,
+  [CodeType.TAILWIND_CSS]: <TailwindCSSIcon className="size-6" />,
+};
