@@ -9,11 +9,13 @@ import {
   wiggleStateKeys,
 } from '~/state/easing-store';
 import { EasingType } from '~/types-and-enums';
-import { classNames } from '~/utils/class-names';
 import Card from './Card';
 import CardHeadline from './CardHeadline';
 import ClipboardIcon from './icons/ClipboardIcon';
+import XIcon from './icons/XIcon';
 import IconTextButton from './IconTextButton';
+
+const productionOrigin = 'https://easingwizard.com';
 
 export default function Share() {
   const getCurrentState = useEasingStore((state) => state.getCurrentState);
@@ -57,7 +59,9 @@ export default function Share() {
     <Card className="px-6 py-5">
       <CardHeadline>Share</CardHeadline>
       <div className="flex flex-col items-start gap-3">
-        <p className="font-light text-zinc-400">Click the button below to copy the link to your current easing configuration.</p>
+        <p className="font-light text-zinc-400">
+          Click the button below to copy the link to your current easing configuration.
+        </p>
         <IconTextButton
           text="Copy Link"
           icon={<ClipboardIcon className="size-6" />}
@@ -66,30 +70,18 @@ export default function Share() {
           toast="Copied!"
         />
         <p className="mt-8 font-light text-zinc-400">Do you like Easing Wizard? Share it with your friends!</p>
-        <a
-          href="https://x.com/intent/tweet?text=Create%20and%20customize%20CSS%20easing%20functions%20with%20magical%20precision%20using%20Easing%20Wizard%20🧙‍♂️%20&url=https://easing-wizard.vercel.app"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={classNames(
-            'flex items-center gap-2 rounded-xl px-4 py-2.5',
-            'text-zinc-100 hover:text-zinc-400',
-            'ease-out-sine transition-all duration-300 will-change-transform',
-            'rounded-xl outline-none',
-            'shadow-element_inactive hover:shadow-element_focused focus:shadow-element_focused active:shadow-element_pressed',
-            'cursor-pointer',
-          )}
-        >
-          <svg
-            viewBox="0 0 100 100"
-            strokeWidth={8}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="size-6 overflow-visible stroke-current"
-          >
-            <path d="M50 20 L50 80 M20 50 L50 80 M80 50 L50 80" />
-          </svg>
-          <span>Share on Twitter</span>
-        </a>
+        <IconTextButton
+          text="Share on X"
+          icon={<XIcon className="size-6" />}
+          onClick={() => {
+            window.open(
+              `https://x.com/intent/tweet?text=Create%20and%20customize%20CSS%20easing%20functions%20with%20magical%20precision%20using%20Easing%20Wizard%20🧙‍♂️%20&url=${productionOrigin}`,
+              '_blank',
+              'noopener noreferrer',
+            );
+          }}
+          isStaticButton
+        />
       </div>
     </Card>
   );
