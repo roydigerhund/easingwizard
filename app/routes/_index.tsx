@@ -37,7 +37,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const stateJson = url.searchParams.get('state');
     if (stateJson) {
       const state = JSON.parse(stateJson) as Partial<EasingState>;
-      console.log('🚀 ~ loader ~ state:', state);
       return { state };
     }
   } catch (error) {
@@ -67,7 +66,7 @@ export default function Index() {
       className={classNames(
         'relative z-0 mx-auto flex max-w-7xl flex-col items-stretch gap-12 px-4 py-12',
         'linear transition-opacity duration-300',
-        showUI ? 'opacity-100' : 'opacity-0',
+        showUI ? 'opacity-100' : 'opacity-0 no-transition',
       )}
     >
       <div className="fixed inset-x-0 top-0 -z-10 h-svh">

@@ -135,9 +135,7 @@ export const wiggleStateKeys = Object.keys(defaultWiggleState) as (keyof EasingS
 const defaultRestState = {
   easingType: EasingType.BEZIER,
   previewDuration: 750,
-  previewPlayMode: PreviewPlayMode.INFINITE,
   previewAnimationType: AnimationType.MOVE_X,
-  previewShowLinear: false,
   editorExtraSpaceTop: false,
   editorExtraSpaceBottom: false,
 };
@@ -145,6 +143,8 @@ const defaultRestState = {
 export const restStateKeys = Object.keys(defaultRestState) as (keyof EasingState)[];
 
 const defaultEasingContext: EasingState = {
+  previewPlayMode: PreviewPlayMode.INFINITE,
+  previewShowLinear: false,
   ...defaultRestState,
   ...defaultBezierState,
   ...defaultOvershootState,

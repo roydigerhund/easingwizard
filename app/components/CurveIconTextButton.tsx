@@ -8,6 +8,7 @@ export default function CurveIconTextButton({ isActive, icon, ...props }: IconTe
       isActive={isActive}
       icon={
         <svg
+          xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 100 100"
           strokeWidth={8}
           strokeLinecap="round"
@@ -16,6 +17,7 @@ export default function CurveIconTextButton({ isActive, icon, ...props }: IconTe
             'size-6 overflow-visible',
             isActive ? 'stroke-[url(#curve-gradient)]' : 'stroke-current',
           )}
+          fill="none"
         >
           {icon}
         </svg>
