@@ -16,6 +16,7 @@ import XIcon from './icons/XIcon';
 import IconTextButton from './IconTextButton';
 
 const productionOrigin = 'https://easingwizard.com';
+const shareText = encodeURI('Create and customize CSS easing functions with magical precision using Easing Wizard 🧙‍♂️');
 
 export default function Share() {
   const getCurrentState = useEasingStore((state) => state.getCurrentState);
@@ -58,8 +59,8 @@ export default function Share() {
   return (
     <Card className="px-6 py-5">
       <CardHeadline>Share</CardHeadline>
-      <div className="flex flex-col items-start gap-3">
-        <p className="font-light text-zinc-400">
+      <div className="space-y-3">
+        <p className="font-light leading-relaxed text-zinc-400">
           Click the button below to copy the link to your current easing configuration.
         </p>
         <IconTextButton
@@ -69,13 +70,25 @@ export default function Share() {
           isStaticButton
           toast="Copied!"
         />
-        <p className="mt-8 font-light text-zinc-400">Do you like Easing Wizard? Share it with your friends!</p>
+      </div>
+      <hr
+        className="my-8 border-t border-zinc-700"
+        style={{
+          maskImage: 'linear-gradient(to right,rgba(0,0,0,1),rgba(0,0,0,0.1))',
+        }}
+      />
+      <div className="space-y-3">
+        <p className="font-light leading-relaxed text-zinc-400">
+          Do you like Easing Wizard?
+          <br />
+          Share it with your friends and followers!
+        </p>
         <IconTextButton
           text="Share on X"
           icon={<XIcon className="size-6" />}
           onClick={() => {
             window.open(
-              `https://x.com/intent/tweet?text=Create%20and%20customize%20CSS%20easing%20functions%20with%20magical%20precision%20using%20Easing%20Wizard%20🧙‍♂️%20&url=${productionOrigin}`,
+              `https://x.com/intent/tweet?text=${shareText}&url=${productionOrigin}`,
               '_blank',
               'noopener noreferrer',
             );

@@ -28,7 +28,6 @@ import { createCubicBezierString } from '~/utils/easing';
 export type EasingState = {
   // General
   easingType: EasingType;
-  animationDuration: number;
   // Bezier
   bezierStyle: BezierStyle;
   bezierCurve: BezierCurve;
@@ -135,7 +134,6 @@ export const wiggleStateKeys = Object.keys(defaultWiggleState) as (keyof EasingS
 
 const defaultRestState = {
   easingType: EasingType.BEZIER,
-  animationDuration: 750,
   previewDuration: 750,
   previewPlayMode: PreviewPlayMode.INFINITE,
   previewAnimationType: AnimationType.MOVE_X,

@@ -1,4 +1,5 @@
 - responsive design
-- share link
-- code part
 - easing type selection styling
+- intro animation
+- validate state from URL
+- heart shadow

@@ -73,7 +73,7 @@ export default function EasingCode() {
         <code
           className={classNames(
             codeType === CodeType.TAILWIND_CSS && 'break-all',
-            'font-monospace selection:text-grdt-to select-all text-zinc-300 selection:bg-none',
+            'font-monospace text-zinc-300 selection:bg-none selection:text-grdt-to',
             'w-full rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-950 p-4',
             'transition-all duration-300 ease-in-out',
             'shadow-[0_0_0_1px_var(--tw-shadow-color)] shadow-zinc-950',
