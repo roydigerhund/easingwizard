@@ -65,7 +65,7 @@ export default function Index() {
     <div
       className={classNames(
         'relative z-0 mx-auto flex max-w-7xl flex-col items-stretch gap-12 px-4 py-12',
-        'linear transition-opacity duration-300',
+        'linear transition-opacity duration-500',
         showUI ? 'opacity-100' : 'opacity-0 no-transition',
       )}
     >
@@ -118,10 +118,10 @@ export default function Index() {
         <Share />
       </div>
       <div>
-        <div className="flex items-center justify-center gap-2 text-center text-sm text-zinc-400">
+        <div className="flex items-center justify-center gap-3 text-center text-sm text-zinc-400">
           <span>Made with </span>
           <span className="sr-only">love</span>
-          <HeartIcon className="size-6 text-grdt-to" />
+          <HeartIcon className="size-6 text-grdt-to drop-shadow-[0_0_0.5rem_var(--grdt-to)]" />
           <span>
             by{' '}
             <a

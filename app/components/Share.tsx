@@ -14,6 +14,7 @@ import CardHeadline from './CardHeadline';
 import ClipboardIcon from './icons/ClipboardIcon';
 import XIcon from './icons/XIcon';
 import IconTextButton from './IconTextButton';
+import BlueskyIcon from './icons/BlueskyIcon';
 
 const productionOrigin = 'https://easingwizard.com';
 const shareText = encodeURI('Create and customize CSS easing functions with magical precision using Easing Wizard 🧙‍♂️');
@@ -89,6 +90,18 @@ export default function Share() {
           onClick={() => {
             window.open(
               `https://x.com/intent/tweet?text=${shareText}&url=${productionOrigin}`,
+              '_blank',
+              'noopener noreferrer',
+            );
+          }}
+          isStaticButton
+        />
+        <IconTextButton
+          text="Share on Bluesky"
+          icon={<BlueskyIcon className="size-6" />}
+          onClick={() => {
+            window.open(
+              `https://bsky.app/intent/compose?text=${shareText}%0A${productionOrigin}`,
               '_blank',
               'noopener noreferrer',
             );

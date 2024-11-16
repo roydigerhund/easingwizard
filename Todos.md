@@ -1,5 +1,3 @@
 - responsive design
 - easing type selection styling
-- intro animation
 - validate state from URL
-- heart shadow

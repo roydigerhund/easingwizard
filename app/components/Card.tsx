@@ -7,10 +7,10 @@ type Props = {
 
 export default function Card({ className, children }: Props) {
   return (
-    <div className={classNames('relative rounded-xl p-px bg-zinc-950', className)}>
-      {children}
+    <div className={classNames('relative rounded-xl bg-zinc-950 p-px', 'animate-appear', className)}>
+      <div className="relative z-10">{children}</div>
       <div
-        className="absolute inset-0 pointer-events-none rounded-xl"
+        className="pointer-events-none absolute inset-0 rounded-xl"
         style={{
           padding: '1px',
           background: 'linear-gradient(135deg,hsla(0,0%,100%,.15),transparent 100%)',
