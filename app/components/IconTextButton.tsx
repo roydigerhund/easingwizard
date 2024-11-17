@@ -43,7 +43,7 @@ export default function IconTextButton({ isActive, isStaticButton, text, icon, t
         )}
       />
       {icon}
-      <span className={classNames('text-xs uppercase tracking-widest')}>{text}</span>
+      <span className={classNames('text-xs uppercase tracking-widest whitespace-nowrap')}>{text}</span>
       {toast && (
         <span
           className={classNames(

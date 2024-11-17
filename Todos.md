@@ -1,3 +1,4 @@
 - responsive design
 - easing type selection styling
 - validate state from URL
+- resize breaks animation 

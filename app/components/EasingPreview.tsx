@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useEasingStore } from '~/state/easing-store';
 import { AnimationType, EasingType, PreviewPlayMode } from '~/types-and-enums';
 import { humanize } from '~/utils/string';
-import Card from './Card';
 import CardHeadline from './CardHeadline';
 import EasingPreviewElement from './EasingPreviewElement';
 import IconButton from './IconButton';
@@ -55,7 +54,7 @@ export default function EasingPreview() {
   const allowPreviewShowLinear = easingType !== EasingType.WIGGLE;
 
   return (
-    <Card className="z-10 py-5">
+    <>
       <div className="px-6">
         <CardHeadline>Preview</CardHeadline>
       </div>
@@ -132,7 +131,7 @@ export default function EasingPreview() {
           ))}
         </div>
       </InputGroup>
-    </Card>
+    </>
   );
 }
 

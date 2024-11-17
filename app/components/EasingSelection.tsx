@@ -25,6 +25,7 @@ import {
 } from '~/types-and-enums';
 import { createCubicBezierString } from '~/utils/easing';
 import { humanize } from '~/utils/string';
+import CardHeadline from './CardHeadline';
 import CurveIconTextButton from './CurveIconTextButton';
 
 export default function EasingSelection() {
@@ -95,7 +96,8 @@ export default function EasingSelection() {
   };
 
   return (
-    <div>
+    <>
+      <CardHeadline>Presets</CardHeadline>
       {easingType === EasingType.BEZIER && (
         <>
           <div className="flex flex-wrap gap-4">
@@ -258,6 +260,6 @@ export default function EasingSelection() {
           ))}
         </div>
       )}
-    </div>
+    </>
   );
 }

@@ -7,7 +7,7 @@ const InfinityIcon = (props: SVGProps<SVGSVGElement>) => (
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={1.5}
-      d="M14 15.242A4.5 4.5 0 1 0 16.5 7C14.015 7 13 9.015 12 11.5S9.985 16 7.5 16A4.5 4.5 0 1 1 10 7.758"
+      d="M14 15.742A4.5 4.5 0 1 0 16.5 7.5C14.015 7.5 13 9.515 12 12s-2.015 4.5-4.5 4.5A4.5 4.5 0 1 1 10 8.258"
     />
   </svg>
 );

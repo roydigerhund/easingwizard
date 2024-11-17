@@ -9,16 +9,16 @@ import EasingCode from '~/components/EasingCode';
 import EasingPreview from '~/components/EasingPreview';
 import EasingSelection from '~/components/EasingSelection';
 import EasingTypeSelection from '~/components/EasingTypeSelection';
-import HeartIcon from '~/components/icons/HeartIcon';
+import Footer from '~/components/Footer';
+import Header from '~/components/Header';
 import OvershootEditor from '~/components/OvershootEditor';
 import Share from '~/components/Share';
+import ShootingStars from '~/components/ShootingStars';
 import SpringEditor from '~/components/SpringEditor';
 import WiggleEditor from '~/components/WiggleEditor';
-import { shootingStars } from '~/data/shooting-stars';
 import { EasingState, useEasingStore } from '~/state/easing-store';
 import { EasingType } from '~/types-and-enums';
 import { classNames } from '~/utils/class-names';
-import { shortTransition } from '~/utils/common-classes';
 
 export const meta: MetaFunction = () => {
   return [
@@ -64,77 +64,40 @@ export default function Index() {
   return (
     <div
       className={classNames(
-        'relative z-0 mx-auto flex max-w-7xl flex-col items-stretch gap-12 px-4 py-12',
+        'relative z-0 mx-auto flex max-w-7xl flex-col items-stretch gap-12 px-4 py-12 md:px-6',
         'linear transition-opacity duration-500',
-        showUI ? 'opacity-100' : 'opacity-0 no-transition',
+        showUI ? 'opacity-100' : 'no-transition opacity-0',
       )}
     >
-      <div className="fixed inset-x-0 top-0 -z-10 h-svh">
-        {shootingStars.map(({ key, xPosition, animationDelay, animationDuration }, index) => (
-          <div
-            key={key}
-            className={classNames('animate-shooting-star absolute top-full', index % 2 === 0 && 'hidden sm:block')}
-            style={{
-              left: `${xPosition}%`,
-              animationDelay: `${animationDelay}s`,
-              animationDuration: `${animationDuration}s`,
-            }}
-          >
-            <div className={classNames('h-1 w-1 rounded-full', 'bg-zinc-800')} />
-          </div>
-        ))}
-      </div>
-      <header className="flex flex-col items-center gap-2">
-        <h1 className="text-5xl font-extrabold text-zinc-100">Easing Wizard</h1>
-        <p className="text-sm leading-6 text-zinc-400">
-          Create and customize CSS easing functions with magical precision.
-        </p>
-      </header>
+      <ShootingStars />
+      <Header />
       <div className="flex justify-center">
         <EasingTypeSelection />
       </div>
-      <div className="grid grid-cols-3 justify-center gap-8">
-        <Card className="px-6 py-5">
-          <CardHeadline>Presets</CardHeadline>
+      <div className={classNames('relative grid grid-cols-6', 'mx-auto max-w-[30rem] sm:max-w-none', 'gap-4 xl:gap-8')}>
+        <Card className="col-span-6 px-6 py-5 lg:col-span-2">
           <EasingSelection />
         </Card>
-        <Card className="z-10 py-5">
-          <div className="px-6">
-            <CardHeadline>Customize</CardHeadline>
-          </div>
+        <Card className="z-20 col-span-6 py-5 sm:col-span-3 lg:col-span-2">
+          <CardHeadline className="mx-6">Customize</CardHeadline>
           {easingType === EasingType.BEZIER && <BezierEditor />}
           {easingType === EasingType.OVERSHOOT && <OvershootEditor />}
           {easingType === EasingType.SPRING && <SpringEditor />}
           {easingType === EasingType.BOUNCE && <BounceEditor />}
           {easingType === EasingType.WIGGLE && <WiggleEditor />}
         </Card>
-        <EasingPreview />
-      </div>
-      <div className="grid grid-cols-3 gap-8">
-        <Card className="col-span-2 px-6 py-5">
+        <Card className="z-10 col-span-6 py-5 sm:col-span-3 lg:col-span-2">
+          <EasingPreview />
+        </Card>
+        <Card className="col-span-6 px-6 py-5 lg:col-span-4">
           <CardHeadline>Code</CardHeadline>
           <EasingCode />
         </Card>
-        <Share />
+        <Card className="col-span-6 px-6 py-5 lg:col-span-2">
+          <Share />
+        </Card>
       </div>
-      <div>
-        <div className="flex items-center justify-center gap-3 text-center text-sm text-zinc-400">
-          <span>Made with </span>
-          <span className="sr-only">love</span>
-          <HeartIcon className="size-6 text-grdt-to drop-shadow-[0_0_0.5rem_var(--grdt-to)]" />
-          <span>
-            by{' '}
-            <a
-              href="https://x.com/RoyDigerhund"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={classNames('text-zinc-100 hover:text-grdt-to', shortTransition)}
-            >
-              Matthias Martin
-            </a>
-          </span>
-        </div>
-      </div>
+      <Footer />
     </div>
   );
 }

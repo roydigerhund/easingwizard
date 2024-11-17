@@ -5,16 +5,19 @@ export default {
   theme: {
     extend: {
       colors: {
-        "grdt-from": "#5e18f5",
-        "grdt-via": "#50aaf8",
-        "grdt-to": "#6ae5b5",
+        'grdt-from': '#5e18f5',
+        'grdt-via': '#50aaf8',
+        'grdt-to': '#6ae5b5',
       },
       boxShadow: {
-        element_inactive: '0 0 0 var(--shadow-retract, -0.25rem) transparent,inset 0 0 0 0 transparent,0 0 0 1px var(--border-inactive)',
-        element_focused: '0 0 2rem var(--shadow-retract, -0.25rem) var(--grdt-to),inset 0 0 0 2px var(--grdt-to),0 0 0 1px transparent',
-        element_pressed: '0 0 1rem var(--shadow-retract, -0.25rem) var(--grdt-to),inset 0 0 0 2px var(--grdt-to),0 0 0 1px transparent',
+        element_inactive:
+          '0 0 0 var(--shadow-retract, -0.25rem) transparent,inset 0 0 0 0 transparent,0 0 0 1px var(--border-inactive)',
+        element_focused:
+          '0 0 2rem var(--shadow-retract, -0.25rem) var(--grdt-to),inset 0 0 0 2px var(--grdt-to),0 0 0 1px transparent',
+        element_pressed:
+          '0 0 1rem var(--shadow-retract, -0.25rem) var(--grdt-to),inset 0 0 0 2px var(--grdt-to),0 0 0 1px transparent',
         element_border_inactive: '0 0 0 1px transparent',
-        element_border_active: "0 0 0 1px var(--border-active)"
+        element_border_active: '0 0 0 1px var(--border-active)',
       },
       fontFamily: {
         sans: [
@@ -27,11 +30,20 @@ export default {
           '"Segoe UI Symbol"',
           '"Noto Color Emoji"',
         ],
-        monospace: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'],
+        monospace: [
+          'ui-monospace',
+          'SFMono-Regular',
+          'Menlo',
+          'Monaco',
+          'Consolas',
+          '"Liberation Mono"',
+          '"Courier New"',
+          'monospace',
+        ],
       },
       transitionTimingFunction: {
-        "in-sine": "cubic-bezier(0.13, 0, 0.39, 0)",
-        "out-sine": "cubic-bezier(0.61, 1, 0.87, 1)",
+        'in-sine': 'cubic-bezier(0.13, 0, 0.39, 0)',
+        'out-sine': 'cubic-bezier(0.61, 1, 0.87, 1)',
         spring:
           'linear(0, 0.013 0.6%, 0.051 1.2%, 0.202 2.5%, 1.228 8.4%, 1.375 9.9%, 1.42 10.7%, 1.44 11.5%, 1.441 12.1%, 1.428 12.8%, 1.362 14.2%, 0.891 20.4%, 0.829 21.9%, 0.805 23.4%, 0.81 24.6%, 0.839 26%, 1.047 32.2%, 1.074 33.6%, 1.086 35.1%, 1.075 37.5%, 0.985 43.5%, 0.962 46.9%, 0.967 49.3%, 1.006 55.3%, 1.017 58.7%, 0.993 70.3%, 1.003 82%, 1)',
         wiggle:
@@ -41,5 +53,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/container-queries')],
 } satisfies Config;

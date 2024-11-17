@@ -52,8 +52,8 @@ export default function EasingCode() {
   const transformedValue = transformValue();
 
   return (
-    <>
-      <div className="flex items-start justify-between">
+    <div className="@container">
+      <div className="@md:flex-row flex flex-col items-start justify-between gap-6">
         <div className="flex gap-6">
           {Object.values(CodeType).map((type) => (
             <TabBarButton key={type} onClick={() => setCodeType(type)} isActive={codeType === type} icon={icons[type]}>
@@ -69,7 +69,7 @@ export default function EasingCode() {
           toast="Copied!"
         />
       </div>
-      <div className="mt-6 flex flex-col items-start gap-4">
+      <div className="@md:mt-6 mt-3 flex flex-col items-start gap-4">
         <code
           className={classNames(
             codeType === CodeType.TAILWIND_CSS && 'break-all',
@@ -84,7 +84,7 @@ export default function EasingCode() {
           {transformedValue}
         </code>
       </div>
-    </>
+    </div>
   );
 }
 

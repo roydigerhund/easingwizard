@@ -49,7 +49,7 @@ export default function TabBarButton({ isActive, children, icon, onClick }: Prop
         style={{ clipPath: 'polygon(0 100%, 100% 100%, calc(100% + 2.5rem) 3rem, -2.5rem 3rem)' }}
       />
       {icon}
-      <span className={classNames('tracking-wide')}>{children}</span>
+      <span className={classNames('tracking-wide whitespace-nowrap')}>{children}</span>
     </button>
   );
 }
