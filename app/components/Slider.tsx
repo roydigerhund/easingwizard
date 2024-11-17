@@ -1,3 +1,4 @@
+import * as RSlider from '@radix-ui/react-slider';
 import { useRef, useState } from 'react';
 import { classNames } from '~/utils/class-names';
 import { shortTransition } from '~/utils/common-classes';
@@ -12,17 +13,18 @@ type Props = {
   min: number;
   max: number;
   step: number;
+  inputStep?: number;
 };
 
-export default function Slider({ className, label, value, onChange, min, max, step }: Props) {
-  const buttonRef = useRef<HTMLButtonElement>(null);
+export default function Slider({ className, label, value, onChange, min, max, step, inputStep }: Props) {
+  const sliderRef = useRef<HTMLSpanElement>(null);
   const [valuePrefix, setValuePrefix] = useState<string | undefined>();
   const [hasTrailingComma, setHasTrailingComma] = useState(false);
   const [trailingZeros, setTrailingZeros] = useState<string | undefined>();
   const [isEmpty, setIsEmpty] = useState(false);
 
-  const clampedValue = Math.min(Math.max(value, min), max);
   const toFixedPrecision = step.toString().split('.')[1]?.length || 0;
+  const toFixedInputPrecision = (inputStep || step).toString().split('.')[1]?.length || 0;
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement | HTMLInputElement>, isTextInput?: boolean) => {
     const isShiftPressed = e.shiftKey;
@@ -48,7 +50,7 @@ export default function Slider({ className, label, value, onChange, min, max, st
     const value = e.target.value;
     const valuesPrecision = value.split('.')[1]?.length || value.split(',')[1]?.length || 0;
 
-    if (valuesPrecision > toFixedPrecision) return;
+    if (valuesPrecision > toFixedInputPrecision) return;
 
     resetConditions();
 
@@ -66,14 +68,16 @@ export default function Slider({ className, label, value, onChange, min, max, st
 
     parsed = Math.min(Math.max(parsed, min), max);
 
-    if (step && floatSafeModulo(parsed, step) !== 0) {
-      parsed = parseFloat((Math.round(parsed / step) * step).toFixed(toFixedPrecision));
+    const usedStep = inputStep || step;
+
+    if (usedStep && floatSafeModulo(parsed, usedStep) !== 0) {
+      parsed = parseFloat((Math.round(parsed / usedStep) * usedStep).toFixed(toFixedInputPrecision));
     }
-    if (checkCommaRegex(value) && toFixedPrecision) setHasTrailingComma(true);
-    if (value.match(trailingZeroRegex) && toFixedPrecision) {
+    if (checkCommaRegex(value) && toFixedInputPrecision) setHasTrailingComma(true);
+    if (value.match(trailingZeroRegex) && toFixedInputPrecision) {
       const match = trailingZeroRegex.exec(value);
       const valuesPrecision = value.split('.')[1]?.length || 0;
-      const additionalZeros = toFixedPrecision - valuesPrecision + 1;
+      const additionalZeros = toFixedInputPrecision - valuesPrecision + 1;
       if (match && match[1]) setTrailingZeros(match[1].substring(0, additionalZeros));
     }
     onChange(parsed);
@@ -88,59 +92,41 @@ export default function Slider({ className, label, value, onChange, min, max, st
             'mr-6 flex w-16 cursor-default items-center font-light tracking-wide text-zinc-500 group-focus-within/all:text-zinc-100 group-hover/all:text-zinc-100',
             shortTransition,
           )}
-          onClick={() => buttonRef.current?.focus()}
+          onClick={() => sliderRef.current?.focus()}
         >
           {label}
         </button>
         <div
           className={classNames(
-            'relative h-10 grow rounded-xl',
-            'shadow-element_inactive hover:shadow-element_focused focus-within:shadow-element_focused active:shadow-element_pressed',
-            'ease-out-sine transition-all duration-300 will-change-transform',
+            'relative flex grow touch-none rounded-xl select-none px-1.5',
+            'shadow-element_inactive focus-within:shadow-element_focused hover:shadow-element_focused active:shadow-element_pressed',
+            'transition-all duration-300 ease-out-sine will-change-transform',
             '[--shadow-retract:-0.6rem]',
           )}
         >
-          <input
-            tabIndex={-1}
-            type="range"
+          <RSlider.Root
+            className={classNames('relative flex h-10 grow cursor-ew-resize items-center')}
+            value={[value]}
             min={min}
             max={max}
             step={step}
-            value={value}
-            onChange={(e) => {
-              onChange(parseFloat(e.target.value));
-              buttonRef.current?.focus();
-            }}
-            onClick={() => buttonRef.current?.focus()}
-            className={classNames('styled-slider', 'absolute inset-0 cursor-ew-resize rounded-xl px-2', 'opacity-0')}
-          />
-          <div className="pointer-events-none absolute inset-x-3 inset-y-0">
-            <div
-              className="absolute -inset-x-1.5 inset-y-1.5 w-full rounded-l-lg bg-zinc-900"
-              style={{
-                clipPath: `inset(0 ${100 - ((clampedValue - min) / (max - min)) * 100}% 0 0)`,
-              }}
+            onValueChange={([value]) => onChange(value)}
+          >
+            <RSlider.Track className="relative h-7 grow overflow-hidden rounded-lg">
+              <RSlider.Range className="absolute h-7 bg-zinc-900" />
+            </RSlider.Track>
+            <RSlider.Thumb
+              ref={sliderRef}
+              className="block h-9 w-3 rounded-full border-4 border-zinc-950 bg-zinc-100 outline-none"
+              aria-label={label}
             />
-            <button
-              ref={buttonRef}
-              className={classNames(
-                'absolute bottom-1.5 top-1.5 w-1 rounded-full bg-zinc-100 outline-none',
-                '-translate-x-1/2',
-              )}
-              value={value}
-              onKeyDown={handleKeyDown}
-              onClick={() => buttonRef.current?.focus()}
-              style={{
-                left: `${((clampedValue - min) / (max - min)) * 100}%`,
-              }}
-            />
-          </div>
+          </RSlider.Root>
         </div>
       </div>
       <input
         className={classNames(
           'ml-3 w-16 rounded-xl bg-transparent text-center text-zinc-100',
-          'ease-out-sine transition-all duration-300 will-change-transform',
+          'transition-all duration-300 ease-out-sine will-change-transform',
           'outline-none',
           'shadow-element_inactive hover:shadow-element_focused focus:shadow-element_focused active:shadow-element_pressed',
           '[--shadow-retract:-0.4rem]',
@@ -156,6 +142,7 @@ export default function Slider({ className, label, value, onChange, min, max, st
         }
         onChange={handleChange}
         onKeyDown={(e) => handleKeyDown(e, true)}
+        inputMode="numeric"
       />
     </div>
   );

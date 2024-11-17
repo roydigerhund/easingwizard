@@ -19,6 +19,7 @@ type DragProps = {
 };
 
 export default function Drag(props: DragProps) {
+  const elementRef = React.createRef<SVGCircleElement>();
   const { x, y, minX = -Infinity, maxX = Infinity, minY = -Infinity, maxY = Infinity, onChange, className } = props;
 
   const [element, setElement] = useState<DragElement>({
@@ -45,11 +46,15 @@ export default function Drag(props: DragProps) {
       });
 
       e.currentTarget.setPointerCapture(e.pointerId);
+
+      document.body.classList.add('lock-scroll');
     }
   }
 
   function handlePointerMove(e: React.PointerEvent<SVGCircleElement>) {
     if (element.active) {
+      e.stopPropagation();
+      e.preventDefault();
       const svg = e.currentTarget.ownerSVGElement;
       if (svg) {
         const pt = svg.createSVGPoint();
@@ -73,20 +78,23 @@ export default function Drag(props: DragProps) {
 
   function handlePointerUp() {
     setElement({ ...element, active: false });
+
+    document.body.classList.remove('lock-scroll');
   }
 
   return (
     <g
-      className={classNames('relative group cursor-grab active:cursor-grabbing', className)}
+      ref={elementRef}
+      className={classNames('group relative cursor-grab touch-none select-none active:cursor-grabbing', className)}
       onPointerDown={handlePointerDown}
-      onPointerUp={handlePointerUp}
       onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
     >
       <circle
         className={classNames(
-          'opacity-0 stroke-current',
+          'stroke-current opacity-0',
           'transition-[stroke-width,opacity]',
-          'ease-in duration-[300ms]',
+          'duration-[300ms] ease-in',
           'group-hover:duration-[1500ms] group-hover:ease-spring',
           'group-hover:stroke-[6] group-hover:opacity-50',
         )}

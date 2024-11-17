@@ -10,7 +10,7 @@ type Props = {
 };
 
 export default function Toggle({ className, label, value, onChange }: Props) {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   return (
     <div className={classNames(className, 'group/all relative flex')}>
@@ -20,41 +20,38 @@ export default function Toggle({ className, label, value, onChange }: Props) {
           'mr-6 flex grow cursor-default items-center font-light tracking-wide text-zinc-500 group-focus-within/all:text-zinc-100 group-hover/all:text-zinc-100',
           shortTransition,
         )}
-        onClick={() => inputRef.current?.focus()}
+        onClick={() => buttonRef.current?.focus()}
       >
         {label}
       </button>
-      <label className="group">
-        <input
-          ref={inputRef}
-          className="absolute opacity-0"
-          type="checkbox"
-          checked={value}
-          onChange={(e) => {
-            onChange(e.target.checked);
-          }}
-        />
-        <span className="sr-only">{label}</span>
-        <span
+      <div className="group select-none">
+        <button
+          ref={buttonRef}
           className={classNames(
-            'relative block h-7 w-14 cursor-pointer rounded-full',
-            'shadow-element_inactive group-hover:shadow-element_focused group-focus-within:shadow-element_focused group-active:shadow-element_pressed',
-            'ease-out-sine transition-all duration-300 will-change-transform',
+            'relative block h-7 w-14 cursor-pointer rounded-full outline-none',
+            'shadow-element_inactive group-focus-within:shadow-element_focused group-hover:shadow-element_focused group-active:shadow-element_pressed',
+            'transition-all duration-300 ease-out-sine will-change-transform',
           )}
+          onClick={() => onChange(!value)}
+          aria-label={label}
         >
           <span
             className={classNames(
               'absolute inset-0 rounded-full',
-              'ease-out-sine transition-all duration-100',
-              'group-hover:ease-in-sine group-hover:duration-200',
-              'group-focus:ease-in-sine group-focus:duration-200',
+              'transition-all duration-100 ease-out-sine',
+              'group-hover:duration-200 group-hover:ease-in-sine',
+              'group-focus-within:duration-200 group-focus-within:ease-in-sine',
               value
-                ? 'shadow-element_border_active group-hover:shadow-element_border_inactive group-focus:shadow-element_border_inactive'
+                ? 'shadow-element_border_active group-focus-within:shadow-element_border_inactive group-hover:shadow-element_border_inactive'
                 : 'shadow-element_border_inactive',
             )}
           />
           <span
-            className={classNames('absolute inset-1.5 rounded-full bg-zinc-900', value ? 'opacity-100' : 'opacity-0', shortTransition)}
+            className={classNames(
+              'absolute inset-1.5 rounded-full bg-zinc-900',
+              value ? 'opacity-100' : 'opacity-0',
+              shortTransition,
+            )}
           />
           <span
             className={classNames(
@@ -66,8 +63,8 @@ export default function Toggle({ className, label, value, onChange }: Props) {
               value ? 'bg-zinc-100' : 'bg-zinc-500',
             )}
           />
-        </span>
-      </label>
+        </button>
+      </div>
     </div>
   );
 }

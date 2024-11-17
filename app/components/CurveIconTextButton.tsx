@@ -15,7 +15,9 @@ export default function CurveIconTextButton({ isActive, icon, ...props }: IconTe
           strokeLinejoin="round"
           className={classNames(
             'size-6 overflow-visible',
-            isActive ? 'stroke-[url(#curve-gradient)]' : 'stroke-current',
+            'stroke-[url(#curve-gradient)]',
+            'transition-all duration-300 ease-linear will-change-transform',
+            isActive ? 'saturate-100' : 'saturate-0 opacity-50 group-hover:opacity-100',
           )}
           fill="none"
         >

@@ -41,7 +41,7 @@ export default function StepSlider<T>({ className, label, value, options, onChan
       >
         {label}
       </button>
-      <div className={classNames('group/input relative h-8 grow')}>
+      <div className={classNames('group/input relative h-8 grow select-none')}>
         <input
           tabIndex={-1}
           type="range"
@@ -83,7 +83,7 @@ export default function StepSlider<T>({ className, label, value, options, onChan
             <span className={classNames('rounded-full bg-zinc-100 size-full block')} />
           </button>
         </div>
-        <span className="pointer-events-none absolute inset-0 flex w-full items-center justify-between">
+        <span className="pointer-events-none absolute inset-0 flex w-full items-center justify-between select-none">
           {options.map((option) => (
             <span
               key={option + ''}

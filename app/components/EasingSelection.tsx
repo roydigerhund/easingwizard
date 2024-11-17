@@ -168,7 +168,7 @@ export default function EasingSelection() {
                   icon={
                     <polyline
                       points={overshootCalculations[style as OvershootStyle].default.sampledPoints
-                        .map((point) => `${point.x},${point.y}`)
+                        .map((point) => `${point.x},${point.y / 2 + 25}`)
                         .join(' ')}
                     />
                   }
@@ -183,25 +183,6 @@ export default function EasingSelection() {
             }}
           />
         </>
-      )}
-      {easingType === EasingType.OVERSHOOT && (
-        <div className="flex flex-wrap gap-4">
-          {Object.keys(overshootFunctions[overshootStyle]).map((curve) => (
-            <CurveIconTextButton
-              key={curve}
-              isActive={!overshootIsCustom && overshootCurve === curve}
-              onClick={() => onOvershootValueChange(overshootStyle, curve as OvershootCurve)}
-              text={humanize(curve)}
-              icon={
-                <polyline
-                  points={overshootCalculations[overshootStyle][curve as OvershootCurve].sampledPoints
-                    .map((point) => `${point.x},${point.y}`)
-                    .join(' ')}
-                />
-              }
-            />
-          ))}
-        </div>
       )}
       {easingType === EasingType.SPRING && (
         <div className="flex flex-wrap gap-4">
@@ -253,6 +234,25 @@ export default function EasingSelection() {
                 <polyline
                   points={wiggleCalculations[curve as WiggleCurve].sampledPoints
                     .map((point) => `${point.x},${point.y / 2}`)
+                    .join(' ')}
+                />
+              }
+            />
+          ))}
+        </div>
+      )}
+      {easingType === EasingType.OVERSHOOT && (
+        <div className="flex flex-wrap gap-4">
+          {Object.keys(overshootFunctions[overshootStyle]).map((curve) => (
+            <CurveIconTextButton
+              key={curve}
+              isActive={!overshootIsCustom && overshootCurve === curve}
+              onClick={() => onOvershootValueChange(overshootStyle, curve as OvershootCurve)}
+              text={humanize(curve)}
+              icon={
+                <polyline
+                  points={overshootCalculations[overshootStyle][curve as OvershootCurve].sampledPoints
+                    .map((point) => `${point.x},${point.y / 2 + 25}`)
                     .join(' ')}
                 />
               }

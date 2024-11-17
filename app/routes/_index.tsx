@@ -27,6 +27,7 @@ export const meta: MetaFunction = () => {
       name: 'description',
       content: 'Create and customize CSS easing functions with magical precision.',
     },
+    { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1' },
   ];
 };
 
@@ -74,11 +75,17 @@ export default function Index() {
       <div className="flex justify-center">
         <EasingTypeSelection />
       </div>
-      <div className={classNames('relative grid grid-cols-6', 'mx-auto max-w-[30rem] sm:max-w-none', 'gap-4 xl:gap-8')}>
+      <div
+        className={classNames(
+          'relative z-10 grid grid-cols-6',
+          'mx-auto max-w-[30rem] sm:max-w-none',
+          'gap-4 xl:gap-8',
+        )}
+      >
         <Card className="col-span-6 px-6 py-5 lg:col-span-2">
           <EasingSelection />
         </Card>
-        <Card className="z-20 col-span-6 py-5 sm:col-span-3 lg:col-span-2">
+        <Card className="col-span-6 py-5 sm:col-span-3 lg:col-span-2">
           <CardHeadline className="mx-6">Customize</CardHeadline>
           {easingType === EasingType.BEZIER && <BezierEditor />}
           {easingType === EasingType.OVERSHOOT && <OvershootEditor />}
@@ -86,7 +93,7 @@ export default function Index() {
           {easingType === EasingType.BOUNCE && <BounceEditor />}
           {easingType === EasingType.WIGGLE && <WiggleEditor />}
         </Card>
-        <Card className="z-10 col-span-6 py-5 sm:col-span-3 lg:col-span-2">
+        <Card className="col-span-6 py-5 sm:col-span-3 lg:col-span-2">
           <EasingPreview />
         </Card>
         <Card className="col-span-6 px-6 py-5 lg:col-span-4">

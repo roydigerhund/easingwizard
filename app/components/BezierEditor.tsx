@@ -62,7 +62,7 @@ export default function BezierEditor() {
         </svg>
         {/* Handles */}
         <svg
-          className="absolute inset-0 z-40 overflow-visible"
+          className="absolute inset-0 z-40 touch-none overflow-visible"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
@@ -113,6 +113,7 @@ export default function BezierEditor() {
           min={0}
           max={1}
           step={0.01}
+          inputStep={0.001}
         />
         <Slider
           label="Y1"
@@ -121,6 +122,7 @@ export default function BezierEditor() {
           min={-1}
           max={2}
           step={0.01}
+          inputStep={0.001}
         />
         <Slider
           label="X2"
@@ -129,6 +131,7 @@ export default function BezierEditor() {
           min={0}
           max={1}
           step={0.01}
+          inputStep={0.001}
         />
         <Slider
           label="Y2"
@@ -137,6 +140,7 @@ export default function BezierEditor() {
           min={-1}
           max={2}
           step={0.01}
+          inputStep={0.001}
         />
       </InputGroup>
     </div>

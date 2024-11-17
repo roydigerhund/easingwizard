@@ -7,7 +7,7 @@ export default function EditorBase({ children }: { children: ReactNode }) {
   const editorExtraSpaceBottom = useEasingStore((state) => state.editorExtraSpaceBottom);
 
   return (
-    <div className="relative z-0">
+    <div className="relative z-10 select-none">
       {editorExtraSpaceTop && <div className="aspect-square w-full border-t border-zinc-800" />}
       <MeshBase>{children}</MeshBase>
       {editorExtraSpaceBottom && <div className="aspect-square w-full border-b border-zinc-800" />}

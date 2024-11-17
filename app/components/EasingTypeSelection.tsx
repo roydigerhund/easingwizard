@@ -9,7 +9,7 @@ export default function EasingTypeSelection() {
 
   return (
     <div className="flex col-span-4">
-      <div className="relative flex gap-8 p-1 rounded-full bg-zinc-950">
+      <div className="relative flex flex-wrap gap-8 p-1 rounded-full bg-zinc-950">
         <div
           className="absolute inset-0 rounded-full"
           style={{

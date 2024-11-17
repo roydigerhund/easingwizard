@@ -68,6 +68,7 @@ export default function EasingPreview() {
             disabled={!allowPreviewShowLinear}
             isActive={previewShowLinear && allowPreviewShowLinear}
             onClick={() => setState({ previewShowLinear: !previewShowLinear })}
+            position='left'
           >
             <CloneIcon className="size-7" />
           </IconButton>
@@ -93,6 +94,7 @@ export default function EasingPreview() {
                     previewPlayMode === PreviewPlayMode.ONCE ? PreviewPlayMode.INFINITE : PreviewPlayMode.ONCE,
                 })
               }
+              position='right'
             >
               <InfinityIcon className="size-7" />
             </IconButton>

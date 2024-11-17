@@ -12,6 +12,7 @@
     "generate-linear-easings": "tsx ./scripts/generate-linear-easings.ts && prettier --write ./app/generated/linear-easings.ts"
   },
   "dependencies": {
+    "@radix-ui/react-slider": "^1.2.1",
     "@remix-run/node": "^2.12.1",
     "@remix-run/react": "^2.12.1",
     "@remix-run/serve": "^2.12.1",
