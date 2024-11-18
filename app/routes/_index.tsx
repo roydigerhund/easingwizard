@@ -25,7 +25,7 @@ export const meta: MetaFunction = () => {
     { title: 'Easing Wizard - CSS Easing Editor' },
     {
       name: 'description',
-      content: 'Create and customize CSS easing functions with magical precision.',
+      content: 'Create and customize CSS easing functions with ease and magical precision using Easing Wizard 🧙‍♂️',
     },
     { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1' },
   ];
@@ -65,7 +65,7 @@ export default function Index() {
   return (
     <div
       className={classNames(
-        'relative z-0 mx-auto flex max-w-7xl flex-col items-stretch gap-8 px-4 py-12 md:gap-12 md:px-6',
+        'relative z-0 mx-auto flex max-w-7xl flex-col items-stretch gap-8 px-4 py-8 sm:py-12 md:gap-12 md:px-6',
         'linear transition-opacity duration-500',
         showUI ? 'opacity-100' : 'no-transition opacity-0',
       )}
@@ -80,10 +80,10 @@ export default function Index() {
           'gap-4 xl:gap-8',
         )}
       >
-        <Card className="col-span-6 px-6 py-5 lg:col-span-2">
+        <Card className="col-span-6 px-6 py-5 [--animation-delay:0.5s] lg:col-span-2">
           <EasingSelection />
         </Card>
-        <Card className="col-span-6 py-5 sm:col-span-3 lg:col-span-2">
+        <Card className="col-span-6 py-5 [--animation-delay:0.5s] sm:col-span-3 lg:col-span-2">
           <CardHeadline className="mx-6">Customize</CardHeadline>
           {easingType === EasingType.BEZIER && <BezierEditor />}
           {easingType === EasingType.OVERSHOOT && <OvershootEditor />}
@@ -91,14 +91,14 @@ export default function Index() {
           {easingType === EasingType.BOUNCE && <BounceEditor />}
           {easingType === EasingType.WIGGLE && <WiggleEditor />}
         </Card>
-        <Card className="col-span-6 py-5 sm:col-span-3 lg:col-span-2">
+        <Card className="col-span-6 py-5 [--animation-delay:0.5s] sm:col-span-3 lg:col-span-2">
           <EasingPreview />
         </Card>
-        <Card className="col-span-6 px-6 py-5 lg:col-span-4">
+        <Card className="col-span-6 px-6 py-5 [--animation-delay:0.5s] lg:col-span-4">
           <CardHeadline>Code</CardHeadline>
           <EasingCode />
         </Card>
-        <Card className="col-span-6 px-6 py-5 lg:col-span-2">
+        <Card className="col-span-6 px-6 py-5 [--animation-delay:0.5s] lg:col-span-2">
           <Share />
         </Card>
       </div>

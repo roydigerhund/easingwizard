@@ -10,6 +10,7 @@ export default function EasingTypeSelection() {
   return (
     <div
       className={classNames(
+        'animate-appear [--animation-delay:0.25s]',
         'relative mx-auto flex items-center justify-between gap-2 rounded-full p-1',
         'max-sm:max-w-[24rem] max-sm:flex-wrap max-sm:justify-center max-sm:gap-3',
         'md:gap-4 lg:gap-8 lg:bg-zinc-950',

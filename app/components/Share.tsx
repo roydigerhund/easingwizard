@@ -16,7 +16,9 @@ import XIcon from './icons/XIcon';
 import IconTextButton from './IconTextButton';
 
 const productionOrigin = 'https://easingwizard.com';
-const shareText = encodeURI('Create and customize CSS easing functions with magical precision using Easing Wizard 🧙‍♂️');
+const shareText = encodeURI(
+  'Create and customize CSS easing functions with ease and magical precision using Easing Wizard 🧙‍♂️',
+);
 
 export default function Share() {
   const getCurrentState = useEasingStore((state) => state.getCurrentState);
@@ -59,8 +61,8 @@ export default function Share() {
   return (
     <div className="@container">
       <CardHeadline>Share</CardHeadline>
-      <div className="@2xl:flex items-stretch">
-        <div className="space-y-3 flex-1">
+      <div className="items-stretch @2xl:flex">
+        <div className="flex-1 space-y-3">
           <p className="font-light leading-relaxed text-zinc-400">
             Click the button below to copy the link to your current easing configuration.
           </p>
@@ -79,12 +81,12 @@ export default function Share() {
           }}
         />
         <div
-          className="mx-8 border-l border-zinc-700 hidden @2xl:block w-px"
+          className="mx-8 hidden w-px border-l border-zinc-700 @2xl:block"
           style={{
             maskImage: 'linear-gradient(to bottom,rgba(0,0,0,1),rgba(0,0,0,0.1))',
           }}
         />
-        <div className="space-y-3 flex-1">
+        <div className="flex-1 space-y-3">
           <p className="font-light leading-relaxed text-zinc-400">
             Do you like Easing Wizard?
             <br />
