@@ -8,7 +8,7 @@ export default function Header() {
           <WizardIcon className="animate-path col-span-full row-span-full h-16 w-auto text-grdt-to drop-shadow-[0_0_0.25rem_var(--grdt-to)] min-[360px]:h-20" />
         </div>
         <div className="mt-2 space-y-1 min-[440px]:mt-4 min-[440px]:space-y-2">
-          <h1 className="animate-appear text-3xl font-extrabold text-zinc-100 [--animation-delay:0.30s] min-[440px]:text-4xl sm:text-5xl">
+          <h1 className="animate-appear text-3xl font-extrabold text-zinc-100 [--animation-delay:0.25s] min-[440px]:text-4xl sm:text-5xl">
             Easing Wizard
           </h1>
           <p className="animate-appear text-[13px] text-zinc-400 [--animation-delay:0.35s] min-[440px]:text-[15px]">

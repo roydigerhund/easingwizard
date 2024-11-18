@@ -79,16 +79,25 @@ input[type='range'].styled-slider::-moz-range-thumb {
 
 .animate-path {
   animation: movePath 1s linear;
-  animation-delay: 0.5s;
   animation-fill-mode: backwards;
+  stroke-dasharray: 450;
+  stroke-dashoffset: 0;
+  transition: all 1s;
+
+  &:hover {
+    transform: scale(0.9);
+    opacity: 0;
+    stroke-dasharray: 600;
+    stroke-dashoffset: 700;
+  }
 }
 
 @keyframes movePath {
-  from {
-    stroke-dasharray: 700;
-    stroke-dashoffset: 750;
+  0% {
+    stroke-dasharray: 600;
+    stroke-dashoffset: 700;
   }
-  to {
+  100% {
     stroke-dasharray: 450;
     stroke-dashoffset: 0;
   }

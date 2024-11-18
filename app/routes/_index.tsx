@@ -1,4 +1,4 @@
-import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
+import type { LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { useEffect, useState } from 'react';
 import BezierEditor from '~/components/BezierEditor';
@@ -19,17 +19,6 @@ import WiggleEditor from '~/components/WiggleEditor';
 import { EasingState, useEasingStore } from '~/state/easing-store';
 import { EasingType } from '~/types-and-enums';
 import { classNames } from '~/utils/class-names';
-
-export const meta: MetaFunction = () => {
-  return [
-    { title: 'Easing Wizard - CSS Easing Editor' },
-    {
-      name: 'description',
-      content: 'Create and customize CSS easing functions with ease and magical precision using Easing Wizard 🧙‍♂️',
-    },
-    { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1' },
-  ];
-};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   try {
@@ -66,7 +55,6 @@ export default function Index() {
     <div
       className={classNames(
         'relative z-0 mx-auto flex max-w-7xl flex-col items-stretch gap-8 px-4 py-8 sm:py-12 md:gap-12 md:px-6',
-        'linear transition-opacity duration-500',
         showUI ? 'opacity-100' : 'no-transition opacity-0',
       )}
     >
