@@ -117,7 +117,7 @@ export default function Slider({ className, label, value, onChange, min, max, st
             </RSlider.Track>
             <RSlider.Thumb
               ref={sliderRef}
-              className="block h-9 w-3 rounded-full border-4 border-zinc-950 bg-zinc-100 outline-none"
+              className="block h-9 w-3 rounded-full border-4 border-zinc-950 bg-zinc-100 focus:outline-none outline-none"
               aria-label={label}
             />
           </RSlider.Root>
@@ -127,7 +127,7 @@ export default function Slider({ className, label, value, onChange, min, max, st
         className={classNames(
           'ml-3 w-16 rounded-xl bg-transparent text-center text-zinc-100',
           'transition-all duration-300 ease-out-sine will-change-transform',
-          'outline-none',
+          'focus:outline-none outline-none',
           'shadow-element_inactive hover:shadow-element_focused focus:shadow-element_focused active:shadow-element_pressed',
           '[--shadow-retract:-0.4rem]',
         )}

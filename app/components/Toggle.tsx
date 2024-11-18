@@ -28,7 +28,7 @@ export default function Toggle({ className, label, value, onChange }: Props) {
         <button
           ref={buttonRef}
           className={classNames(
-            'relative block h-7 w-14 cursor-pointer rounded-full outline-none',
+            'relative block h-7 w-14 cursor-pointer rounded-full focus:outline-none outline-none',
             'shadow-element_inactive group-focus-within:shadow-element_focused group-hover:shadow-element_focused group-active:shadow-element_pressed',
             'transition-all duration-300 ease-out-sine will-change-transform',
           )}

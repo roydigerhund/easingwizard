@@ -8,44 +8,58 @@ export default function EasingTypeSelection() {
   const setEasingType = useEasingStore((state) => state.setEasingType);
 
   return (
-    <div className="flex col-span-4">
-      <div className="relative flex flex-wrap gap-8 p-1 rounded-full bg-zinc-950">
-        <div
-          className="absolute inset-0 rounded-full"
-          style={{
-            padding: '1px',
-            background: 'linear-gradient(175deg,hsla(0,0%,100%,.15),transparent 100%)',
-            mask: 'linear-gradient(#000,#000) content-box,linear-gradient(#000,#000)',
-            maskComposite: 'exclude',
-          }}
-        />
-        {Object.values(EasingType).map((type) => (
-          <button
-            key={type}
+    <div
+      className={classNames(
+        'relative mx-auto flex items-center justify-between gap-2 rounded-full p-1',
+        'max-sm:max-w-[24rem] max-sm:flex-wrap max-sm:justify-center max-sm:gap-3',
+        'md:gap-4 lg:gap-8 lg:bg-zinc-950',
+      )}
+    >
+      <div
+        className="absolute inset-0 rounded-full max-sm:hidden"
+        style={{
+          padding: '1px',
+          background: 'linear-gradient(175deg,hsla(0,0%,100%,.15),transparent 100%)',
+          mask: 'linear-gradient(#000,#000) content-box,linear-gradient(#000,#000)',
+          maskComposite: 'exclude',
+        }}
+      />
+      {Object.values(EasingType).map((type) => (
+        <button
+          key={type}
+          className={classNames(
+            'group relative z-0 rounded-full p-0.5 outline-none focus:outline-none',
+            'transition-all duration-200 ease-linear',
+            // somehow fixes a UI bug in safari when the stars are not visible
+            'max-lg:will-change-transform',
+            easingType === type ? 'text-zinc-300' : 'text-zinc-500 hover:text-zinc-300',
+          )}
+          onClick={() => setEasingType(type)}
+        >
+          <span
             className={classNames(
-              'rounded-full relative p-px z-0',
-              easingType === type ? 'text-zinc-300' : 'text-zinc-500 hover:text-zinc-300',
+              'absolute inset-0 -z-10 rounded-full bg-gradient-to-tr from-grdt-from via-grdt-via to-grdt-to',
+              'transition-all duration-200 ease-linear',
+              easingType === type ? 'opacity-100' : 'scale-110 opacity-0 group-focus:scale-100 group-focus:opacity-100',
             )}
-            onClick={() => setEasingType(type)}
+          />
+          <span className={classNames('absolute inset-0 -z-20 rounded-full bg-zinc-950')} />
+          <span
+            className={classNames(
+              'absolute inset-0 -z-30 rounded-full bg-gradient-to-tr from-grdt-from via-grdt-via to-grdt-to blur-[0.5rem]',
+              'transition-all duration-200 ease-linear',
+              easingType === type ? 'opacity-100' : 'opacity-0 group-focus:opacity-100',
+            )}
+          />
+          <span
+            className={classNames(
+              'relative z-10 block rounded-full bg-zinc-950 px-4 py-2 text-xs min-[360px]:text-sm uppercase tracking-widest md:px-5',
+            )}
           >
-            <span
-              className={classNames(
-                'absolute -z-10 rounded-full p-0.5 inset-0 bg-gradient-to-tr from-grdt-from via-grdt-via to-grdt-to',
-                easingType !== type && 'opacity-0',
-              )}
-              style={{
-                mask: 'linear-gradient(#000,#000) content-box,linear-gradient(#000,#000)',
-                maskComposite: 'exclude',
-              }}
-            />
-            <span
-              className={classNames('px-5 py-2 block rounded-full uppercase tracking-widest text-sm relative z-10')}
-            >
-              {humanize(type)}
-            </span>
-          </button>
-        ))}
-      </div>
+            {humanize(type)}
+          </span>
+        </button>
+      ))}
     </div>
   );
 }

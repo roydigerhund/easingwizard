@@ -25,7 +25,7 @@ export default function IconTextButton({ isActive, isStaticButton, text, icon, t
         'group relative z-0 flex items-center gap-2 rounded-xl px-4 py-2.5 select-none',
         isActive || isStaticButton ? 'text-zinc-100' : 'text-zinc-500 hover:text-zinc-400',
         'transition-all duration-300 ease-out-sine will-change-transform',
-        'rounded-xl outline-none',
+        'rounded-xl focus:outline-none outline-none',
         'shadow-element_inactive hover:shadow-element_focused focus:shadow-element_focused active:shadow-element_pressed',
         '[--shadow-retract:-0.6rem]',
       )}

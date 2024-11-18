@@ -65,16 +65,14 @@ export default function Index() {
   return (
     <div
       className={classNames(
-        'relative z-0 mx-auto flex max-w-7xl flex-col items-stretch gap-12 px-4 py-12 md:px-6',
+        'relative z-0 mx-auto flex max-w-7xl flex-col items-stretch gap-8 px-4 py-12 md:gap-12 md:px-6',
         'linear transition-opacity duration-500',
         showUI ? 'opacity-100' : 'no-transition opacity-0',
       )}
     >
       <ShootingStars />
       <Header />
-      <div className="flex justify-center">
-        <EasingTypeSelection />
-      </div>
+      <EasingTypeSelection />
       <div
         className={classNames(
           'relative z-10 grid grid-cols-6',

@@ -1,8 +1,8 @@
 import { classNames } from '~/utils/class-names';
 
 type Props = {
-  children: string;
-  icon: React.ReactNode;
+  children: React.ReactNode;
+  icon?: React.ReactNode;
   isActive: boolean;
   onClick: () => void;
 };
@@ -14,7 +14,7 @@ export default function TabBarButton({ isActive, children, icon, onClick }: Prop
         'group relative z-0 flex items-center gap-2 py-2.5',
         isActive ? 'text-zinc-100' : 'text-zinc-500 hover:text-zinc-400',
         'ease-out-sine transition-all duration-300 will-change-transform',
-        'rounded-xl outline-none',
+        'rounded-xl focus:outline-none outline-none',
       )}
       onClick={onClick}
     >

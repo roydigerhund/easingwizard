@@ -66,11 +66,11 @@ export default function StepSlider<T>({ className, label, value, options, onChan
           <button
             ref={buttonRef}
             className={classNames(
-              'absolute top-0.5 z-20 size-7 p-1.5 rounded-full bg-zinc-950',
+              'absolute top-0.5 z-20 size-7 rounded-full bg-zinc-950 p-1.5',
               '-translate-x-1/2',
-              'ease-out-sine transition-shadow duration-300 will-change-transform',
-              'outline-none',
-              'shadow-element_inactive group-hover/input:shadow-element_focused focus:shadow-element_focused',
+              'transition-shadow duration-300 ease-out-sine will-change-transform',
+              'focus:outline-none outline-none',
+              'shadow-element_inactive focus:shadow-element_focused group-hover/input:shadow-element_focused',
               '[--shadow-retract:-0.05rem]',
             )}
             value={indexValue}
@@ -80,10 +80,10 @@ export default function StepSlider<T>({ className, label, value, options, onChan
               left: `${((indexValue - min) / (max - min)) * 100}%`,
             }}
           >
-            <span className={classNames('rounded-full bg-zinc-100 size-full block')} />
+            <span className={classNames('block size-full rounded-full bg-zinc-100')} />
           </button>
         </div>
-        <span className="pointer-events-none absolute inset-0 flex w-full items-center justify-between select-none">
+        <span className="pointer-events-none absolute inset-0 flex w-full select-none items-center justify-between">
           {options.map((option) => (
             <span
               key={option + ''}
