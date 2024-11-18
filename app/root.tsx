@@ -9,7 +9,7 @@ export const meta: MetaFunction = () => {
     { title: 'Easing Wizard - CSS Easing Editor' },
     {
       name: 'description',
-      content: 'Create and customize CSS easing functions with ease and magical precision using Easing Wizard 🧙‍♂️',
+      content: 'Create and customize CSS easing functions with ease and magical precision using Easing Wizard 🧙‍♂️🧙',
     },
     { name: 'viewport', content: 'width=device-width, initial-scale=1' },
     { name: 'theme-color', content: '#09090b' },
@@ -53,6 +53,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {children}
         <ScrollRestoration />
         <Scripts />
+        <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js" />
       </body>
     </html>
   );
