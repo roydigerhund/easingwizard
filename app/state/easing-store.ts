@@ -1,12 +1,19 @@
 import { create } from 'zustand';
 import {
+  defaultBezierCurve,
   defaultBezierFunction,
+  defaultBezierStyle,
+  defaultBounceCurve,
   defaultBounceFunction,
   defaultBounceValue,
+  defaultOvershootCurve,
   defaultOvershootFunction,
+  defaultOvershootStyle,
   defaultOvershootValue,
+  defaultSpringCurve,
   defaultSpringFunction,
   defaultSpringValue,
+  defaultWiggleCurve,
   defaultWiggleFunction,
   defaultWiggleValue,
 } from '~/data/easing';
@@ -81,8 +88,8 @@ type EasingAction = {
 };
 
 const defaultBezierState: EasingStateBlock<'bezier'> = {
-  bezierStyle: BezierStyle.IN_OUT,
-  bezierCurve: BezierCurve.CUBIC,
+  bezierStyle: defaultBezierStyle,
+  bezierCurve: defaultBezierCurve,
   bezierRawValue: defaultBezierFunction,
   bezierValue: createCubicBezierString(defaultBezierFunction),
   bezierIsCustom: false,
@@ -90,19 +97,8 @@ const defaultBezierState: EasingStateBlock<'bezier'> = {
 
 export const bezierStateKeys = Object.keys(defaultBezierState) as (keyof EasingState)[];
 
-const defaultOvershootState: EasingStateBlock<'overshoot'> = {
-  overshootStyle: OvershootStyle.OUT,
-  overshootCurve: OvershootCurve.DEFAULT,
-  overshootDamping: defaultOvershootFunction.damping,
-  overshootMass: defaultOvershootFunction.mass,
-  overshootValue: defaultOvershootValue,
-  overshootIsCustom: false,
-};
-
-export const overshootStateKeys = Object.keys(defaultOvershootState) as (keyof EasingState)[];
-
 const defaultSpringState: EasingStateBlock<'spring'> = {
-  springCurve: SpringCurve.DEFAULT,
+  springCurve: defaultSpringCurve,
   springStiffness: defaultSpringFunction.stiffness,
   springDamping: defaultSpringFunction.damping,
   springMass: defaultSpringFunction.mass,
@@ -113,7 +109,7 @@ const defaultSpringState: EasingStateBlock<'spring'> = {
 export const springStateKeys = Object.keys(defaultSpringState) as (keyof EasingState)[];
 
 const defaultBounceState: EasingStateBlock<'bounce'> = {
-  bounceCurve: BounceCurve.DEFAULT,
+  bounceCurve: defaultBounceCurve,
   bounceBounces: defaultBounceFunction.bounces,
   bounceDamping: defaultBounceFunction.damping,
   bounceValue: defaultBounceValue,
@@ -123,7 +119,7 @@ const defaultBounceState: EasingStateBlock<'bounce'> = {
 export const bounceStateKeys = Object.keys(defaultBounceState) as (keyof EasingState)[];
 
 const defaultWiggleState: EasingStateBlock<'wiggle'> = {
-  wiggleCurve: WiggleCurve.DEFAULT,
+  wiggleCurve: defaultWiggleCurve,
   wiggleDamping: defaultWiggleFunction.damping,
   wiggleWiggles: defaultWiggleFunction.wiggles,
   wiggleValue: defaultWiggleValue,
@@ -131,6 +127,17 @@ const defaultWiggleState: EasingStateBlock<'wiggle'> = {
 };
 
 export const wiggleStateKeys = Object.keys(defaultWiggleState) as (keyof EasingState)[];
+
+const defaultOvershootState: EasingStateBlock<'overshoot'> = {
+  overshootStyle: defaultOvershootStyle,
+  overshootCurve: defaultOvershootCurve,
+  overshootDamping: defaultOvershootFunction.damping,
+  overshootMass: defaultOvershootFunction.mass,
+  overshootValue: defaultOvershootValue,
+  overshootIsCustom: false,
+};
+
+export const overshootStateKeys = Object.keys(defaultOvershootState) as (keyof EasingState)[];
 
 const defaultRestState = {
   easingType: EasingType.BEZIER,

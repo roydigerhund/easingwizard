@@ -38,33 +38,41 @@ export enum OvershootStyle {
   IN_OUT = 'inOut',
 }
 
-// TODO Add more overshoot curves
-export enum OvershootCurve {
-  DEFAULT = 'default',
-  OVERSHOOT = 'overshoot',
-  ANTICIPATE = 'anticipate',
-}
-
-// TODO: Add more spring curves
 export enum SpringCurve {
-  DEFAULT = 'default',
-  WOBBLY = 'wobbly',
-  GENTLE = 'gentle',
-  STIFF = 'stiff',
+  HEAVY = 'heavy',
+  BOUNCY = 'bouncy',
+  DROP = 'drop',
+  GLIDE = 'glide',
+  SNAP = 'snap',
+  LAZY = 'lazy',
+  ELASTIC = 'elastic',
 }
 
-// TODO: Add more bounce curves
 export enum BounceCurve {
-  DEFAULT = 'default',
-  FLOPPY = 'floppy',
-  RELAXED = 'relaxed',
+  FIRM = 'firm',
+  SOFT = 'soft',
+  SHARP = 'sharp',
+  SUBTLE = 'subtle',
+  PLAYFUL = 'playful',
+  SPRINGY = 'springy',
 }
 
-// TODO: Add more wiggle curves
 export enum WiggleCurve {
-  DEFAULT = 'default',
-  LOOSE = 'loose',
-  TIGHT = 'tight',
+  SUBTLE = 'subtle',
+  ENERGETIC = 'energetic',
+  PLAYFUL = 'playful',
+  SHARP = 'sharp',
+  SMOOTH = 'smooth',
+  INTENSE = 'intense',
+  DYNAMIC = 'dynamic',
+}
+
+export enum OvershootCurve {
+  SOFT = "soft",
+  FIRM = "firm",
+  SMOOTH = "smooth",
+  DYNAMIC = "dynamic",
+  DRAMATIC = "dramatic",
 }
 
 export enum AnimationType {

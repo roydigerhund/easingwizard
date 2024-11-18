@@ -315,57 +315,147 @@ export const bezierFunctions: Record<BezierStyle, Partial<Record<BezierCurve, Be
   ),
 };
 
-export const defaultBezierFunction = bezierFunctions.inOut.cubic as BezierValue;
-
-export const overshootFunctions: Record<OvershootStyle, Record<OvershootCurve, { damping: number; mass: number }>> = {
-  in: {
-    default: { damping: 50, mass: 2 },
-    overshoot: { damping: 10, mass: 2 },
-    anticipate: { damping: 26, mass: 2 },
-  },
-  out: {
-    default: { damping: 50, mass: 2 },
-    overshoot: { damping: 10, mass: 2 },
-    anticipate: { damping: 26, mass: 2 },
-  },
-  inOut: {
-    default: { damping: 100, mass: 2 },
-    overshoot: { damping: 100, mass: 2 },
-    anticipate: { damping: 75, mass: 2 },
-  },
-};
-
-export const defaultOvershootFunction = overshootFunctions.out.default;
+export const defaultBezierStyle = BezierStyle.IN_OUT;
+export const defaultBezierCurve = BezierCurve.CUBIC;
+export const defaultBezierFunction = bezierFunctions[defaultBezierStyle][defaultBezierCurve] as BezierValue;
 
 export const springFunctions: Record<SpringCurve, { stiffness: number; damping: number; mass: number }> = {
-  default: { stiffness: 100, damping: 10, mass: 1 },
-  wobbly: { stiffness: 170, damping: 26, mass: 1 },
-  gentle: { stiffness: 120, damping: 14, mass: 1 },
-  stiff: { stiffness: 210, damping: 20, mass: 1 },
+  heavy: {
+    mass: 3.5,
+    stiffness: 100,
+    damping: 10,
+  },
+  bouncy: {
+    mass: 1.0,
+    stiffness: 400,
+    damping: 5,
+  },
+  drop: {
+    mass: 4,
+    stiffness: 50,
+    damping: 6,
+  },
+  glide: {
+    mass: 1.0,
+    stiffness: 50,
+    damping: 20,
+  },
+  snap: {
+    mass: 0.5,
+    stiffness: 300,
+    damping: 15,
+  },
+  lazy: {
+    mass: 2.5,
+    stiffness: 20,
+    damping: 8,
+  },
+  elastic: {
+    mass: 0.6,
+    stiffness: 150,
+    damping: 12,
+  },
 };
 
-export const defaultSpringFunction = springFunctions.default;
+export const defaultSpringCurve = SpringCurve.HEAVY;
+export const defaultSpringFunction = springFunctions[defaultSpringCurve];
+export const defaultSpringValue = springCalculations[defaultSpringCurve].easingValue;
 
 export const bounceFunctions: Record<BounceCurve, { bounces: number; damping: number }> = {
-  default: { bounces: 4, damping: 0.5 },
-  floppy: { bounces: 3, damping: 0.2 },
-  relaxed: { bounces: 5, damping: 0.8 },
+  firm: {
+    bounces: 4,
+    damping: 0.5,
+  },
+  soft: {
+    bounces: 2,
+    damping: 1,
+  },
+  sharp: {
+    bounces: 3,
+    damping: 1.5,
+  },
+  subtle: {
+    bounces: 1,
+    damping: 0.2,
+  },
+  playful: {
+    bounces: 6,
+    damping: -0.5,
+  },
+  springy: {
+    bounces: 8,
+    damping: -1.5,
+  },
 };
 
-export const defaultBounceFunction = bounceFunctions.default;
+export const defaultBounceCurve = BounceCurve.FIRM;
+export const defaultBounceFunction = bounceFunctions[defaultBounceCurve];
+export const defaultBounceValue = bounceCalculations[defaultBounceCurve].easingValue;
 
 export const wiggleFunctions: Record<WiggleCurve, { wiggles: number; damping: number }> = {
-  default: { wiggles: 1, damping: 0.5 },
-  loose: { wiggles: 1, damping: 26 },
-  tight: { wiggles: 1, damping: 14 },
+  subtle: {
+    wiggles: 2,
+    damping: 15,
+  },
+  energetic: {
+    wiggles: 6,
+    damping: 5,
+  },
+  playful: {
+    wiggles: 4,
+    damping: 10,
+  },
+  sharp: {
+    wiggles: 3,
+    damping: 18,
+  },
+  smooth: {
+    wiggles: 1,
+    damping: 20,
+  },
+  intense: {
+    wiggles: 8,
+    damping: 2,
+  },
+  dynamic: {
+    wiggles: 10,
+    damping: 0,
+  },
 };
 
-export const defaultWiggleFunction = wiggleFunctions.default;
+export const defaultWiggleCurve = WiggleCurve.SUBTLE;
+export const defaultWiggleFunction = wiggleFunctions[defaultWiggleCurve];
+export const defaultWiggleValue = wiggleCalculations[defaultWiggleCurve].easingValue;
 
-export const defaultOvershootValue = overshootCalculations.out.default.easingValue;
+const overshootCurveFunctions: Record<OvershootCurve, { damping: number; mass: number }> = {
+  soft: {
+    mass: 2,
+    damping: 80,
+  },
+  firm: {
+    mass: 3,
+    damping: 90,
+  },
+  smooth: {
+    mass: 3.5,
+    damping: 85,
+  },
+  dynamic: {
+    mass: 4,
+    damping: 60,
+  },
+  dramatic: {
+    mass: 5,
+    damping: 50,
+  },
+};
+export const overshootFunctions: Record<OvershootStyle, Record<OvershootCurve, { damping: number; mass: number }>> = {
+  in: overshootCurveFunctions,
+  out: overshootCurveFunctions,
+  inOut: overshootCurveFunctions,
+};
 
-export const defaultSpringValue = springCalculations.default.easingValue;
-
-export const defaultBounceValue = bounceCalculations.default.easingValue;
-
-export const defaultWiggleValue = wiggleCalculations.default.easingValue;
+export const defaultOvershootStyle = OvershootStyle.OUT;
+export const defaultOvershootCurve = OvershootCurve.SOFT;
+export const defaultOvershootFunction = overshootFunctions[defaultOvershootStyle][defaultOvershootCurve];
+export const defaultOvershootValue = overshootCalculations[defaultOvershootStyle][defaultOvershootCurve].easingValue;

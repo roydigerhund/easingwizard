@@ -2,6 +2,7 @@ import {
   bezierFunctions,
   bezierStyleFunctions,
   bounceFunctions,
+  defaultOvershootCurve,
   overshootFunctions,
   springFunctions,
   wiggleFunctions,
@@ -161,13 +162,13 @@ export default function EasingSelection() {
                     if (overshootCurve in overshootFunctions[style as OvershootStyle]) {
                       onOvershootValueChange(style as OvershootStyle, overshootCurve);
                     } else {
-                      onOvershootValueChange(style as OvershootStyle, OvershootCurve.DEFAULT);
+                      onOvershootValueChange(style as OvershootStyle, defaultOvershootCurve);
                     }
                   }}
                   text={humanize(style)}
                   icon={
                     <polyline
-                      points={overshootCalculations[style as OvershootStyle].default.sampledPoints
+                      points={overshootCalculations[style as OvershootStyle][defaultOvershootCurve].sampledPoints
                         .map((point) => `${point.x},${point.y / 2 + 25}`)
                         .join(' ')}
                     />

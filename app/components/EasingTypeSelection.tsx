@@ -41,7 +41,7 @@ export default function EasingTypeSelection() {
             className={classNames(
               'absolute inset-0 -z-10 rounded-full bg-gradient-to-tr from-grdt-from via-grdt-via to-grdt-to',
               'transition-all duration-200 ease-linear',
-              easingType === type ? 'opacity-100' : 'scale-110 opacity-0 group-focus:scale-100 group-focus:opacity-100',
+              easingType === type ? 'opacity-100' : 'scale-x-105 scale-y-110 opacity-0 group-focus:scale-100 group-focus:opacity-100',
             )}
           />
           <span className={classNames('absolute inset-0 -z-20 rounded-full bg-zinc-950')} />
