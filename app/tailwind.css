@@ -66,10 +66,6 @@ input[type='range'].styled-slider::-moz-range-thumb {
   animation-delay: var(--animation-delay, 0s);
 }
 
-.no-transition .animate-appear {
-  animation: none;
-}
-
 @keyframes appear {
   0% {
     opacity: 0;
