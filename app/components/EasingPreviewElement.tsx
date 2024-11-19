@@ -20,7 +20,7 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
     if (clicked) {
       const timeout = setTimeout(() => {
         setClicked(false);
-      }, 2500);
+      }, 4500);
       return () => clearTimeout(timeout);
     }
   }, [clicked]);
@@ -55,49 +55,64 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
   });
 
   return (
-    <div
-      className={classNames(
-        'absolute inset-0 z-20 grid items-center justify-items-center',
-        // TODO let the element wiggle, turn turquoise and explode when clicked
-        clicked && 'opacity-50',
+    <>
+      {/* Easter egg */}
+      {clicked && (
+        <div className="absolute inset-0 z-10 grid items-center justify-items-center overflow-hidden">
+          <div className="animate-easteregg col-span-full row-span-full size-1/4">
+            <div className="easteregg-leaving size-full">
+              <div className="easteregg-rotate size-full">
+                <div className="easteregg-shape size-full rounded-xl bg-grdt-from" />
+              </div>
+            </div>
+          </div>
+        </div>
       )}
-      style={{
-        // settings for 3d perspective
-        perspective: '250px',
-        perspectiveOrigin: '50% 50%',
-        transformStyle: 'preserve-3d',
-      }}
-    >
-      <div
-        role="button"
-        tabIndex={-1}
-        className="bg-grdt-from col-span-full row-span-full size-1/4 cursor-help rounded-xl !border-none"
-        style={animationStyles(value)}
-        onClick={() => setClicked(!clicked)}
-        onKeyUp={(e) => e.key === 'Enter' && setClicked(!clicked)}
-        aria-label='Easteregg'
-      />
-
       <div
         className={classNames(
-          'pointer-events-none col-span-full row-span-full grid size-full items-center justify-items-center',
-          previewShowLinear && easingType !== EasingType.WIGGLE ? 'opacity-50' : 'opacity-0',
+          'absolute inset-0 z-20 grid items-center justify-items-center',
+          'transition-all duration-300',
+          'outline-none focus:outline-none',
+          clicked ? 'scale-0 opacity-0 ease-[cubic-bezier(0.55,_0,_1,_0.45)]' : 'ease-[cubic-bezier(0,_0.55,_0.45,_1)]',
         )}
         style={{
           // settings for 3d perspective
-          perspective: '500px',
+          perspective: '250px',
           perspectiveOrigin: '50% 50%',
           transformStyle: 'preserve-3d',
         }}
       >
         <div
-          className={classNames(
-            'border-grdt-to rounded-xl border',
-            [AnimationType.ROTATE_X, AnimationType.ROTATE_Y].includes(previewAnimationType) ? 'size-3/6' : 'size-1/4',
-          )}
-          style={animationStyles('linear')}
+          role="button"
+          tabIndex={-1}
+          className="col-span-full row-span-full size-1/4 cursor-help rounded-xl !border-none bg-grdt-from"
+          style={animationStyles(value)}
+          onClick={() => setClicked(!clicked)}
+          onKeyUp={(e) => e.key === 'Enter' && setClicked(!clicked)}
+          aria-label="Easteregg"
         />
+
+        <div
+          className={classNames(
+            'pointer-events-none col-span-full row-span-full grid size-full items-center justify-items-center',
+            previewShowLinear && easingType !== EasingType.WIGGLE ? 'opacity-50' : 'opacity-0',
+          )}
+          style={{
+            // settings for 3d perspective
+            perspective: '500px',
+            perspectiveOrigin: '50% 50%',
+            transformStyle: 'preserve-3d',
+          }}
+        >
+          <div
+            className={classNames(
+              'rounded-xl border border-grdt-to',
+              [AnimationType.ROTATE_X, AnimationType.ROTATE_Y].includes(previewAnimationType) ? 'size-3/6' : 'size-1/4',
+            )}
+            style={animationStyles('linear')}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 }

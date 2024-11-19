@@ -1,4 +1,3 @@
-- easter egg
 
 Not important
 - validate state from URL (partially done)
