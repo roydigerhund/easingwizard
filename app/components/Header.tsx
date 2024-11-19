@@ -4,7 +4,7 @@ export default function Header() {
   return (
     <header className="flex flex-col items-center gap-2">
       <div className="flex items-center gap-4">
-        <div className="animate-appear grid items-center justify-items-center [--animation-delay:0.25s]">
+        <div className="animate-appear-fast grid items-center justify-items-center [--animation-delay:0.25s]">
           <WizardIcon className="animate-path col-span-full row-span-full h-16 w-auto text-grdt-to drop-shadow-[0_0_0.25rem_var(--grdt-to)] min-[360px]:h-20" />
         </div>
         <div className="mt-2 space-y-1 min-[440px]:mt-4 min-[440px]:space-y-2">
