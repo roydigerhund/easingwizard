@@ -12,7 +12,7 @@
 
 html,
 body {
-  @apply bg-zinc-950;
+  @apply bg-zinc-950 text-zinc-100;
 }
 
 .lock-scroll {

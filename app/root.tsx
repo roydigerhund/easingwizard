@@ -1,4 +1,4 @@
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
+import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration, useRouteError } from '@remix-run/react';
 import type { LinksFunction, MetaFunction } from '@vercel/remix';
 
 import React from 'react';
@@ -48,7 +48,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <style>{`body { background: #09090b } .no-transition * { transition: none !important; animation none !important; filter: none !important; }`}</style>
+        <style>{`body { background: #09090b; color: #f4f4f5; } .no-transition * { transition: none !important; animation none !important; filter: none !important; }`}</style>
         <Meta />
         <Links />
       </head>
@@ -57,6 +57,48 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <ScrollRestoration />
         <Scripts />
         <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js" />
+      </body>
+    </html>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <title>Oops!</title>
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <div
+          style={{
+            minHeight: '100svh',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '1rem',
+            padding: '1rem',
+            textAlign: 'center',
+            fontFamily: 'sans-serif',
+          }}
+        >
+          <h1>
+            {isRouteErrorResponse(error)
+              ? `${error.status} ${error.statusText}`
+              : error instanceof Error
+                ? error.message
+                : 'Unknown Error'}
+          </h1>
+          <a href="/" style={{
+            color: '#f4f4f5',
+            textDecoration: 'underline',
+          }}>Go back home</a>
+        </div>
+        <Scripts />
       </body>
     </html>
   );
