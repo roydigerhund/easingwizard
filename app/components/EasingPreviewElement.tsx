@@ -20,7 +20,7 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
     if (clicked) {
       const timeout = setTimeout(() => {
         setClicked(false);
-      }, 4500);
+      }, 4000);
       return () => clearTimeout(timeout);
     }
   }, [clicked]);
@@ -60,10 +60,8 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
       {clicked && (
         <div className="absolute inset-0 z-10 grid items-center justify-items-center overflow-hidden">
           <div className="animate-easteregg col-span-full row-span-full size-1/4">
-            <div className="easteregg-leaving size-full">
-              <div className="easteregg-rotate size-full">
-                <div className="easteregg-shape size-full rounded-xl bg-grdt-from" />
-              </div>
+            <div className="easteregg-rotate size-full">
+              <div className="easteregg-shape size-full rounded-xl bg-grdt-from" />
             </div>
           </div>
         </div>
