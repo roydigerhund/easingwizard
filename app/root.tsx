@@ -1,5 +1,5 @@
-import type { LinksFunction, MetaFunction } from '@vercel/remix';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
+import type { LinksFunction, MetaFunction } from '@vercel/remix';
 
 import React from 'react';
 import { description, productionOrigin, title } from './data/globals';

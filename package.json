@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@radix-ui/react-slider": "^1.2.1",
+    "@remix-run/node": "^2.14.0",
     "@remix-run/react": "^2.12.1",
     "@remix-run/serve": "^2.12.1",
     "@tailwindcss/container-queries": "^0.1.1",
@@ -48,6 +49,6 @@
     "vite-tsconfig-paths": "^4.2.1"
   },
   "engines": {
-    "node": "20"
+    "node": "^20"
   }
 }
