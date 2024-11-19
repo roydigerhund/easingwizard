@@ -2,18 +2,21 @@ import type { LinksFunction } from '@remix-run/node';
 import { Links, Meta, MetaFunction, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
 
 import React from 'react';
+import { description, productionOrigin, title } from './data/globals';
 import './tailwind.css';
 
 export const meta: MetaFunction = () => {
   return [
-    { title: 'Easing Wizard - CSS Easing Editor' },
-    {
-      name: 'description',
-      content: 'Create and customize CSS easing functions with ease and magical precision using Easing Wizard 🧙‍♂️🧙',
-    },
+    { title },
+    { name: 'description', content: description },
     { name: 'viewport', content: 'width=device-width, initial-scale=1' },
     { name: 'theme-color', content: '#09090b' },
     { name: 'apple-mobile-web-app-title', content: 'Easing Wizard' },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:title', content: title },
+    { property: 'og:url', content: productionOrigin },
+    { property: 'og:image', content: `${productionOrigin}/share-image.png` },
+    { property: 'og:description', content: description },
   ];
 };
 

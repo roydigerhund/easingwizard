@@ -1,3 +1,4 @@
+import { description, productionOrigin } from '~/data/globals';
 import {
   bezierStateKeys,
   bounceStateKeys,
@@ -13,11 +14,6 @@ import BlueskyIcon from './icons/BlueskyIcon';
 import ClipboardIcon from './icons/ClipboardIcon';
 import XIcon from './icons/XIcon';
 import IconTextButton from './IconTextButton';
-
-const productionOrigin = 'https://easingwizard.com';
-const shareText = encodeURI(
-  'Create and customize CSS easing functions with ease and magical precision using Easing Wizard 🧙‍♂️',
-);
 
 export default function Share() {
   const getCurrentState = useEasingStore((state) => state.getCurrentState);
@@ -58,7 +54,7 @@ export default function Share() {
 
   const handleCopyLink = () => {
     const configuration = getEasingConfiguration();
-    console.log("🚀 ~ handleCopyLink ~ configuration:", configuration)
+    console.log('🚀 ~ handleCopyLink ~ configuration:', configuration);
     const configurationLinkParams = new URLSearchParams({
       ...configuration,
     });
@@ -105,7 +101,7 @@ export default function Share() {
             icon={<XIcon className="size-6" />}
             onClick={() => {
               window.open(
-                `https://x.com/intent/tweet?text=${shareText}&url=${productionOrigin}`,
+                `https://x.com/intent/tweet?text=${encodeURI(description)}&url=${productionOrigin}`,
                 '_blank',
                 'noopener noreferrer',
               );
@@ -117,7 +113,7 @@ export default function Share() {
             icon={<BlueskyIcon className="size-6" />}
             onClick={() => {
               window.open(
-                `https://bsky.app/intent/compose?text=${shareText}%0A${productionOrigin}`,
+                `https://bsky.app/intent/compose?text=${encodeURI(description)}%0A${productionOrigin}`,
                 '_blank',
                 'noopener noreferrer',
               );
