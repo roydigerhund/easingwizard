@@ -156,7 +156,7 @@ input[type='range'].styled-slider::-moz-range-thumb {
     transform: translateY(-300%);
   }
   30% {
-    transform: translateY(-110%);
+    transform: translateY(-120%);
   }
   50% {
     transform: translateY(-60%);
