@@ -4,7 +4,7 @@ export type Point = {
 };
 
 export enum EasingType {
-  BEZIER = 'bézier',
+  BEZIER = 'bezier',
   SPRING = 'spring',
   BOUNCE = 'bounce',
   WIGGLE = 'wiggle',

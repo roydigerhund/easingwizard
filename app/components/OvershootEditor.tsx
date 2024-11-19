@@ -12,8 +12,8 @@ export default function OvershootEditor() {
   const overshootStyle = useEasingStore((state) => state.overshootStyle);
   const overshootDamping = useEasingStore((state) => state.overshootDamping);
   const overshootMass = useEasingStore((state) => state.overshootMass);
+  const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
   const setState = useEasingStore((state) => state.setState);
-  const [accuracy, setAccuracy] = useState(LinearEasingAccuracy.HIGH);
   const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
 
   useEffect(() => {
@@ -24,12 +24,12 @@ export default function OvershootEditor() {
         mass: overshootMass,
         style: overshootStyle,
       }),
-      accuracy,
+      editorAccuracy,
       1,
     );
     setPoints(sampledPoints);
     setState({ overshootValue: easingValue });
-  }, [overshootDamping, overshootMass, overshootStyle, accuracy, setState]);
+  }, [overshootDamping, overshootMass, overshootStyle, editorAccuracy, setState]);
 
   const handleChange = (state: Partial<EasingState>) => {
     setState({ ...state, overshootIsCustom: true });
@@ -69,9 +69,9 @@ export default function OvershootEditor() {
 
         <StepSlider
           label="Accuracy"
-          value={accuracy}
+          value={editorAccuracy}
           options={Object.values(LinearEasingAccuracy).map((value) => value)}
-          onChange={(value) => setAccuracy(value)}
+          onChange={(value) => setState({ editorAccuracy: value })}
         />
       </InputGroup>
     </div>

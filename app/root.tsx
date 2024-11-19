@@ -45,7 +45,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <style>{`body { background: #09090b } .no-transition * { transition: none !important; animation none !important }`}</style>
+        <style>{`body { background: #09090b } .no-transition * { transition: none !important; animation none !important; filter: none !important; }`}</style>
         <Meta />
         <Links />
       </head>

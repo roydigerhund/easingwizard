@@ -143,6 +143,7 @@ export default function Slider({ className, label, value, onChange, min, max, st
         onChange={handleChange}
         onKeyDown={(e) => handleKeyDown(e, true)}
         inputMode="numeric"
+        aria-label={label}
       />
     </div>
   );

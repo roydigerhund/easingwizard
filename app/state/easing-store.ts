@@ -24,6 +24,7 @@ import {
   BezierValue,
   BounceCurve,
   EasingType,
+  LinearEasingAccuracy,
   OvershootCurve,
   OvershootStyle,
   PreviewPlayMode,
@@ -75,6 +76,7 @@ export type EasingState = {
   // Editor
   editorExtraSpaceTop: boolean;
   editorExtraSpaceBottom: boolean;
+  editorAccuracy: LinearEasingAccuracy;
 };
 
 type EasingStateBlock<Prefix extends string> = {
@@ -145,11 +147,12 @@ const defaultRestState = {
   previewAnimationType: AnimationType.MOVE_X,
   editorExtraSpaceTop: false,
   editorExtraSpaceBottom: false,
+  editorAccuracy: LinearEasingAccuracy.HIGH,
 };
 
 export const restStateKeys = Object.keys(defaultRestState) as (keyof EasingState)[];
 
-const defaultEasingContext: EasingState = {
+export const defaultEasingContext: EasingState = {
   previewPlayMode: PreviewPlayMode.INFINITE,
   previewShowLinear: false,
   ...defaultRestState,

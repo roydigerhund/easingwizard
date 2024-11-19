@@ -1,7 +1,6 @@
 import {
   bezierStateKeys,
   bounceStateKeys,
-  EasingState,
   overshootStateKeys,
   restStateKeys,
   springStateKeys,
@@ -28,31 +27,40 @@ export default function Share() {
     switch (currentState.easingType) {
       case EasingType.BEZIER:
         return Object.fromEntries(
-          [...restStateKeys, ...bezierStateKeys].map((key) => [key, currentState[key]]),
-        ) as Partial<EasingState>;
+          [...restStateKeys, ...bezierStateKeys].map((key) => [key, JSON.stringify(currentState[key])]),
+        );
       case EasingType.OVERSHOOT:
         return Object.fromEntries(
-          [...restStateKeys, ...overshootStateKeys].map((key) => [key, currentState[key]]),
-        ) as Partial<EasingState>;
+          [...restStateKeys, ...overshootStateKeys]
+            .filter((k) => k !== 'overshootValue')
+            .map((key) => [key, JSON.stringify(currentState[key])]),
+        );
       case EasingType.SPRING:
         return Object.fromEntries(
-          [...restStateKeys, ...springStateKeys].map((key) => [key, currentState[key]]),
-        ) as Partial<EasingState>;
+          [...restStateKeys, ...springStateKeys]
+            .filter((k) => k !== 'springValue')
+            .map((key) => [key, JSON.stringify(currentState[key])]),
+        );
       case EasingType.BOUNCE:
         return Object.fromEntries(
-          [...restStateKeys, ...bounceStateKeys].map((key) => [key, currentState[key]]),
-        ) as Partial<EasingState>;
+          [...restStateKeys, ...bounceStateKeys]
+            .filter((k) => k !== 'bounceValue')
+            .map((key) => [key, JSON.stringify(currentState[key])]),
+        );
       case EasingType.WIGGLE:
         return Object.fromEntries(
-          [...restStateKeys, ...wiggleStateKeys].map((key) => [key, currentState[key]]),
-        ) as Partial<EasingState>;
+          [...restStateKeys, ...wiggleStateKeys]
+            .filter((k) => k !== 'wiggleValue')
+            .map((key) => [key, JSON.stringify(currentState[key])]),
+        );
     }
   };
 
   const handleCopyLink = () => {
     const configuration = getEasingConfiguration();
+    console.log("🚀 ~ handleCopyLink ~ configuration:", configuration)
     const configurationLinkParams = new URLSearchParams({
-      state: JSON.stringify(configuration),
+      ...configuration,
     });
     const configurationLink = `${window.location.origin}/?${configurationLinkParams}`;
     navigator.clipboard.writeText(configurationLink);

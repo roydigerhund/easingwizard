@@ -12,8 +12,8 @@ export default function SpringEditor() {
   const springStiffness = useEasingStore((state) => state.springStiffness);
   const springDamping = useEasingStore((state) => state.springDamping);
   const springMass = useEasingStore((state) => state.springMass);
+  const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
   const setState = useEasingStore((state) => state.setState);
-  const [accuracy, setAccuracy] = useState(LinearEasingAccuracy.HIGH);
   const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
 
   useEffect(() => {
@@ -24,11 +24,11 @@ export default function SpringEditor() {
         damping: springDamping,
         mass: springMass,
       }),
-      accuracy,
+      editorAccuracy,
     );
     setPoints(sampledPoints);
     setState({ springValue: easingValue });
-  }, [springStiffness, springDamping, springMass, accuracy, setState]);
+  }, [springStiffness, springDamping, springMass, editorAccuracy, setState]);
 
   const handleChange = (state: Partial<EasingState>) => {
     setState({ ...state, springIsCustom: true });
@@ -75,9 +75,9 @@ export default function SpringEditor() {
         />
         <StepSlider
           label="Accuracy"
-          value={accuracy}
+          value={editorAccuracy}
           options={Object.values(LinearEasingAccuracy).map((value) => value)}
-          onChange={(value) => setAccuracy(value)}
+          onChange={(value) => setState({ editorAccuracy: value })}
         />
       </InputGroup>
     </div>

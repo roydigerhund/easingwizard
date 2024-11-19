@@ -1,5 +1,4 @@
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { useSearchParams } from '@remix-run/react';
 import { useEffect, useState } from 'react';
 import BezierEditor from '~/components/BezierEditor';
 import BounceEditor from '~/components/BounceEditor';
@@ -16,40 +15,37 @@ import Share from '~/components/Share';
 import ShootingStars from '~/components/ShootingStars';
 import SpringEditor from '~/components/SpringEditor';
 import WiggleEditor from '~/components/WiggleEditor';
-import { EasingState, useEasingStore } from '~/state/easing-store';
+import { defaultEasingContext, useEasingStore } from '~/state/easing-store';
 import { EasingType } from '~/types-and-enums';
 import { classNames } from '~/utils/class-names';
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  try {
-    // get state search param
-    const url = new URL(request.url);
-    const stateJson = url.searchParams.get('state');
-    if (stateJson) {
-      const state = JSON.parse(stateJson) as Partial<EasingState>;
-      return { state };
-    }
-  } catch (error) {
-    console.error(error);
-  }
-  return { state: null };
-}
-
 export default function Index() {
-  const { state } = useLoaderData<typeof loader>();
+  const [searchParams, setSearchParams] = useSearchParams();
   const easingType = useEasingStore((state) => state.easingType);
   const setState = useEasingStore((state) => state.setState);
   const [showUI, setShowUI] = useState(false);
 
   // we only want to set the state on client side to avoid excessive renders on the server
   useEffect(() => {
-    if (state) {
-      setState(state);
-      // remove state search param
-      window.history.replaceState({}, '', window.location.pathname);
+    // easingType should always be set
+    if (searchParams.get('easingType')) {
+      const newState: Record<string, unknown> = {};
+
+      Array.from(searchParams.entries()).forEach(([key, value]) => {
+        if (key in defaultEasingContext) {
+          try {
+            newState[key] = JSON.parse(value);
+          } catch (error) {
+            console.error('Error parsing value:', error);
+          }
+        }
+      });
+
+      setState(newState);
+      setSearchParams(new URLSearchParams());
     }
     setShowUI(true);
-  }, [state, setState]);
+  }, [searchParams, setSearchParams, setState]);
 
   return (
     <div

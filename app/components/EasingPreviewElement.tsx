@@ -75,6 +75,7 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
         style={animationStyles(value)}
         onClick={() => setClicked(!clicked)}
         onKeyUp={(e) => e.key === 'Enter' && setClicked(!clicked)}
+        aria-label='Easteregg'
       />
 
       <div

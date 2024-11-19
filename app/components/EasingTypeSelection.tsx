@@ -41,7 +41,9 @@ export default function EasingTypeSelection() {
             className={classNames(
               'absolute inset-0 -z-10 rounded-full bg-gradient-to-tr from-grdt-from via-grdt-via to-grdt-to',
               'transition-all duration-200 ease-linear',
-              easingType === type ? 'opacity-100' : 'scale-x-105 scale-y-110 opacity-0 group-focus:scale-100 group-focus:opacity-100',
+              easingType === type
+                ? 'opacity-100'
+                : 'scale-x-105 scale-y-110 opacity-0 group-focus:scale-100 group-focus:opacity-100',
             )}
           />
           <span className={classNames('absolute inset-0 -z-20 rounded-full bg-zinc-950')} />
@@ -54,10 +56,10 @@ export default function EasingTypeSelection() {
           />
           <span
             className={classNames(
-              'relative z-10 block rounded-full bg-zinc-950 px-4 py-2 text-xs min-[360px]:text-sm uppercase tracking-widest md:px-5',
+              'relative z-10 block rounded-full bg-zinc-950 px-4 py-2 text-xs uppercase tracking-widest min-[360px]:text-sm md:px-5',
             )}
           >
-            {humanize(type)}
+            {type === EasingType.BEZIER ? 'Bézier' : humanize(type)}
           </span>
         </button>
       ))}

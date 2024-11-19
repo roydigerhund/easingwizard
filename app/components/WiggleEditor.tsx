@@ -11,8 +11,8 @@ import StepSlider from './StepSlider';
 export default function WiggleEditor() {
   const wiggleDamping = useEasingStore((state) => state.wiggleDamping);
   const wiggleWiggles = useEasingStore((state) => state.wiggleWiggles);
+  const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
   const setState = useEasingStore((state) => state.setState);
-  const [accuracy, setAccuracy] = useState(LinearEasingAccuracy.HIGH);
   const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
 
   useEffect(() => {
@@ -23,13 +23,13 @@ export default function WiggleEditor() {
         damping: wiggleDamping,
         wiggles: wiggleWiggles,
       }),
-      accuracy,
+      editorAccuracy,
       1,
       0,
     );
     setPoints(sampledPoints);
     setState({ wiggleValue: easingValue });
-  }, [wiggleDamping, wiggleWiggles, accuracy, setState]);
+  }, [wiggleDamping, wiggleWiggles, editorAccuracy, setState]);
 
   const handleChange = (state: Partial<EasingState>) => {
     setState({ ...state, wiggleIsCustom: true });
@@ -69,9 +69,9 @@ export default function WiggleEditor() {
 
         <StepSlider
           label="Accuracy"
-          value={accuracy}
+          value={editorAccuracy}
           options={Object.values(LinearEasingAccuracy).map((value) => value)}
-          onChange={(value) => setAccuracy(value)}
+          onChange={(value) => setState({ editorAccuracy: value })}
         />
       </InputGroup>
     </div>
