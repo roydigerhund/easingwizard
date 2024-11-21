@@ -9,9 +9,10 @@ import {
   wiggleStateKeys,
 } from '~/state/easing-store';
 import { EasingType } from '~/types-and-enums';
+import { paragraph } from '~/utils/common-classes';
 import CardHeadline from './CardHeadline';
 import BlueskyIcon from './icons/BlueskyIcon';
-import ClipboardIcon from './icons/ClipboardIcon';
+import ShareIcon from './icons/ShareIcon';
 import XIcon from './icons/XIcon';
 import IconTextButton from './IconTextButton';
 
@@ -67,12 +68,10 @@ export default function Share() {
       <CardHeadline>Share</CardHeadline>
       <div className="items-stretch @2xl:flex">
         <div className="flex-1 space-y-3">
-          <p className="font-light leading-relaxed text-zinc-400">
-            Click the button below to copy the link to your current easing configuration.
-          </p>
+          <p className={paragraph}>Click the button below to copy the link to your current easing configuration for easy sharing.</p>
           <IconTextButton
-            text="Copy Link"
-            icon={<ClipboardIcon className="size-6" />}
+            text="Copy Share Link"
+            icon={<ShareIcon className="size-6" />}
             onClick={handleCopyLink}
             isStaticButton
             toast="Copied!"
@@ -91,7 +90,7 @@ export default function Share() {
           }}
         />
         <div className="flex-1 space-y-3">
-          <p className="font-light leading-relaxed text-zinc-400">
+          <p className={paragraph}>
             Do you like Easing Wizard?
             <br />
             Share it with your friends and followers!

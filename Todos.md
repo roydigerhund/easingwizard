@@ -1,7 +1,6 @@
 - description in code block
 - second tailwind css code arbitrary property
 - third tailwind css code for config / check out css code version
-- catch all route
 
 
 Not important
