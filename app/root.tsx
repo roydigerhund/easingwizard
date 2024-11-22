@@ -4,6 +4,7 @@ import type { LinksFunction, MetaFunction } from '@vercel/remix';
 import React from 'react';
 import { description, productionOrigin, title } from './data/globals';
 import './tailwind.css';
+import { Analytics } from '@vercel/analytics/remix';
 
 export const meta: MetaFunction = () => {
   return [
@@ -56,6 +57,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {children}
         <ScrollRestoration />
         <Scripts />
+        <Analytics />
         <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js" />
       </body>
     </html>
