@@ -77,7 +77,7 @@ export default function EasingCode() {
               In CSS, <code>{easingType === EasingType.BEZIER ? 'cubic-bezier' : 'linear'}</code> is used in
               the <code>transition-timing-function</code> or <code>animation-timing-function</code> property.
               <br />
-              For a detailed explanation and interactive examples, check out the{' '}
+              For a detailed explanation, check out the{' '}
               <a
                 href="https://developer.mozilla.org/en-US/docs/Web/CSS/easing-function"
                 target="_blank"
