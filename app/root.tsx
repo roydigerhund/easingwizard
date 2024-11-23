@@ -1,10 +1,10 @@
 import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration, useRouteError } from '@remix-run/react';
 import type { LinksFunction, MetaFunction } from '@vercel/remix';
 
+import { Analytics } from '@vercel/analytics/remix';
 import React from 'react';
 import { description, productionOrigin, title } from './data/globals';
 import './tailwind.css';
-import { Analytics } from '@vercel/analytics/remix';
 
 export const meta: MetaFunction = () => {
   return [
@@ -42,6 +42,7 @@ export const links: LinksFunction = () => [
   { rel: 'shortcut icon', href: '/favicon.ico' },
   { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
   { rel: 'manifest', href: '/site.webmanifest' },
+  { rel: 'canonical', href: productionOrigin + '/' },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -95,10 +96,15 @@ export function ErrorBoundary() {
                 ? error.message
                 : 'Unknown Error'}
           </h1>
-          <a href="/" style={{
-            color: '#f4f4f5',
-            textDecoration: 'underline',
-          }}>Go back home</a>
+          <a
+            href="/"
+            style={{
+              color: '#f4f4f5',
+              textDecoration: 'underline',
+            }}
+          >
+            Go back home
+          </a>
         </div>
         <Scripts />
       </body>

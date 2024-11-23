@@ -68,7 +68,7 @@ export default function Share() {
       <CardHeadline>Share</CardHeadline>
       <div className="items-stretch @2xl:flex">
         <div className="flex-1 space-y-3">
-          <p className={paragraph}>Click the button below to copy the link to your current easing configuration for easy sharing.</p>
+          <p className={paragraph}>Click the button below to copy the link to your current easing configuration for sharing.</p>
           <IconTextButton
             text="Copy Share Link"
             icon={<ShareIcon className="size-6" />}
