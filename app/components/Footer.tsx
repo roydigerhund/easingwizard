@@ -4,9 +4,9 @@ import XIcon from './icons/XIcon';
 
 export default function Footer() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       <hr
-        className="my-5 border-t border-zinc-700"
+        className="border-t border-zinc-700"
         style={{
           maskImage: 'linear-gradient(to right,rgba(0,0,0,1),rgba(0,0,0,0.1))',
         }}
