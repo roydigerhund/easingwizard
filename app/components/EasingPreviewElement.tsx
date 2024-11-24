@@ -14,16 +14,22 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
   const previewPlayMode = useEasingStore((state) => state.previewPlayMode);
   const previewAnimationType = useEasingStore((state) => state.previewAnimationType);
   const previewShowLinear = useEasingStore((state) => state.previewShowLinear);
+  const setState = useEasingStore((state) => state.setState);
   const [clicked, setClicked] = useState(false);
+
+  const handleClick = () => {
+    setClicked(true);
+  };
 
   useEffect(() => {
     if (clicked) {
       const timeout = setTimeout(() => {
         setClicked(false);
+        setState({ foundEasterEgg: true });
       }, 4000);
       return () => clearTimeout(timeout);
     }
-  }, [clicked]);
+  }, [clicked, setState]);
 
   const getValue = () => {
     switch (easingType) {
@@ -85,8 +91,8 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
           tabIndex={-1}
           className="col-span-full row-span-full size-1/4 cursor-help rounded-xl !border-none bg-grdt-from"
           style={animationStyles(value)}
-          onClick={() => setClicked(!clicked)}
-          onKeyUp={(e) => e.key === 'Enter' && setClicked(!clicked)}
+          onClick={handleClick}
+          onKeyUp={(e) => e.key === 'Enter' && handleClick()}
           aria-label="Easteregg"
         />
 

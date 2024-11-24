@@ -77,6 +77,8 @@ export type EasingState = {
   editorExtraSpaceTop: boolean;
   editorExtraSpaceBottom: boolean;
   editorAccuracy: LinearEasingAccuracy;
+  // Easter Egg
+  foundEasterEgg: boolean;
 };
 
 type EasingStateBlock<Prefix extends string> = {
@@ -155,6 +157,7 @@ export const restStateKeys = Object.keys(defaultRestState) as (keyof EasingState
 export const defaultEasingContext: EasingState = {
   previewPlayMode: PreviewPlayMode.INFINITE,
   previewShowLinear: false,
+  foundEasterEgg: false,
   ...defaultRestState,
   ...defaultBezierState,
   ...defaultOvershootState,

@@ -10,6 +10,7 @@ import EasingSelection from '~/components/EasingSelection';
 import EasingTypeSelection from '~/components/EasingTypeSelection';
 import Footer from '~/components/Footer';
 import Header from '~/components/Header';
+import Notification from '~/components/Notification';
 import OvershootEditor from '~/components/OvershootEditor';
 import Share from '~/components/Share';
 import ShootingStars from '~/components/ShootingStars';
@@ -87,6 +88,7 @@ export default function Index() {
         </Card>
       </div>
       <Footer />
+      <Notification />
     </div>
   );
 }
