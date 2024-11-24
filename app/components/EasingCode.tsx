@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useEasingStore } from '~/state/easing-store';
 import { EasingType } from '~/types-and-enums';
 import { paragraph } from '~/utils/common-classes';
@@ -23,6 +23,19 @@ export default function EasingCode() {
   const wiggleValue = useEasingStore((state) => state.wiggleValue);
 
   const [codeType, setCodeType] = useState(CodeType.CSS);
+
+  useEffect(() => {
+    // check localStorage for the last selected code type
+    const lastCodeType = localStorage.getItem('lastCodeType');
+    if (lastCodeType && Object.values(CodeType).includes(lastCodeType as CodeType)) {
+      setCodeType(lastCodeType as CodeType);
+    }
+  }, []);
+
+  const handleSetCodeType = (type: CodeType) => {
+    setCodeType(type);
+    localStorage.setItem('lastCodeType', type);
+  };
 
   const getValue = () => {
     switch (easingType) {
@@ -56,7 +69,12 @@ export default function EasingCode() {
       <div className="flex flex-col items-start justify-between gap-6 @md:flex-row">
         <div className="flex gap-6">
           {Object.values(CodeType).map((type) => (
-            <TabBarButton key={type} onClick={() => setCodeType(type)} isActive={codeType === type} icon={icons[type]}>
+            <TabBarButton
+              key={type}
+              onClick={() => handleSetCodeType(type)}
+              isActive={codeType === type}
+              icon={icons[type]}
+            >
               {type}
             </TabBarButton>
           ))}
@@ -74,8 +92,8 @@ export default function EasingCode() {
           <>
             <CodeBlock>{transformedValue}</CodeBlock>
             <p className={paragraph}>
-              In CSS, <code>{easingType === EasingType.BEZIER ? 'cubic-bezier' : 'linear'}</code> is used in
-              the <code>transition-timing-function</code> or <code>animation-timing-function</code> property.
+              In CSS, <code>{easingType === EasingType.BEZIER ? 'cubic-bezier' : 'linear'}</code> is used in the{' '}
+              <code>transition-timing-function</code> or <code>animation-timing-function</code> property.
               <br />
               For a detailed explanation, check out the{' '}
               <a
