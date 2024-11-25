@@ -55,7 +55,6 @@ export default function Share() {
 
   const handleCopyLink = () => {
     const configuration = getEasingConfiguration();
-    console.log('🚀 ~ handleCopyLink ~ configuration:', configuration);
     const configurationLinkParams = new URLSearchParams({
       ...configuration,
     });

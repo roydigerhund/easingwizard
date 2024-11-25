@@ -89,7 +89,7 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
         <div
           role="button"
           tabIndex={-1}
-          className="col-span-full row-span-full size-1/4 cursor-help rounded-xl !border-none bg-grdt-from"
+          className="relative z-10 col-span-full row-span-full size-1/4 cursor-help rounded-xl !border-none bg-grdt-from"
           style={animationStyles(value)}
           onClick={handleClick}
           onKeyUp={(e) => e.key === 'Enter' && handleClick()}
