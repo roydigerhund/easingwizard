@@ -1,7 +1,6 @@
 import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration, useRouteError } from '@remix-run/react';
 import type { LinksFunction, MetaFunction } from '@vercel/remix';
 
-import { Analytics } from '@vercel/analytics/remix';
 import React from 'react';
 import { description, productionOrigin, title } from './data/globals';
 import './tailwind.css';
@@ -58,7 +57,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {children}
         <ScrollRestoration />
         <Scripts />
-        <Analytics />
         <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js" />
       </body>
     </html>
