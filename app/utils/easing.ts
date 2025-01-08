@@ -100,8 +100,6 @@ export function createOvershootFunction({
 }
 
 // SPRING
-
-// Function to create the spring function based on the parameters
 export function createSpringFunction({
   stiffness,
   mass,
@@ -153,8 +151,6 @@ export function createSpringFunction({
 }
 
 // BOUNCE
-
-// Function to create the bounce function based on the parameters
 export function createBounceFunction({
   bounces,
   damping,
@@ -181,8 +177,6 @@ export function createBounceFunction({
 }
 
 // WIGGLE
-
-// Function to create the wiggle function based on the parameters
 export function createWiggleFunction({
   wiggles,
   damping,
