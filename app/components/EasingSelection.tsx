@@ -34,15 +34,15 @@ export default function EasingSelection() {
   const bezierStyle = useEasingStore((state) => state.bezierStyle);
   const bezierCurve = useEasingStore((state) => state.bezierCurve);
   const bezierIsCustom = useEasingStore((state) => state.bezierIsCustom);
-  const overshootStyle = useEasingStore((state) => state.overshootStyle);
-  const overshootIsCustom = useEasingStore((state) => state.overshootIsCustom);
-  const overshootCurve = useEasingStore((state) => state.overshootCurve);
   const springCurve = useEasingStore((state) => state.springCurve);
   const springIsCustom = useEasingStore((state) => state.springIsCustom);
   const bounceCurve = useEasingStore((state) => state.bounceCurve);
   const bounceIsCustom = useEasingStore((state) => state.bounceIsCustom);
   const wiggleCurve = useEasingStore((state) => state.wiggleCurve);
   const wiggleIsCustom = useEasingStore((state) => state.wiggleIsCustom);
+  const overshootStyle = useEasingStore((state) => state.overshootStyle);
+  const overshootIsCustom = useEasingStore((state) => state.overshootIsCustom);
+  const overshootCurve = useEasingStore((state) => state.overshootCurve);
   const setState = useEasingStore((state) => state.setState);
 
   const onBezierValueChange = (style: BezierStyle, curve: BezierCurve) => {
@@ -58,16 +58,6 @@ export default function EasingSelection() {
       bezierIsCustom: false,
       editorExtraSpaceTop: Math.max(value.y1, value.y2) > 1,
       editorExtraSpaceBottom: Math.min(value.y1, value.y2) < 0,
-    });
-  };
-
-  const onOvershootValueChange = (style: OvershootStyle, curve: OvershootCurve) => {
-    setState({
-      overshootStyle: style,
-      overshootDamping: overshootFunctions[style][curve].damping,
-      overshootMass: overshootFunctions[style][curve].mass,
-      overshootCurve: curve,
-      overshootIsCustom: false,
     });
   };
 
@@ -96,6 +86,16 @@ export default function EasingSelection() {
       wiggleWiggles: wiggleFunctions[curve].wiggles,
       wiggleCurve: curve,
       wiggleIsCustom: false,
+    });
+  };
+
+  const onOvershootValueChange = (style: OvershootStyle, curve: OvershootCurve) => {
+    setState({
+      overshootStyle: style,
+      overshootDamping: overshootFunctions[style][curve].damping,
+      overshootMass: overshootFunctions[style][curve].mass,
+      overshootCurve: curve,
+      overshootIsCustom: false,
     });
   };
 

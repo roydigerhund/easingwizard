@@ -1,7 +1,6 @@
 /v1/
  ├─ presets/
- │    ├─ GET    /           → Liste verfügbarer Presets
- │    └─ GET    /{slug}     → Detail: Punkte, Tags, SVG-Preview
+ │    └─ GET    /           → Liste verfügbarer Presets
  │
  ├─ curves/
  │    ├─ POST   /bezier     →  Body: {p1:[x,y], p2:[x,y]}                ↴

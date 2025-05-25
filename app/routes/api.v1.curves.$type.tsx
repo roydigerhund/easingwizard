@@ -1,6 +1,6 @@
 import { ActionFunctionArgs } from '@vercel/remix';
 import z from 'zod/v4';
-import { productionOrigin } from '~/data/globals';
+import { apiOrigin, productionOrigin } from '~/data/globals';
 import { EasingType } from '~/types-and-enums';
 import { createCubicBezierString, cssStringToTailwind, generateLinearEasing } from '~/utils/easing';
 import {
@@ -104,7 +104,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
       output,
       // HATEOAS
       links: {
-        self: `${productionOrigin}/api/v1/curves/${type}`,
+        self: `${apiOrigin}/curves/${type}`,
         preview_svg: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0,100 C${config.x1 * 100},${100 - config.y1 * 100} ${config.x2 * 100},${100 - config.y2 * 100} 100,0" fill="none" stroke="currentColor" stroke-width="2"/></svg>`,
         share_url: `${productionOrigin}/${type}`,
       },
