@@ -30,25 +30,53 @@ export const BezierInput = z.object({
 export type BezierInput = z.infer<typeof BezierInput>;
 
 export const SpringInput = z.object({
-  mass: z.number().min(1).max(5).transform((val) => roundTo(val, 1)),
-  stiffness: z.number().min(1).max(500).transform((val) => roundTo(val, 0)),
-  damping: z.number().min(5).max(25).transform((val) => roundTo(val, 0)),
+  mass: z
+    .number()
+    .min(1)
+    .max(5)
+    .transform((val) => roundTo(val, 1)),
+  stiffness: z
+    .number()
+    .min(1)
+    .max(500)
+    .transform((val) => roundTo(val, 0)),
+  damping: z
+    .number()
+    .min(5)
+    .max(25)
+    .transform((val) => roundTo(val, 0)),
   accuracy: z.enum(LinearEasingAccuracy),
 });
 
 export type SpringInput = z.infer<typeof SpringInput>;
 
 export const BounceInput = z.object({
-  bounces: z.number().min(1).max(10).transform((val) => roundTo(val, 0)),
-  damping: z.number().min(-2).max(2).transform((val) => roundTo(val, 1)),
+  bounces: z
+    .number()
+    .min(1)
+    .max(10)
+    .transform((val) => roundTo(val, 0)),
+  damping: z
+    .number()
+    .min(-2)
+    .max(2)
+    .transform((val) => roundTo(val, 1)),
   accuracy: z.enum(LinearEasingAccuracy),
 });
 
 export type BounceInput = z.infer<typeof BounceInput>;
 
 export const WiggleInput = z.object({
-  wiggles: z.number().min(1).max(10).transform((val) => roundTo(val, 0)),
-  damping: z.number().min(0).max(20).transform((val) => roundTo(val, 1)),
+  wiggles: z
+    .number()
+    .min(1)
+    .max(10)
+    .transform((val) => roundTo(val, 0)),
+  damping: z
+    .number()
+    .min(0)
+    .max(20)
+    .transform((val) => roundTo(val, 1)),
   accuracy: z.enum(LinearEasingAccuracy),
 });
 
@@ -56,8 +84,16 @@ export type WiggleInput = z.infer<typeof WiggleInput>;
 
 export const OvershootInput = z.object({
   style: z.enum(OvershootStyle),
-  mass: z.number().min(1).max(5).transform((val) => roundTo(val, 1)),
-  damping: z.number().min(50).max(100).transform((val) => roundTo(val, 0)),
+  mass: z
+    .number()
+    .min(1)
+    .max(5)
+    .transform((val) => roundTo(val, 1)),
+  damping: z
+    .number()
+    .min(50)
+    .max(100)
+    .transform((val) => roundTo(val, 0)),
   accuracy: z.enum(LinearEasingAccuracy),
 });
 
