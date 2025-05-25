@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EasingState, useEasingStore } from '~/state/easing-store';
-import { LinearEasingAccuracy } from '~/types-and-enums';
-import { createBounceFunction, generateLinearEasing } from '~/utils/easing';
+import { EasingType, LinearEasingAccuracy, Point } from '~/types-and-enums';
+import { generateLinearEasing } from '~/utils/easing';
+import { generateBounceSVGPolyline } from '~/utils/svg';
 import EditorBase from './EditorBase';
 import EditorBaseLine from './EditorBaseLine';
 import InputGroup from './InputGroup';
@@ -13,21 +14,19 @@ export default function BounceEditor() {
   const bounceDamping = useEasingStore((state) => state.bounceDamping);
   const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
   const setState = useEasingStore((state) => state.setState);
-  const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
-
-  const bounceFunc = useMemo(() => {
-    return createBounceFunction({
-      bounces: bounceBounces,
-      damping: bounceDamping,
-    });
-  }, [bounceBounces, bounceDamping]);
+  const [points, setPoints] = useState<Point[]>([]);
 
   useEffect(() => {
     // Recalculate when parameters change
-    const { easingValue, sampledPoints } = generateLinearEasing(bounceFunc, editorAccuracy, 1);
+    const { easingValue, sampledPoints } = generateLinearEasing({
+      type: EasingType.BOUNCE,
+      accuracy: editorAccuracy,
+      bounces: bounceBounces,
+      damping: bounceDamping,
+    });
     setPoints(sampledPoints);
     setState({ bounceValue: easingValue });
-  }, [editorAccuracy, setState, bounceFunc]);
+  }, [editorAccuracy, bounceBounces, bounceDamping, setState]);
 
   const handleChange = (state: Partial<EasingState>) => {
     setState({ ...state, bounceIsCustom: true });
@@ -38,12 +37,8 @@ export default function BounceEditor() {
       <EditorBase>
         {/* Bounce Curve */}
         <EditorBaseLine>
-          <polyline strokeWidth="2" points={points.map((point) => `${point.x},${100 - point.y}`).join(' ')} />
-          <polyline
-            strokeWidth="6"
-            points={points.map((point) => `${point.x},${100 - point.y}`).join(' ')}
-            filter='url("#f1")'
-          />
+          <polyline strokeWidth="2" points={generateBounceSVGPolyline(points)} />
+          <polyline strokeWidth="6" points={generateBounceSVGPolyline(points)} filter='url("#f1")' />
         </EditorBaseLine>
       </EditorBase>
 

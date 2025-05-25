@@ -48,13 +48,16 @@ export default function EasingSelection() {
   const onBezierValueChange = (style: BezierStyle, curve: BezierCurve) => {
     const value = bezierFunctions[style][curve]!;
     setState({
-      bezierRawValue: value,
+      bezierX1: value.x1,
+      bezierY1: value.y1,
+      bezierX2: value.x2,
+      bezierY2: value.y2,
       bezierValue: createCubicBezierString(value),
       bezierStyle: style,
       bezierCurve: curve,
       bezierIsCustom: false,
-      editorExtraSpaceTop: Math.max(value[1], value[3]) > 1,
-      editorExtraSpaceBottom: Math.min(value[1], value[3]) < 0,
+      editorExtraSpaceTop: Math.max(value.y1, value.y2) > 1,
+      editorExtraSpaceBottom: Math.min(value.y1, value.y2) < 0,
     });
   };
 
@@ -118,7 +121,7 @@ export default function EasingSelection() {
                   text={humanize(style)}
                   icon={
                     <path
-                      d={`M0,100 C${values[0] * 100},${100 - values[1] * 100} ${values[2] * 100},${100 - values[3] * 100} 100,0`}
+                      d={`M0,100 C${values.x1 * 100},${100 - values.y1 * 100} ${values.x2 * 100},${100 - values.y2 * 100} 100,0`}
                     />
                   }
                 />
@@ -143,7 +146,7 @@ export default function EasingSelection() {
               text={humanize(curve)}
               icon={
                 <path
-                  d={`M0,100 C${values[0] * 100},${100 - values[1] * 100} ${values[2] * 100},${100 - values[3] * 100} 100,0`}
+                  d={`M0,100 C${values.x1 * 100},${100 - values.y1 * 100} ${values.x2 * 100},${100 - values.y2 * 100} 100,0`}
                 />
               }
             />

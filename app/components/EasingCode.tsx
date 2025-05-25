@@ -8,6 +8,7 @@ import CSSIcon from './icons/CSSIcon';
 import TailwindCSSIcon from './icons/TailwindCSSIcon';
 import IconTextButton from './IconTextButton';
 import TabBarButton from './TabBarButton';
+import { cssStringToTailwind } from '~/utils/easing';
 
 export enum CodeType {
   CSS = 'CSS',
@@ -58,7 +59,7 @@ export default function EasingCode() {
       case CodeType.CSS:
         return value;
       case CodeType.TAILWIND_CSS:
-        return `ease-[${value.replace(/ /g, '_')}]`;
+        return cssStringToTailwind(value);
     }
   };
 

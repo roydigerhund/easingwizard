@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { EasingState, useEasingStore } from '~/state/easing-store';
-import { LinearEasingAccuracy } from '~/types-and-enums';
-import { createWiggleFunction, generateLinearEasing } from '~/utils/easing';
+import { EasingType, LinearEasingAccuracy, Point } from '~/types-and-enums';
+import { generateLinearEasing } from '~/utils/easing';
+import { generateWiggleSVGPolyline } from '~/utils/svg';
 import EditorBase from './EditorBase';
 import EditorBaseLine from './EditorBaseLine';
 import InputGroup from './InputGroup';
@@ -13,20 +14,16 @@ export default function WiggleEditor() {
   const wiggleWiggles = useEasingStore((state) => state.wiggleWiggles);
   const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
   const setState = useEasingStore((state) => state.setState);
-  const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
+  const [points, setPoints] = useState<Point[]>([]);
 
   useEffect(() => {
     // Recalculate when parameters change
-    const { easingValue, sampledPoints } = generateLinearEasing(
-      createWiggleFunction({
-        // stiffness: wiggleStiffness,
-        damping: wiggleDamping,
-        wiggles: wiggleWiggles,
-      }),
-      editorAccuracy,
-      1,
-      0,
-    );
+    const { easingValue, sampledPoints } = generateLinearEasing({
+      type: EasingType.WIGGLE,
+      accuracy: editorAccuracy,
+      wiggles: wiggleWiggles,
+      damping: wiggleDamping,
+    });
     setPoints(sampledPoints);
     setState({ wiggleValue: easingValue });
   }, [wiggleDamping, wiggleWiggles, editorAccuracy, setState]);
@@ -40,12 +37,8 @@ export default function WiggleEditor() {
       <EditorBase>
         {/* Wiggle Curve */}
         <EditorBaseLine>
-          <polyline strokeWidth="2" points={points.map((point) => `${point.x},${point.y / 2}`).join(' ')} />
-          <polyline
-            strokeWidth="6"
-            points={points.map((point) => `${point.x},${point.y / 2}`).join(' ')}
-            filter='url("#f1")'
-          />
+          <polyline strokeWidth="2" points={generateWiggleSVGPolyline(points)} />
+          <polyline strokeWidth="6" points={generateWiggleSVGPolyline(points)} filter='url("#f1")' />
         </EditorBaseLine>
       </EditorBase>
 

@@ -1,33 +1,27 @@
 import fs from 'fs';
 import { bounceFunctions, overshootFunctions, springFunctions, wiggleFunctions } from '~/data/easing';
-import { LinearEasingAccuracy, OvershootStyle } from '~/types-and-enums';
-import {
-  createBounceFunction,
-  createOvershootFunction,
-  createSpringFunction,
-  createWiggleFunction,
-  generateLinearEasing,
-} from '~/utils/easing';
+import { EasingType, LinearEasingAccuracy, OvershootStyle } from '~/types-and-enums';
+import { generateLinearEasing } from '~/utils/easing';
 
 function main() {
   const springCalculations = Object.fromEntries(
     Object.entries(springFunctions).map(([curve, springFunction]) => [
       curve,
-      generateLinearEasing(createSpringFunction(springFunction), LinearEasingAccuracy.HIGH),
+      generateLinearEasing({ type: EasingType.SPRING, accuracy: LinearEasingAccuracy.HIGH, ...springFunction }),
     ]),
   );
 
   const bounceCalculations = Object.fromEntries(
     Object.entries(bounceFunctions).map(([curve, bounceFunction]) => [
       curve,
-      generateLinearEasing(createBounceFunction(bounceFunction), LinearEasingAccuracy.HIGH, 1),
+      generateLinearEasing({ type: EasingType.BOUNCE, accuracy: LinearEasingAccuracy.HIGH, ...bounceFunction }),
     ]),
   );
 
   const wiggleCalculations = Object.fromEntries(
     Object.entries(wiggleFunctions).map(([curve, wiggleFunction]) => [
       curve,
-      generateLinearEasing(createWiggleFunction(wiggleFunction), LinearEasingAccuracy.HIGH, 1, 0),
+      generateLinearEasing({ type: EasingType.WIGGLE, accuracy: LinearEasingAccuracy.HIGH, ...wiggleFunction }),
     ]),
   );
 
@@ -37,11 +31,12 @@ function main() {
       Object.fromEntries(
         Object.entries(curves).map(([curve, overshootFunction]) => [
           curve,
-          generateLinearEasing(
-            createOvershootFunction({ ...overshootFunction, style: style as OvershootStyle }),
-            LinearEasingAccuracy.HIGH,
-            1,
-          ),
+          generateLinearEasing({
+            type: EasingType.OVERSHOOT,
+            accuracy: LinearEasingAccuracy.HIGH,
+            ...overshootFunction,
+            style: style as OvershootStyle,
+          }),
         ]),
       ),
     ]),

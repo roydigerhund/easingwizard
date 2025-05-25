@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { EasingState, useEasingStore } from '~/state/easing-store';
-import { LinearEasingAccuracy } from '~/types-and-enums';
-import { createOvershootFunction, generateLinearEasing } from '~/utils/easing';
+import { EasingType, LinearEasingAccuracy, Point } from '~/types-and-enums';
+import { generateLinearEasing } from '~/utils/easing';
+import { generateOvershootSVGPolyline } from '~/utils/svg';
 import EditorBase from './EditorBase';
 import EditorBaseLine from './EditorBaseLine';
 import InputGroup from './InputGroup';
@@ -14,19 +15,17 @@ export default function OvershootEditor() {
   const overshootMass = useEasingStore((state) => state.overshootMass);
   const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
   const setState = useEasingStore((state) => state.setState);
-  const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
+  const [points, setPoints] = useState<Point[]>([]);
 
   useEffect(() => {
     // Recalculate when parameters change
-    const { easingValue, sampledPoints } = generateLinearEasing(
-      createOvershootFunction({
-        damping: overshootDamping,
-        mass: overshootMass,
-        style: overshootStyle,
-      }),
-      editorAccuracy,
-      1,
-    );
+    const { easingValue, sampledPoints } = generateLinearEasing({
+      type: EasingType.OVERSHOOT,
+      accuracy: editorAccuracy,
+      damping: overshootDamping,
+      mass: overshootMass,
+      style: overshootStyle,
+    });
     setPoints(sampledPoints);
     setState({ overshootValue: easingValue });
   }, [overshootDamping, overshootMass, overshootStyle, editorAccuracy, setState]);
@@ -40,12 +39,8 @@ export default function OvershootEditor() {
       <EditorBase>
         {/* Overshoot Curve */}
         <EditorBaseLine>
-          <polyline strokeWidth="2" points={points.map((point) => `${point.x},${point.y / 2 + 25}`).join(' ')} />
-          <polyline
-            strokeWidth="6"
-            points={points.map((point) => `${point.x},${point.y / 2 + 25}`).join(' ')}
-            filter='url("#f1")'
-          />
+          <polyline strokeWidth="2" points={generateOvershootSVGPolyline(points)} />
+          <polyline strokeWidth="6" points={generateOvershootSVGPolyline(points)} filter='url("#f1")' />
         </EditorBaseLine>
       </EditorBase>
 

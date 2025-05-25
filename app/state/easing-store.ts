@@ -21,17 +21,16 @@ import {
   AnimationType,
   BezierCurve,
   BezierStyle,
-  BezierValue,
   BounceCurve,
   EasingType,
   LinearEasingAccuracy,
   OvershootCurve,
-  OvershootStyle,
   PreviewPlayMode,
   SpringCurve,
   WiggleCurve,
 } from '~/types-and-enums';
 import { createCubicBezierString } from '~/utils/easing';
+import { BezierInput, BounceInput, OvershootInput, SpringInput, WiggleInput } from '~/validations/easing';
 
 export type EasingState = {
   // General
@@ -39,35 +38,38 @@ export type EasingState = {
   // Bezier
   bezierStyle: BezierStyle;
   bezierCurve: BezierCurve;
-  bezierRawValue: BezierValue;
+  bezierX1: BezierInput['x1'];
+  bezierY1: BezierInput['y1'];
+  bezierX2: BezierInput['x2'];
+  bezierY2: BezierInput['y2'];
   bezierValue: string;
   bezierIsCustom: boolean;
-  // Overeshoot
-  overshootStyle: OvershootStyle;
-  overshootCurve: OvershootCurve;
-  overshootDamping: number;
-  overshootMass: number;
-  overshootValue: string;
-  overshootIsCustom: boolean;
   // Spring
   springCurve: SpringCurve;
-  springStiffness: number;
-  springDamping: number;
-  springMass: number;
+  springMass: SpringInput['mass'];
+  springStiffness: SpringInput['stiffness'];
+  springDamping: SpringInput['damping'];
   springValue: string;
   springIsCustom: boolean;
   // Bounce
   bounceCurve: BounceCurve;
-  bounceBounces: number;
-  bounceDamping: number;
+  bounceBounces: BounceInput['bounces'];
+  bounceDamping: BounceInput['damping'];
   bounceValue: string;
   bounceIsCustom: boolean;
   // Wiggle
   wiggleCurve: WiggleCurve;
-  wiggleDamping: number;
-  wiggleWiggles: number;
+  wiggleWiggles: WiggleInput['wiggles'];
+  wiggleDamping: WiggleInput['damping'];
   wiggleValue: string;
   wiggleIsCustom: boolean;
+  // Overeshoot
+  overshootStyle: OvershootInput['style'];
+  overshootCurve: OvershootCurve;
+  overshootMass: OvershootInput['mass'];
+  overshootDamping: OvershootInput['damping'];
+  overshootValue: string;
+  overshootIsCustom: boolean;
   // Preview
   previewDuration: number;
   previewPlayMode: PreviewPlayMode;
@@ -92,9 +94,12 @@ type EasingAction = {
 };
 
 const defaultBezierState: EasingStateBlock<'bezier'> = {
+  bezierX1: defaultBezierFunction.x1,
+  bezierY1: defaultBezierFunction.y1,
+  bezierX2: defaultBezierFunction.x2,
+  bezierY2: defaultBezierFunction.y2,
   bezierStyle: defaultBezierStyle,
   bezierCurve: defaultBezierCurve,
-  bezierRawValue: defaultBezierFunction,
   bezierValue: createCubicBezierString(defaultBezierFunction),
   bezierIsCustom: false,
 };
@@ -171,10 +176,10 @@ export const useEasingStore = create<EasingState & EasingAction>((set, get) => (
   setEasingType: (easingType: EasingType) => {
     switch (easingType) {
       case EasingType.BEZIER:
-        set(({ bezierRawValue }) => ({
+        set(({ bezierY1, bezierY2 }) => ({
           easingType,
-          editorExtraSpaceTop: Math.max(bezierRawValue[1], bezierRawValue[3]) > 1,
-          editorExtraSpaceBottom: Math.min(bezierRawValue[1], bezierRawValue[3]) < 0,
+          editorExtraSpaceTop: Math.max(bezierY1, bezierY2) > 1,
+          editorExtraSpaceBottom: Math.min(bezierY1, bezierY2) < 0,
         }));
         break;
       case EasingType.OVERSHOOT:
