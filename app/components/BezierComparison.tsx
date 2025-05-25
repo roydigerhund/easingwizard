@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react';
 import { bezierEasings } from '~/data/easing';
-import { LinearEasingAccuracy } from '~/types-and-enums';
+import { EasingType, LinearEasingAccuracy } from '~/types-and-enums';
 import { classNames } from '~/utils/class-names';
-import { generateLinearEasing } from '~/utils/easing';
+import { createCubicBezierString, generateLinearEasing } from '~/utils/easing';
 import { humanize } from '~/utils/string';
+import { BezierInput } from '~/validations/easing';
 import EditorBase from './EditorBase';
 import EditorBaseLine from './EditorBaseLine';
 import MeshBase from './MeshBase';
@@ -13,20 +14,20 @@ const options = types.flatMap((type) => Object.values(bezierEasings[type]));
 const names = types.flatMap((type) => Object.keys(bezierEasings[type]).map((name) => humanize(`${type}_${name}`)));
 
 export default function BezierComparison() {
-  const [bezierValue, setBezierValue] = useState(bezierEasings.in.sine.bezierValue);
+  const [bezierValue, setBezierValue] = useState<BezierInput>(bezierEasings.in.sine);
   const [selectedOption, setSelectedOption] = useState(0);
 
   const { mathFunction } = options[selectedOption];
 
   const { sampledPoints } = useMemo(
-    () => generateLinearEasing(mathFunction, LinearEasingAccuracy.ULTRA, 1),
+    () => generateLinearEasing({ type: EasingType.BEZIER, accuracy: LinearEasingAccuracy.HIGH, mathFunction }),
     [mathFunction],
   );
 
   const animationStyles = (easing: string) => ({
     animationDuration: `3000ms`,
     animationIterationCount: 'infinite',
-    animationTimingFunction: `cubic-bezier(${easing})`,
+    animationTimingFunction: easing,
     animationName: 'move' + 'Animation' + 'Infinite',
     animationFillMode: 'both',
   });
@@ -38,7 +39,7 @@ export default function BezierComparison() {
           {/* Bezier Curve */}
           <EditorBaseLine>
             <path
-              d={`M0,100 C${bezierValue[0] * 100},${100 - bezierValue[1] * 100} ${bezierValue[2] * 100},${100 - bezierValue[3] * 100} 100,0`}
+              d={`M0,100 C${bezierValue.x1 * 100},${100 - bezierValue.y1 * 100} ${bezierValue.x2 * 100},${100 - bezierValue.y2 * 100} 100,0`}
               strokeWidth="1"
               stroke="rgba(255, 0, 255, 0.75)"
             />
@@ -48,22 +49,22 @@ export default function BezierComparison() {
               stroke="rgba(255, 255, 0, 0.75)"
             />
             {/* Dots */}
-            <circle cx={bezierValue[0] * 100} cy={100 - bezierValue[1] * 100} r="1" stroke="none" fill="white" />
-            <circle cx={bezierValue[2] * 100} cy={100 - bezierValue[3] * 100} r="1" stroke="none" fill="white" />
+            <circle cx={bezierValue.x1 * 100} cy={100 - bezierValue.y1 * 100} r="1" stroke="none" fill="white" />
+            <circle cx={bezierValue.x2 * 100} cy={100 - bezierValue.y2 * 100} r="1" stroke="none" fill="white" />
             {/* Lines to Dots */}
             <line
               x1="0"
               y1="100"
-              x2={bezierValue[0] * 100}
-              y2={100 - bezierValue[1] * 100}
+              x2={bezierValue.x1 * 100}
+              y2={100 - bezierValue.y1 * 100}
               stroke="rgba(255,255,255,0.5)"
               strokeWidth={0.25}
             />
             <line
               x1="100"
               y1="0"
-              x2={bezierValue[2] * 100}
-              y2={100 - bezierValue[3] * 100}
+              x2={bezierValue.x2 * 100}
+              y2={100 - bezierValue.y2 * 100}
               stroke="rgba(255,255,255,0.5)"
               strokeWidth={0.25}
             />
@@ -71,8 +72,8 @@ export default function BezierComparison() {
         </EditorBase>
         <input
           className="mt-8"
-          value={bezierValue.join(', ')}
-          onChange={(e) => setBezierValue(e.target.value.split(',').map((value) => parseFloat(value)))}
+          value={JSON.stringify(bezierValue)}
+          onChange={(e) => setBezierValue(JSON.parse(e.target.value))}
         />
         <textarea className="mt-8 h-32 w-full" value={mathFunction.toString()} />
       </div>
@@ -83,7 +84,7 @@ export default function BezierComparison() {
             key={index}
             onClick={() => {
               setSelectedOption(index);
-              setBezierValue(options[index].bezierValue);
+              setBezierValue(options[index]);
             }}
             className={classNames(
               'px-3 py-2',
@@ -96,11 +97,11 @@ export default function BezierComparison() {
         <MeshBase>
           <div className="absolute inset-0 z-10 grid items-center justify-items-center">
             <div
-              className="bg-grdt-from col-span-full row-span-full size-1/4 rounded-xl !border-none"
-              style={animationStyles(bezierValue.join(', '))}
+              className="col-span-full row-span-full size-1/4 rounded-xl !border-none bg-grdt-from"
+              style={animationStyles(createCubicBezierString(bezierValue))}
             />
             <div
-              className="border-grdt-to col-span-full row-span-full size-1/4 rounded-xl border opacity-50"
+              className="col-span-full row-span-full size-1/4 rounded-xl border border-grdt-to opacity-50"
               style={animationStyles('linear')}
             />
           </div>

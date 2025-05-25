@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { EasingState, useEasingStore } from '~/state/easing-store';
-import { LinearEasingAccuracy } from '~/types-and-enums';
-import { createSpringFunction, generateLinearEasing } from '~/utils/easing';
+import { EasingType, LinearEasingAccuracy, Point } from '~/types-and-enums';
+import { generateLinearEasing } from '~/utils/easing';
+import { generateSpringSVGPolyline } from '~/utils/svg';
 import EditorBase from './EditorBase';
 import EditorBaseLine from './EditorBaseLine';
 import InputGroup from './InputGroup';
@@ -14,18 +15,17 @@ export default function SpringEditor() {
   const springMass = useEasingStore((state) => state.springMass);
   const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
   const setState = useEasingStore((state) => state.setState);
-  const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
+  const [points, setPoints] = useState<Point[]>([]);
 
   useEffect(() => {
     // Recalculate when parameters change
-    const { easingValue, sampledPoints } = generateLinearEasing(
-      createSpringFunction({
-        stiffness: springStiffness,
-        damping: springDamping,
-        mass: springMass,
-      }),
-      editorAccuracy,
-    );
+    const { easingValue, sampledPoints } = generateLinearEasing({
+      type: EasingType.SPRING,
+      accuracy: editorAccuracy,
+      stiffness: springStiffness,
+      damping: springDamping,
+      mass: springMass,
+    });
     setPoints(sampledPoints);
     setState({ springValue: easingValue });
   }, [springStiffness, springDamping, springMass, editorAccuracy, setState]);
@@ -39,12 +39,8 @@ export default function SpringEditor() {
       <EditorBase>
         {/* Spring Curve */}
         <EditorBaseLine>
-          <polyline strokeWidth="2" points={points.map((point) => `${point.x},${point.y / 2 + 50}`).join(' ')} />
-          <polyline
-            strokeWidth="6"
-            points={points.map((point) => `${point.x},${point.y / 2 + 50}`).join(' ')}
-            filter='url("#f1")'
-          />
+          <polyline strokeWidth="2" points={generateSpringSVGPolyline(points)} />
+          <polyline strokeWidth="6" points={generateSpringSVGPolyline(points)} filter='url("#f1")' />
         </EditorBaseLine>
       </EditorBase>
 

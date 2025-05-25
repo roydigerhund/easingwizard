@@ -7,68 +7,92 @@ import {
 import {
   BezierCurve,
   BezierStyle,
-  BezierValue,
   BounceCurve,
   OvershootCurve,
   OvershootStyle,
   SpringCurve,
   WiggleCurve,
 } from '~/types-and-enums';
+import { BezierInput } from '~/validations/easing';
 
 export const bezierEasings = {
   in: {
     // In Sine
     sine: {
-      bezierValue: [0.13, 0, 0.39, 0],
+      x1: 0.13,
+      y1: 0,
+      x2: 0.39,
+      y2: 0,
       mathFunction: function (x: number): number {
         return 1 - Math.cos(x * Math.PI * 0.5);
       },
     },
     // In Quad
     quad: {
-      bezierValue: [0.11, 0, 0.5, 0],
+      x1: 0.11,
+      y1: 0,
+      x2: 0.5,
+      y2: 0,
       mathFunction: function (x: number): number {
         return Math.pow(x, 2);
       },
     },
     // In Cubic
     cubic: {
-      bezierValue: [0.32, 0, 0.67, 0],
+      x1: 0.32,
+      y1: 0,
+      x2: 0.67,
+      y2: 0,
       mathFunction: function (x: number): number {
         return Math.pow(x, 3);
       },
     },
     // In Quart
     quart: {
-      bezierValue: [0.5, 0, 0.75, 0],
+      x1: 0.5,
+      y1: 0,
+      x2: 0.75,
+      y2: 0,
       mathFunction: function (x: number): number {
         return Math.pow(x, 4);
       },
     },
     // In Quint
     quint: {
-      bezierValue: [0.64, 0, 0.78, 0],
+      x1: 0.64,
+      y1: 0,
+      x2: 0.78,
+      y2: 0,
       mathFunction: function (x: number): number {
         return Math.pow(x, 5);
       },
     },
     // In Expo
     expo: {
-      bezierValue: [0.7, 0, 0.84, 0],
+      x1: 0.7,
+      y1: 0,
+      x2: 0.84,
+      y2: 0,
       mathFunction: function (x: number): number {
         return x === 0 ? 0 : Math.pow(2, 10 * x - 10);
       },
     },
     // In Circ
     circ: {
-      bezierValue: [0.55, 0, 1, 0.45],
+      x1: 0.55,
+      y1: 0,
+      x2: 1,
+      y2: 0.45,
       mathFunction: function (x: number): number {
         return 1 - Math.sqrt(1 - Math.pow(x, 2));
       },
     },
     // In Back
     back: {
-      bezierValue: [0.36, 0, 0.66, -0.56],
+      x1: 0.36,
+      y1: 0,
+      x2: 0.66,
+      y2: -0.56,
       mathFunction: function (x: number): number {
         const c1 = 1.70158;
         const c3 = c1 + 1;
@@ -79,42 +103,60 @@ export const bezierEasings = {
   inOut: {
     // In Out Sine
     sine: {
-      bezierValue: [0.36, 0, 0.64, 1],
+      x1: 0.36,
+      y1: 0,
+      x2: 0.64,
+      y2: 1,
       mathFunction: function (x: number): number {
         return -(Math.cos(Math.PI * x) - 1) * 0.5;
       },
     },
     // In Out Quad
     quad: {
-      bezierValue: [0.44, 0, 0.56, 1],
+      x1: 0.44,
+      y1: 0,
+      x2: 0.56,
+      y2: 1,
       mathFunction: function (x: number): number {
         return x < 0.5 ? 2 * Math.pow(x, 2) : 1 - Math.pow(-2 * x + 2, 2) * 0.5;
       },
     },
     // In Out Cubic
     cubic: {
-      bezierValue: [0.66, 0, 0.34, 1],
+      x1: 0.66,
+      y1: 0,
+      x2: 0.34,
+      y2: 1,
       mathFunction: function (x: number): number {
         return x < 0.5 ? 4 * Math.pow(x, 3) : 1 - Math.pow(-2 * x + 2, 3) * 0.5;
       },
     },
     // In Out Quart
     quart: {
-      bezierValue: [0.78, 0, 0.22, 1],
+      x1: 0.78,
+      y1: 0,
+      x2: 0.22,
+      y2: 1,
       mathFunction: function (x: number): number {
         return x < 0.5 ? 8 * Math.pow(x, 4) : 1 - Math.pow(-2 * x + 2, 4) * 0.5;
       },
     },
     // In Out Quint
     quint: {
-      bezierValue: [0.86, 0, 0.14, 1],
+      x1: 0.86,
+      y1: 0,
+      x2: 0.14,
+      y2: 1,
       mathFunction: function (x: number): number {
         return x < 0.5 ? 16 * Math.pow(x, 5) : 1 - Math.pow(-2 * x + 2, 5) * 0.5;
       },
     },
     // In Out Expo
     expo: {
-      bezierValue: [0.9, 0, 0.1, 1],
+      x1: 0.9,
+      y1: 0,
+      x2: 0.1,
+      y2: 1,
       mathFunction: function (x: number): number {
         return x === 0
           ? 0
@@ -127,7 +169,10 @@ export const bezierEasings = {
     },
     // In Out Circ
     circ: {
-      bezierValue: [0.85, 0.09, 0.15, 0.91],
+      x1: 0.85,
+      y1: 0.09,
+      x2: 0.15,
+      y2: 0.91,
       mathFunction: function (x: number): number {
         return x < 0.5
           ? (1 - Math.sqrt(1 - Math.pow(2 * x, 2))) * 0.5
@@ -136,7 +181,10 @@ export const bezierEasings = {
     },
     // In Out Jump
     jump: {
-      bezierValue: [1, 0, 0, 1],
+      x1: 1,
+      y1: 0,
+      x2: 0,
+      y2: 1,
       mathFunction: function (x: number): number {
         return x < 0.5
           ? (1 - Math.sqrt(1 - Math.pow(2 * x, 4))) * 0.5
@@ -145,7 +193,10 @@ export const bezierEasings = {
     },
     // In Out Anticipate
     anticipate: {
-      bezierValue: [0.8, -0.4, 0.5, 1],
+      x1: 0.8,
+      y1: -0.4,
+      x2: 0.5,
+      y2: 1,
       mathFunction: function (x: number): number {
         return x;
       },
@@ -154,7 +205,10 @@ export const bezierEasings = {
   inverseInOut: {
     // Inverse In Out Sine
     sine: {
-      bezierValue: [0, 0.36, 1, 0.64],
+      x1: 0,
+      y1: 0.36,
+      x2: 1,
+      y2: 0.64,
       mathFunction: function (x: number): number {
         return Math.asin(x * 2 - 1) / Math.PI + 0.5;
       },
@@ -163,56 +217,80 @@ export const bezierEasings = {
   out: {
     // Out Sine
     sine: {
-      bezierValue: [0.61, 1, 0.87, 1],
+      x1: 0.61,
+      y1: 1,
+      x2: 0.87,
+      y2: 1,
       mathFunction: function (x: number): number {
         return Math.sin(x * Math.PI * 0.5);
       },
     },
     // Out Quad
     quad: {
-      bezierValue: [0.5, 1, 0.89, 1],
+      x1: 0.5,
+      y1: 1,
+      x2: 0.89,
+      y2: 1,
       mathFunction: function (x: number): number {
         return 1 - Math.pow(1 - x, 2);
       },
     },
     // Out Cubic
     cubic: {
-      bezierValue: [0.33, 1, 0.68, 1],
+      x1: 0.33,
+      y1: 1,
+      x2: 0.68,
+      y2: 1,
       mathFunction: function (x: number): number {
         return 1 - Math.pow(1 - x, 3);
       },
     },
     // Out Quart
     quart: {
-      bezierValue: [0.25, 1, 0.5, 1],
+      x1: 0.25,
+      y1: 1,
+      x2: 0.5,
+      y2: 1,
       mathFunction: function (x: number): number {
         return 1 - Math.pow(1 - x, 4);
       },
     },
     // Out Quint
     quint: {
-      bezierValue: [0.22, 1, 0.36, 1],
+      x1: 0.22,
+      y1: 1,
+      x2: 0.36,
+      y2: 1,
       mathFunction: function (x: number): number {
         return 1 - Math.pow(1 - x, 5);
       },
     },
     // Out Expo
     expo: {
-      bezierValue: [0.16, 1, 0.3, 1],
+      x1: 0.16,
+      y1: 1,
+      x2: 0.3,
+      y2: 1,
       mathFunction: function (x: number): number {
         return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
       },
     },
     // Out Circ
     circ: {
-      bezierValue: [0, 0.55, 0.45, 1],
+      x1: 0,
+      y1: 0.55,
+      x2: 0.45,
+      y2: 1,
       mathFunction: function (x: number): number {
         return Math.sqrt(1 - Math.pow(x - 1, 2));
       },
     },
     // Out Back
     back: {
-      bezierValue: [0.34, 1.56, 0.64, 1],
+      x1: 0.34,
+      y1: 1.56,
+      x2: 0.64,
+      y2: 1,
       mathFunction: function (x: number): number {
         const c1 = 1.70158;
         const c3 = c1 + 1;
@@ -223,42 +301,60 @@ export const bezierEasings = {
   outIn: {
     // Out In Sine
     sine: {
-      bezierValue: [0.64, 1, 0.36, 0],
+      x1: 0.64,
+      y1: 1,
+      x2: 0.36,
+      y2: 0,
       mathFunction: function (x: number): number {
         return x < 0.5 ? Math.sin(x * Math.PI) * 0.5 : 1 + Math.sin(x * Math.PI) * -0.5;
       },
     },
     // Out In Quad
     quad: {
-      bezierValue: [0.56, 1, 0.44, 0],
+      x1: 0.56,
+      y1: 1,
+      x2: 0.44,
+      y2: 0,
       mathFunction: function (x: number): number {
         return x < 0.5 ? -2 * Math.pow(x, 2) + 2 * x : 2 * Math.pow(x, 2) - 2 * x + 1;
       },
     },
     // Out In Cubic
     cubic: {
-      bezierValue: [0.34, 1, 0.66, 0],
+      x1: 0.34,
+      y1: 1,
+      x2: 0.66,
+      y2: 0,
       mathFunction: function (x: number): number {
         return x < 0.5 ? 0.5 - Math.pow(1 - 2 * x, 3) * 0.5 : Math.pow(2 * x - 1, 3) * 0.5 + 0.5;
       },
     },
     // Out In Quart
     quart: {
-      bezierValue: [0.22, 1, 0.78, 0],
+      x1: 0.22,
+      y1: 1,
+      x2: 0.78,
+      y2: 0,
       mathFunction: function (x: number): number {
         return x < 0.5 ? 0.5 - Math.pow(1 - 2 * x, 4) * 0.5 : Math.pow(2 * x - 1, 4) * 0.5 + 0.5;
       },
     },
     // Out In Quint
     quint: {
-      bezierValue: [0.14, 1, 0.86, 0],
+      x1: 0.14,
+      y1: 1,
+      x2: 0.86,
+      y2: 0,
       mathFunction: function (x: number): number {
         return x < 0.5 ? 0.5 - Math.pow(1 - 2 * x, 5) * 0.5 : Math.pow(2 * x - 1, 5) * 0.5 + 0.5;
       },
     },
     // Out In Expo
     expo: {
-      bezierValue: [0.1, 1, 0.9, 0],
+      x1: 0.1,
+      y1: 1,
+      x2: 0.9,
+      y2: 0,
       mathFunction: function (x: number): number {
         return x === 0
           ? 0
@@ -271,14 +367,20 @@ export const bezierEasings = {
     },
     // Out In Circ
     circ: {
-      bezierValue: [0.15, 0.91, 0.85, 0.09],
+      x1: 0.15,
+      y1: 0.91,
+      x2: 0.85,
+      y2: 0.09,
       mathFunction: function (x: number): number {
         return x < 0.5 ? Math.sqrt(1 - Math.pow(2 * x - 1, 2)) * 0.5 : 1 - Math.sqrt(1 - Math.pow(2 * x - 1, 2)) * 0.5;
       },
     },
     // Out In Jump
     jump: {
-      bezierValue: [0, 1, 1, 0],
+      x1: 0,
+      y1: 1,
+      x2: 1,
+      y2: 0,
       mathFunction: function (x: number): number {
         return x < 0.5
           ? Math.sqrt(1 - Math.pow(-2 * (x + 0.5) + 2, 4)) * 0.5
@@ -289,7 +391,10 @@ export const bezierEasings = {
   inverseOutIn: {
     // Inverse Out In Sine
     sine: {
-      bezierValue: [1, 0.64, 0, 0.36],
+      x1: 1,
+      y1: 0.64,
+      x2: 0,
+      y2: 0.36,
       mathFunction: function (x: number): number {
         return x < 0.5 ? Math.asin((x + 0.5) * 2 - 1) / Math.PI : Math.asin((x - 0.5) * 2 - 1) / Math.PI + 1;
       },
@@ -297,27 +402,31 @@ export const bezierEasings = {
   },
 };
 
-export const bezierStyleFunctions: Record<BezierStyle, BezierValue> = {
-  in: [0.75, 0, 1, 1],
-  out: [0, 0, 0.25, 1],
-  inOut: [0.6, 0, 0.4, 1],
-  outIn: [0.4, 1, 0.6, 0],
+export const bezierStyleFunctions: Record<BezierStyle, BezierInput> = {
+  in: { x1: 0.75, y1: 0, x2: 1, y2: 1 },
+  out: { x1: 0, y1: 0, x2: 0.25, y2: 1 },
+  inOut: { x1: 0.6, y1: 0, x2: 0.4, y2: 1 },
+  outIn: { x1: 0.4, y1: 1, x2: 0.6, y2: 0 },
 };
 
-export const bezierFunctions: Record<BezierStyle, Partial<Record<BezierCurve, BezierValue>>> = {
-  in: Object.fromEntries(Object.entries(bezierEasings.in).map(([curve, { bezierValue }]) => [curve, bezierValue])),
-  out: Object.fromEntries(Object.entries(bezierEasings.out).map(([curve, { bezierValue }]) => [curve, bezierValue])),
+export const bezierFunctions: Record<BezierStyle, Partial<Record<BezierCurve, BezierInput>>> = {
+  in: Object.fromEntries(
+    Object.entries(bezierEasings.in).map(([curve, { x1, y1, x2, y2 }]) => [curve, { x1, y1, x2, y2 }]),
+  ),
+  out: Object.fromEntries(
+    Object.entries(bezierEasings.out).map(([curve, { x1, y1, x2, y2 }]) => [curve, { x1, y1, x2, y2 }]),
+  ),
   inOut: Object.fromEntries(
-    Object.entries(bezierEasings.inOut).map(([curve, { bezierValue }]) => [curve, bezierValue]),
+    Object.entries(bezierEasings.inOut).map(([curve, { x1, y1, x2, y2 }]) => [curve, { x1, y1, x2, y2 }]),
   ),
   outIn: Object.fromEntries(
-    Object.entries(bezierEasings.outIn).map(([curve, { bezierValue }]) => [curve, bezierValue]),
+    Object.entries(bezierEasings.outIn).map(([curve, { x1, y1, x2, y2 }]) => [curve, { x1, y1, x2, y2 }]),
   ),
 };
 
 export const defaultBezierStyle = BezierStyle.IN_OUT;
 export const defaultBezierCurve = BezierCurve.CUBIC;
-export const defaultBezierFunction = bezierFunctions[defaultBezierStyle][defaultBezierCurve] as BezierValue;
+export const defaultBezierFunction = bezierFunctions[defaultBezierStyle][defaultBezierCurve] as BezierInput;
 
 export const springFunctions: Record<SpringCurve, { stiffness: number; damping: number; mass: number }> = {
   heavy: {

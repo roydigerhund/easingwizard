@@ -23,6 +23,7 @@
     "isbot": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "zod": "^3.25.20",
     "zustand": "^5.0.0"
   },
   "devDependencies": {

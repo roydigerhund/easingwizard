@@ -1,7 +1,8 @@
 import { useEasingStore } from '~/state/easing-store';
-import { BezierValue } from '~/types-and-enums';
 import { createCubicBezierString } from '~/utils/easing';
 import { roundTo } from '~/utils/numbers';
+import { generateBezierSVGPath } from '~/utils/svg';
+import { BezierInput } from '~/validations/easing';
 import Drag from './Drag';
 import EditorBase from './EditorBase';
 import EditorBaseLine from './EditorBaseLine';
@@ -10,13 +11,23 @@ import Slider from './Slider';
 import Toggle from './Toggle';
 
 export default function BezierEditor() {
-  const bezierRawValue = useEasingStore((state) => state.bezierRawValue);
+  const bezierX1 = useEasingStore((state) => state.bezierX1);
+  const bezierY1 = useEasingStore((state) => state.bezierY1);
+  const bezierX2 = useEasingStore((state) => state.bezierX2);
+  const bezierY2 = useEasingStore((state) => state.bezierY2);
   const editorExtraSpaceTop = useEasingStore((state) => state.editorExtraSpaceTop);
   const editorExtraSpaceBottom = useEasingStore((state) => state.editorExtraSpaceBottom);
   const setState = useEasingStore((state) => state.setState);
 
-  const handleChange = (value: BezierValue) => {
-    setState({ bezierRawValue: value, bezierValue: createCubicBezierString(value), bezierIsCustom: true });
+  const handleChange = ({ x1, y1, x2, y2 }: BezierInput) => {
+    setState({
+      bezierX1: x1,
+      bezierY1: y1,
+      bezierX2: x2,
+      bezierY2: y2,
+      bezierValue: createCubicBezierString({ x1, y1, x2, y2 }),
+      bezierIsCustom: true,
+    });
   };
 
   return (
@@ -24,12 +35,9 @@ export default function BezierEditor() {
       <EditorBase>
         {/* Bezier Curve */}
         <EditorBaseLine>
+          <path d={generateBezierSVGPath({ x1: bezierX1, y1: bezierY1, x2: bezierX2, y2: bezierY2 })} strokeWidth="2" />
           <path
-            d={`M0,100 C${bezierRawValue[0] * 100},${100 - bezierRawValue[1] * 100} ${bezierRawValue[2] * 100},${100 - bezierRawValue[3] * 100} 100,0`}
-            strokeWidth="2"
-          />
-          <path
-            d={`M0,100 C${bezierRawValue[0] * 100},${100 - bezierRawValue[1] * 100} ${bezierRawValue[2] * 100},${100 - bezierRawValue[3] * 100} 100,0`}
+            d={generateBezierSVGPath({ x1: bezierX1, y1: bezierY1, x2: bezierX2, y2: bezierY2 })}
             strokeWidth="6"
             filter='url("#f1")'
           />
@@ -47,16 +55,16 @@ export default function BezierEditor() {
             className="text-grdt-from"
             x1={0}
             y1={100}
-            x2={bezierRawValue[0] * 100}
-            y2={100 - bezierRawValue[1] * 100}
+            x2={bezierX1 * 100}
+            y2={100 - bezierY1 * 100}
             stroke="currentColor"
           />
           <line
             className="text-grdt-to"
             x1={100}
             y1={0}
-            x2={bezierRawValue[2] * 100}
-            y2={100 - bezierRawValue[3] * 100}
+            x2={bezierX2 * 100}
+            y2={100 - bezierY2 * 100}
             stroke="currentColor"
           />
         </svg>
@@ -74,10 +82,10 @@ export default function BezierEditor() {
             minY={-100}
             maxX={100}
             maxY={200}
-            x={bezierRawValue[0] * 100}
-            y={100 - bezierRawValue[1] * 100}
+            x={bezierX1 * 100}
+            y={100 - bezierY1 * 100}
             onChange={(x, y) =>
-              handleChange([roundTo(x / 100, 3), roundTo(1 - y / 100, 3), bezierRawValue[2], bezierRawValue[3]])
+              handleChange({ x1: roundTo(x / 100, 3), y1: roundTo(1 - y / 100, 3), x2: bezierX2, y2: bezierY2 })
             }
           />
           <Drag
@@ -86,10 +94,10 @@ export default function BezierEditor() {
             minY={-100}
             maxX={100}
             maxY={200}
-            x={bezierRawValue[2] * 100}
-            y={100 - bezierRawValue[3] * 100}
+            x={bezierX2 * 100}
+            y={100 - bezierY2 * 100}
             onChange={(x, y) =>
-              handleChange([bezierRawValue[0], bezierRawValue[1], roundTo(x / 100, 3), roundTo(1 - y / 100, 3)])
+              handleChange({ x1: bezierX1, y1: bezierY1, x2: roundTo(x / 100, 3), y2: roundTo(1 - y / 100, 3) })
             }
           />
         </svg>
@@ -108,8 +116,8 @@ export default function BezierEditor() {
         />
         <Slider
           label="X1"
-          value={bezierRawValue[0]}
-          onChange={(value) => handleChange([value, bezierRawValue[1], bezierRawValue[2], bezierRawValue[3]])}
+          value={bezierX1}
+          onChange={(value) => handleChange({ x1: value, y1: bezierY1, x2: bezierX2, y2: bezierY2 })}
           min={0}
           max={1}
           step={0.01}
@@ -117,8 +125,8 @@ export default function BezierEditor() {
         />
         <Slider
           label="Y1"
-          value={bezierRawValue[1]}
-          onChange={(value) => handleChange([bezierRawValue[0], value, bezierRawValue[2], bezierRawValue[3]])}
+          value={bezierY1}
+          onChange={(value) => handleChange({ x1: bezierX1, y1: value, x2: bezierX2, y2: bezierY2 })}
           min={-1}
           max={2}
           step={0.01}
@@ -126,8 +134,8 @@ export default function BezierEditor() {
         />
         <Slider
           label="X2"
-          value={bezierRawValue[2]}
-          onChange={(value) => handleChange([bezierRawValue[0], bezierRawValue[1], value, bezierRawValue[3]])}
+          value={bezierX2}
+          onChange={(value) => handleChange({ x1: bezierX1, y1: bezierY1, x2: value, y2: bezierY2 })}
           min={0}
           max={1}
           step={0.01}
@@ -135,8 +143,8 @@ export default function BezierEditor() {
         />
         <Slider
           label="Y2"
-          value={bezierRawValue[3]}
-          onChange={(value) => handleChange([bezierRawValue[0], bezierRawValue[1], bezierRawValue[2], value])}
+          value={bezierY2}
+          onChange={(value) => handleChange({ x1: bezierX1, y1: bezierY1, x2: bezierX2, y2: value })}
           min={-1}
           max={2}
           step={0.01}

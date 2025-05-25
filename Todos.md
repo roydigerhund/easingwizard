@@ -1,6 +1,8 @@
 - move bezier can still break on touch
 - test mix of , and . in numbers
 
+- when rebuilding share URLs, also unify the damping parameter
+
 
 Not important
 - validate state from URL (partially done)

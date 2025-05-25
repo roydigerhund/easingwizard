@@ -30,8 +30,6 @@ export enum BezierCurve {
   ANTICIPATE = 'anticipate',
 }
 
-export type BezierValue = [number, number, number, number];
-
 export enum OvershootStyle {
   IN = 'in',
   OUT = 'out',
@@ -68,11 +66,11 @@ export enum WiggleCurve {
 }
 
 export enum OvershootCurve {
-  SOFT = "soft",
-  FIRM = "firm",
-  SMOOTH = "smooth",
-  DYNAMIC = "dynamic",
-  DRAMATIC = "dramatic",
+  SOFT = 'soft',
+  FIRM = 'firm',
+  SMOOTH = 'smooth',
+  DYNAMIC = 'dynamic',
+  DRAMATIC = 'dramatic',
 }
 
 export enum AnimationType {
@@ -94,8 +92,8 @@ export enum PreviewPlayMode {
 }
 
 export enum LinearEasingAccuracy {
-  LOW = 'LOW',
-  MEDIUM = 'MEDIUM',
-  HIGH = 'HIGH',
-  ULTRA = 'ULTRA',
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high',
+  ULTRA = 'ultra',
 }

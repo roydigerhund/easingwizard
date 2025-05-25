@@ -1,16 +1,56 @@
-import { BezierValue, LinearEasingAccuracy, OvershootStyle, Point } from '~/types-and-enums';
+import { EasingType, LinearEasingAccuracy, OvershootStyle, Point } from '~/types-and-enums';
+import { BezierInput, BounceInput, OvershootInput, SpringInput, WiggleInput } from '~/validations/easing';
 import { roundTo } from './numbers';
 
-export function createCubicBezierString(value: BezierValue): string {
-  return `cubic-bezier(${value.join(', ')})`;
+export function createCubicBezierString({ x1, y1, x2, y2 }: BezierInput): string {
+  return `cubic-bezier(${x1}, ${y1}, ${x2}, ${y2})`;
 }
 
-export function generateLinearEasing(
-  easingFunction: (t: number) => number,
-  accuracy: LinearEasingAccuracy,
-  fixedTotalTime?: number,
-  endValue?: number,
-) {
+type LinearEasingFunctionInputBezier = {
+  type: EasingType.BEZIER;
+  accuracy: LinearEasingAccuracy;
+  mathFunction: (t: number) => number;
+}; // only used in BezierComparison component
+type LinearEasingFunctionInputSpring = SpringInput & { type: EasingType.SPRING; mathFunction?: never };
+type LinearEasingFunctionInputBounce = BounceInput & { type: EasingType.BOUNCE; mathFunction?: never };
+type LinearEasingFunctionInputWiggle = WiggleInput & { type: EasingType.WIGGLE; mathFunction?: never };
+type LinearEasingFunctionInputOvershoot = OvershootInput & { type: EasingType.OVERSHOOT; mathFunction?: never };
+
+type LinearEasingFunctionInput =
+  | LinearEasingFunctionInputBezier
+  | LinearEasingFunctionInputSpring
+  | LinearEasingFunctionInputBounce
+  | LinearEasingFunctionInputWiggle
+  | LinearEasingFunctionInputOvershoot;
+
+const getEasingFunction = (config: LinearEasingFunctionInput) => {
+  switch (config.type) {
+    case EasingType.BEZIER:
+      throw new Error('Bezier easing function requires a mathFunction to be provided.');
+    case EasingType.SPRING:
+      return createSpringFunction(config);
+    case EasingType.BOUNCE:
+      return createBounceFunction(config);
+    case EasingType.WIGGLE:
+      return createWiggleFunction(config);
+    case EasingType.OVERSHOOT:
+      return createOvershootFunction(config);
+  }
+};
+
+export function generateLinearEasing(config: LinearEasingFunctionInput) {
+  const { type, accuracy } = config;
+  const easingFunction: (t: number) => number = config.mathFunction ?? getEasingFunction(config);
+
+  const fixedTotalTime =
+    type === EasingType.BEZIER ||
+    type === EasingType.BOUNCE ||
+    type === EasingType.WIGGLE ||
+    type === EasingType.OVERSHOOT
+      ? 1
+      : undefined;
+  const endValue = type === EasingType.WIGGLE ? 0 : undefined;
+
   const totalTime = fixedTotalTime || getTotalTime(easingFunction, endValue);
   // Use the getKeyTimes function to get key times
   const keyTimes = getKeyTimes(easingFunction, totalTime, accuracy);
@@ -185,7 +225,7 @@ export function createWiggleFunction({
   damping: number; // Damping ratio
 }): (t: number) => number {
   const totalTime = 1; // Total time for the wiggle function to settle
-  const normalizedDampingRatio = Math.min(Math.max(damping / 100, 0), 0.2); // Clamp damping ratio between 0 and 1
+  const normalizedDampingRatio = Math.min(Math.max(damping / 100, 0), 0.2); // Clamp damping ratio between 0 and 0.2
 
   const omega0 = (wiggles * Math.PI) / totalTime;
   const zeta = normalizedDampingRatio;
@@ -322,7 +362,7 @@ function rdp(points: { t: number; y: number }[], epsilon: number): { t: number; 
 
   stack.push({ startIndex, endIndex });
 
-  const marked = new Array(points.length).fill(false);
+  const marked = Array.from({ length: points.length }).fill(false);
   marked[startIndex] = true;
   marked[endIndex] = true;
 
@@ -375,4 +415,9 @@ function perpendicularDistance(
   const denominator = Math.sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2);
 
   return numerator / denominator;
+}
+
+export function cssStringToTailwind(cssString: string): string {
+  // Convert CSS string to Tailwind CSS format
+  return `ease-[${cssString.replace(/, /g, ',').replace(/ /g, '_')}]`;
 }
