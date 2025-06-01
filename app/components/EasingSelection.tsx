@@ -24,13 +24,14 @@ import {
   SpringCurve,
   WiggleCurve,
 } from '~/types-and-enums';
-import { createCubicBezierString } from '~/utils/easing';
+import { createCubicBezierString, generateLinearEasing } from '~/utils/easing';
 import { humanize } from '~/utils/string';
 import CardHeadline from './CardHeadline';
 import CurveIconTextButton from './CurveIconTextButton';
 
 export default function EasingSelection() {
   const easingType = useEasingStore((state) => state.easingType);
+  const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
   const bezierStyle = useEasingStore((state) => state.bezierStyle);
   const bezierCurve = useEasingStore((state) => state.bezierCurve);
   const bezierIsCustom = useEasingStore((state) => state.bezierIsCustom);
@@ -62,46 +63,83 @@ export default function EasingSelection() {
   };
 
   const onSpringValueChange = (curve: SpringCurve) => {
+    const { easingValue, sampledPoints } = generateLinearEasing({
+      type: EasingType.SPRING,
+      accuracy: editorAccuracy,
+      ...springFunctions[curve],
+    });
     setState({
       springStiffness: springFunctions[curve].stiffness,
       springDamping: springFunctions[curve].damping,
       springMass: springFunctions[curve].mass,
       springCurve: curve,
+      springValue: easingValue,
+      springPoints: sampledPoints,
       springIsCustom: false,
     });
   };
 
   const onBounceValueChange = (curve: BounceCurve) => {
+    const { easingValue, sampledPoints } = generateLinearEasing({
+      type: EasingType.BOUNCE,
+      accuracy: editorAccuracy,
+      ...bounceFunctions[curve],
+    });
     setState({
       bounceBounces: bounceFunctions[curve].bounces,
       bounceDamping: bounceFunctions[curve].damping,
       bounceCurve: curve,
+      bounceValue: easingValue,
+      bouncePoints: sampledPoints,
       bounceIsCustom: false,
     });
   };
 
   const onWiggleValueChange = (curve: WiggleCurve) => {
+    const { easingValue, sampledPoints } = generateLinearEasing({
+      type: EasingType.WIGGLE,
+      accuracy: editorAccuracy,
+      ...wiggleFunctions[curve],
+    });
     setState({
       wiggleDamping: wiggleFunctions[curve].damping,
       wiggleWiggles: wiggleFunctions[curve].wiggles,
       wiggleCurve: curve,
+      wiggleValue: easingValue,
+      wigglePoints: sampledPoints,
       wiggleIsCustom: false,
     });
   };
 
-  const onOvershootValueChange = (style: OvershootStyle, curve: OvershootCurve) => {
-    setState({
-      overshootStyle: style,
-      overshootDamping: overshootFunctions[style][curve].damping,
-      overshootMass: overshootFunctions[style][curve].mass,
-      overshootCurve: curve,
-      overshootIsCustom: false,
+  const onOvershootValueChange = (style: OvershootStyle, curve?: OvershootCurve) => {
+    const { easingValue, sampledPoints } = generateLinearEasing({
+      type: EasingType.OVERSHOOT,
+      accuracy: editorAccuracy,
+      style,
+      ...overshootFunctions[style][curve || defaultOvershootCurve],
     });
+    setState(
+      curve
+        ? {
+            overshootStyle: style,
+            overshootDamping: overshootFunctions[style][curve].damping,
+            overshootMass: overshootFunctions[style][curve].mass,
+            overshootCurve: curve,
+            overshootValue: easingValue,
+            overshootPoints: sampledPoints,
+            overshootIsCustom: false,
+          }
+        : {
+            overshootStyle: style,
+            overshootValue: easingValue,
+            overshootPoints: sampledPoints,
+          },
+    );
   };
 
   return (
     <>
-      <CardHeadline>Presets</CardHeadline>
+      <CardHeadline>Basis</CardHeadline>
       {easingType === EasingType.BEZIER && (
         <>
           <div className="flex flex-wrap gap-4">
@@ -160,13 +198,9 @@ export default function EasingSelection() {
               return (
                 <CurveIconTextButton
                   key={style}
-                  isActive={!overshootIsCustom && overshootStyle === style}
+                  isActive={overshootStyle === style}
                   onClick={() => {
-                    if (overshootCurve in overshootFunctions[style as OvershootStyle]) {
-                      onOvershootValueChange(style as OvershootStyle, overshootCurve);
-                    } else {
-                      onOvershootValueChange(style as OvershootStyle, defaultOvershootCurve);
-                    }
+                    onOvershootValueChange(style as OvershootStyle, overshootIsCustom ? undefined : overshootCurve);
                   }}
                   text={humanize(style)}
                   icon={

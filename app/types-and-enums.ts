@@ -1,7 +1,15 @@
+import { EASING_STATE_SHARE_KEYS_V0 } from './utils/state-sharing/v0';
+
 export type Point = {
   x: number;
   y: number;
 };
+
+export type EasingStateValue = string | number | boolean | Point[];
+
+export type EasingStateShareKey = (typeof EASING_STATE_SHARE_KEYS_V0)[number];
+
+export type EasingStateShare = Partial<Record<EasingStateShareKey, EasingStateValue>>;
 
 export enum EasingType {
   BEZIER = 'bezier',

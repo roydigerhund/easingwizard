@@ -431,100 +431,102 @@ export const defaultBezierFunction = bezierFunctions[defaultBezierStyle][default
 export const springFunctions: Record<SpringCurve, { stiffness: number; damping: number; mass: number }> = {
   heavy: {
     mass: 3.5,
-    stiffness: 100,
-    damping: 10,
+    stiffness: 20,
+    damping: 26,
   },
   bouncy: {
     mass: 1.0,
-    stiffness: 400,
-    damping: 5,
+    stiffness: 80,
+    damping: 0,
   },
   drop: {
     mass: 4,
-    stiffness: 50,
-    damping: 6,
+    stiffness: 10,
+    damping: 5,
   },
   glide: {
     mass: 1.0,
-    stiffness: 50,
-    damping: 20,
+    stiffness: 10,
+    damping: 75,
   },
   snap: {
     mass: 0.5,
-    stiffness: 300,
-    damping: 15,
+    stiffness: 60,
+    damping: 50,
   },
   lazy: {
     mass: 2.5,
-    stiffness: 20,
-    damping: 8,
+    stiffness: 4,
+    damping: 15,
   },
   elastic: {
     mass: 0.6,
-    stiffness: 150,
-    damping: 12,
+    stiffness: 30,
+    damping: 35,
   },
 };
 
 export const defaultSpringCurve = SpringCurve.HEAVY;
 export const defaultSpringFunction = springFunctions[defaultSpringCurve];
 export const defaultSpringValue = springCalculations[defaultSpringCurve].easingValue;
+export const defaultSpringPoints = springCalculations[defaultSpringCurve].sampledPoints;
 
 export const bounceFunctions: Record<BounceCurve, { bounces: number; damping: number }> = {
   firm: {
     bounces: 4,
-    damping: 0.5,
+    damping: 60,
   },
   soft: {
     bounces: 2,
-    damping: 1,
+    damping: 75,
   },
   sharp: {
     bounces: 3,
-    damping: 1.5,
+    damping: 85,
   },
   subtle: {
     bounces: 1,
-    damping: 0.2,
+    damping: 55,
   },
   playful: {
     bounces: 6,
-    damping: -0.5,
+    damping: 35,
   },
   springy: {
     bounces: 8,
-    damping: -1.5,
+    damping: 10,
   },
 };
 
 export const defaultBounceCurve = BounceCurve.FIRM;
 export const defaultBounceFunction = bounceFunctions[defaultBounceCurve];
 export const defaultBounceValue = bounceCalculations[defaultBounceCurve].easingValue;
+export const defaultBouncePoints = bounceCalculations[defaultBounceCurve].sampledPoints;
 
 export const wiggleFunctions: Record<WiggleCurve, { wiggles: number; damping: number }> = {
   subtle: {
     wiggles: 2,
-    damping: 15,
+    damping: 75,
   },
   energetic: {
     wiggles: 6,
-    damping: 5,
+    damping: 25,
   },
   playful: {
     wiggles: 4,
-    damping: 10,
+    damping: 50,
   },
   sharp: {
     wiggles: 3,
-    damping: 18,
+    damping: 90,
   },
   smooth: {
     wiggles: 1,
-    damping: 20,
+    damping: 100,
   },
   intense: {
     wiggles: 8,
-    damping: 2,
+    damping: 10,
   },
   dynamic: {
     wiggles: 10,
@@ -535,27 +537,28 @@ export const wiggleFunctions: Record<WiggleCurve, { wiggles: number; damping: nu
 export const defaultWiggleCurve = WiggleCurve.SUBTLE;
 export const defaultWiggleFunction = wiggleFunctions[defaultWiggleCurve];
 export const defaultWiggleValue = wiggleCalculations[defaultWiggleCurve].easingValue;
+export const defaultWigglePoints = wiggleCalculations[defaultWiggleCurve].sampledPoints;
 
 const overshootCurveFunctions: Record<OvershootCurve, { damping: number; mass: number }> = {
   soft: {
     mass: 2,
-    damping: 80,
+    damping: 60,
   },
   firm: {
     mass: 3,
-    damping: 90,
+    damping: 80,
   },
   smooth: {
     mass: 3.5,
-    damping: 85,
+    damping: 70,
   },
   dynamic: {
     mass: 4,
-    damping: 60,
+    damping: 20,
   },
   dramatic: {
     mass: 5,
-    damping: 50,
+    damping: 0,
   },
 };
 export const overshootFunctions: Record<OvershootStyle, Record<OvershootCurve, { damping: number; mass: number }>> = {
@@ -568,3 +571,4 @@ export const defaultOvershootStyle = OvershootStyle.OUT;
 export const defaultOvershootCurve = OvershootCurve.SOFT;
 export const defaultOvershootFunction = overshootFunctions[defaultOvershootStyle][defaultOvershootCurve];
 export const defaultOvershootValue = overshootCalculations[defaultOvershootStyle][defaultOvershootCurve].easingValue;
+export const defaultOvershootPoints = overshootCalculations[defaultOvershootStyle][defaultOvershootCurve].sampledPoints;

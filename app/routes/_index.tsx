@@ -1,4 +1,4 @@
-import { useSearchParams } from '@remix-run/react';
+import { useLocation, useSearchParams } from '@remix-run/react';
 import { useEffect, useState } from 'react';
 import BezierEditor from '~/components/BezierEditor';
 import BounceEditor from '~/components/BounceEditor';
@@ -16,37 +16,43 @@ import Share from '~/components/Share';
 import ShootingStars from '~/components/ShootingStars';
 import SpringEditor from '~/components/SpringEditor';
 import WiggleEditor from '~/components/WiggleEditor';
-import { defaultEasingContext, useEasingStore } from '~/state/easing-store';
+import { useEasingStore } from '~/state/easing-store';
 import { EasingType } from '~/types-and-enums';
 import { classNames } from '~/utils/class-names';
+import { rehydrateShareStateLegacy } from '~/utils/state-sharing/legacy';
+import { rehydrateShareState } from '~/utils/state-sharing/state-serialization';
+import { decodeState } from '~/utils/state-sharing/url-code';
 
 export default function Index() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { hash } = useLocation();
   const easingType = useEasingStore((state) => state.easingType);
   const setState = useEasingStore((state) => state.setState);
   const [showUI, setShowUI] = useState(false);
 
   // we only want to set the state on client side to avoid excessive renders on the server
   useEffect(() => {
-    // easingType should always be set
-    if (searchParams.get('easingType')) {
-      const newState: Record<string, unknown> = {};
+    try {
+      if (searchParams.get('easingType')) {
+        // Legacy sharing mode
+        const newState = rehydrateShareStateLegacy(searchParams);
 
-      Array.from(searchParams.entries()).forEach(([key, value]) => {
-        if (key in defaultEasingContext) {
-          try {
-            newState[key] = JSON.parse(value);
-          } catch (error) {
-            console.error('Error parsing value:', error);
-          }
-        }
-      });
-
-      setState(newState);
-      setSearchParams(new URLSearchParams());
+        setState(newState);
+        setSearchParams(new URLSearchParams());
+      } else if (hash && hash.length > 1) {
+        // V0
+        // in new sharing mode, we use fragment with a minified code, like #a1b2c3d4e5
+        const decodedState = decodeState(hash.slice(1));
+        const rehydratedState = rehydrateShareState(decodedState);
+        setState(rehydratedState);
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+    } catch (error) {
+      console.error('Error parsing value:', error);
+    } finally {
+      setShowUI(true);
     }
-    setShowUI(true);
-  }, [searchParams, setSearchParams, setState]);
+  }, [searchParams, setSearchParams, setState, hash]);
 
   return (
     <div

@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
 import { EasingState, useEasingStore } from '~/state/easing-store';
-import { EasingType, LinearEasingAccuracy, Point } from '~/types-and-enums';
+import { EasingType, LinearEasingAccuracy } from '~/types-and-enums';
 import { generateLinearEasing } from '~/utils/easing';
 import { generateBounceSVGPolyline } from '~/utils/svg';
 import EditorBase from './EditorBase';
@@ -12,24 +11,29 @@ import StepSlider from './StepSlider';
 export default function BounceEditor() {
   const bounceBounces = useEasingStore((state) => state.bounceBounces);
   const bounceDamping = useEasingStore((state) => state.bounceDamping);
+  const bouncePoints = useEasingStore((state) => state.bouncePoints);
   const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
   const setState = useEasingStore((state) => state.setState);
-  const [points, setPoints] = useState<Point[]>([]);
-
-  useEffect(() => {
-    // Recalculate when parameters change
-    const { easingValue, sampledPoints } = generateLinearEasing({
-      type: EasingType.BOUNCE,
-      accuracy: editorAccuracy,
-      bounces: bounceBounces,
-      damping: bounceDamping,
-    });
-    setPoints(sampledPoints);
-    setState({ bounceValue: easingValue });
-  }, [editorAccuracy, bounceBounces, bounceDamping, setState]);
 
   const handleChange = (state: Partial<EasingState>) => {
-    setState({ ...state, bounceIsCustom: true });
+    const newState: Partial<EasingState> = {
+      bounceBounces,
+      bounceDamping,
+      // If editorAccuracy is not provided, we assume it's a custom curve
+      ...(state.editorAccuracy ? {} : { bounceIsCustom: true }),
+      ...state,
+    };
+    const { easingValue, sampledPoints } = generateLinearEasing({
+      type: EasingType.BOUNCE,
+      accuracy: newState.editorAccuracy || editorAccuracy,
+      bounces: newState.bounceBounces || bounceBounces,
+      damping: newState.bounceDamping || bounceDamping,
+    });
+    setState({
+      ...newState,
+      bounceValue: easingValue,
+      bouncePoints: sampledPoints,
+    });
   };
 
   return (
@@ -37,8 +41,8 @@ export default function BounceEditor() {
       <EditorBase>
         {/* Bounce Curve */}
         <EditorBaseLine>
-          <polyline strokeWidth="2" points={generateBounceSVGPolyline(points)} />
-          <polyline strokeWidth="6" points={generateBounceSVGPolyline(points)} filter='url("#f1")' />
+          <polyline strokeWidth="2" points={generateBounceSVGPolyline(bouncePoints)} />
+          <polyline strokeWidth="6" points={generateBounceSVGPolyline(bouncePoints)} filter='url("#f1")' />
         </EditorBaseLine>
       </EditorBase>
 
@@ -55,16 +59,16 @@ export default function BounceEditor() {
           label="Damping"
           value={bounceDamping}
           onChange={(value) => handleChange({ bounceDamping: value })}
-          min={-2}
-          max={2}
-          step={0.1}
+          min={0}
+          max={100}
+          step={1}
         />
 
         <StepSlider
           label="Accuracy"
           value={editorAccuracy}
           options={Object.values(LinearEasingAccuracy).map((value) => value)}
-          onChange={(value) => setState({ editorAccuracy: value })}
+          onChange={(value) => handleChange({ editorAccuracy: value })}
         />
       </InputGroup>
     </div>
