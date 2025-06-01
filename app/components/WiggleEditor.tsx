@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
 import { EasingState, useEasingStore } from '~/state/easing-store';
-import { EasingType, LinearEasingAccuracy, Point } from '~/types-and-enums';
+import { EasingType, LinearEasingAccuracy } from '~/types-and-enums';
 import { generateLinearEasing } from '~/utils/easing';
 import { generateWiggleSVGPolyline } from '~/utils/svg';
 import EditorBase from './EditorBase';
@@ -12,24 +11,29 @@ import StepSlider from './StepSlider';
 export default function WiggleEditor() {
   const wiggleDamping = useEasingStore((state) => state.wiggleDamping);
   const wiggleWiggles = useEasingStore((state) => state.wiggleWiggles);
+  const wigglePoints = useEasingStore((state) => state.wigglePoints);
   const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
   const setState = useEasingStore((state) => state.setState);
-  const [points, setPoints] = useState<Point[]>([]);
-
-  useEffect(() => {
-    // Recalculate when parameters change
-    const { easingValue, sampledPoints } = generateLinearEasing({
-      type: EasingType.WIGGLE,
-      accuracy: editorAccuracy,
-      wiggles: wiggleWiggles,
-      damping: wiggleDamping,
-    });
-    setPoints(sampledPoints);
-    setState({ wiggleValue: easingValue });
-  }, [wiggleDamping, wiggleWiggles, editorAccuracy, setState]);
 
   const handleChange = (state: Partial<EasingState>) => {
-    setState({ ...state, wiggleIsCustom: true });
+    const newState: Partial<EasingState> = {
+      wiggleWiggles,
+      wiggleDamping,
+      // If editorAccuracy is not provided, we assume it's a custom curve
+      ...(state.editorAccuracy ? {} : { wiggleIsCustom: true }),
+      ...state,
+    };
+    const { easingValue, sampledPoints } = generateLinearEasing({
+      type: EasingType.WIGGLE,
+      accuracy: newState.editorAccuracy || editorAccuracy,
+      wiggles: newState.wiggleWiggles || wiggleWiggles,
+      damping: newState.wiggleDamping || wiggleDamping,
+    });
+    setState({
+      ...newState,
+      wiggleValue: easingValue,
+      wigglePoints: sampledPoints,
+    });
   };
 
   return (
@@ -37,8 +41,8 @@ export default function WiggleEditor() {
       <EditorBase>
         {/* Wiggle Curve */}
         <EditorBaseLine>
-          <polyline strokeWidth="2" points={generateWiggleSVGPolyline(points)} />
-          <polyline strokeWidth="6" points={generateWiggleSVGPolyline(points)} filter='url("#f1")' />
+          <polyline strokeWidth="2" points={generateWiggleSVGPolyline(wigglePoints)} />
+          <polyline strokeWidth="6" points={generateWiggleSVGPolyline(wigglePoints)} filter='url("#f1")' />
         </EditorBaseLine>
       </EditorBase>
 
@@ -56,15 +60,15 @@ export default function WiggleEditor() {
           value={wiggleDamping}
           onChange={(value) => handleChange({ wiggleDamping: value })}
           min={0}
-          max={20}
-          step={0.1}
+          max={100}
+          step={1}
         />
 
         <StepSlider
           label="Accuracy"
           value={editorAccuracy}
           options={Object.values(LinearEasingAccuracy).map((value) => value)}
-          onChange={(value) => setState({ editorAccuracy: value })}
+          onChange={(value) => handleChange({ editorAccuracy: value })}
         />
       </InputGroup>
     </div>

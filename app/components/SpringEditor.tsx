@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
 import { EasingState, useEasingStore } from '~/state/easing-store';
-import { EasingType, LinearEasingAccuracy, Point } from '~/types-and-enums';
+import { EasingType, LinearEasingAccuracy } from '~/types-and-enums';
 import { generateLinearEasing } from '~/utils/easing';
 import { generateSpringSVGPolyline } from '~/utils/svg';
 import EditorBase from './EditorBase';
@@ -13,25 +12,31 @@ export default function SpringEditor() {
   const springStiffness = useEasingStore((state) => state.springStiffness);
   const springDamping = useEasingStore((state) => state.springDamping);
   const springMass = useEasingStore((state) => state.springMass);
+  const springPoints = useEasingStore((state) => state.springPoints);
   const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
   const setState = useEasingStore((state) => state.setState);
-  const [points, setPoints] = useState<Point[]>([]);
-
-  useEffect(() => {
-    // Recalculate when parameters change
-    const { easingValue, sampledPoints } = generateLinearEasing({
-      type: EasingType.SPRING,
-      accuracy: editorAccuracy,
-      stiffness: springStiffness,
-      damping: springDamping,
-      mass: springMass,
-    });
-    setPoints(sampledPoints);
-    setState({ springValue: easingValue });
-  }, [springStiffness, springDamping, springMass, editorAccuracy, setState]);
 
   const handleChange = (state: Partial<EasingState>) => {
-    setState({ ...state, springIsCustom: true });
+    const newState: Partial<EasingState> = {
+      springStiffness,
+      springDamping,
+      springMass,
+      // If editorAccuracy is not provided, we assume it's a custom curve
+      ...(state.editorAccuracy ? {} : { springIsCustom: true }),
+      ...state,
+    };
+    const { easingValue, sampledPoints } = generateLinearEasing({
+      type: EasingType.SPRING,
+      accuracy: newState.editorAccuracy || editorAccuracy,
+      stiffness: newState.springStiffness || springStiffness,
+      damping: newState.springDamping || springDamping,
+      mass: newState.springMass || springMass,
+    });
+    setState({
+      ...newState,
+      springValue: easingValue,
+      springPoints: sampledPoints,
+    });
   };
 
   return (
@@ -39,8 +44,8 @@ export default function SpringEditor() {
       <EditorBase>
         {/* Spring Curve */}
         <EditorBaseLine>
-          <polyline strokeWidth="2" points={generateSpringSVGPolyline(points)} />
-          <polyline strokeWidth="6" points={generateSpringSVGPolyline(points)} filter='url("#f1")' />
+          <polyline strokeWidth="2" points={generateSpringSVGPolyline(springPoints)} />
+          <polyline strokeWidth="6" points={generateSpringSVGPolyline(springPoints)} filter='url("#f1")' />
         </EditorBaseLine>
       </EditorBase>
 
@@ -57,23 +62,23 @@ export default function SpringEditor() {
           label="Stiffness"
           value={springStiffness}
           onChange={(value) => handleChange({ springStiffness: value })}
-          min={1}
-          max={500}
+          min={0}
+          max={100}
           step={1}
         />
         <Slider
           label="Damping"
           value={springDamping}
           onChange={(value) => handleChange({ springDamping: value })}
-          min={5}
-          max={25}
+          min={0}
+          max={100}
           step={1}
         />
         <StepSlider
           label="Accuracy"
           value={editorAccuracy}
           options={Object.values(LinearEasingAccuracy).map((value) => value)}
-          onChange={(value) => setState({ editorAccuracy: value })}
+          onChange={(value) => handleChange({ editorAccuracy: value })}
         />
       </InputGroup>
     </div>

@@ -5,16 +5,20 @@ import {
   defaultBezierStyle,
   defaultBounceCurve,
   defaultBounceFunction,
+  defaultBouncePoints,
   defaultBounceValue,
   defaultOvershootCurve,
   defaultOvershootFunction,
+  defaultOvershootPoints,
   defaultOvershootStyle,
   defaultOvershootValue,
   defaultSpringCurve,
   defaultSpringFunction,
+  defaultSpringPoints,
   defaultSpringValue,
   defaultWiggleCurve,
   defaultWiggleFunction,
+  defaultWigglePoints,
   defaultWiggleValue,
 } from '~/data/easing';
 import {
@@ -25,6 +29,7 @@ import {
   EasingType,
   LinearEasingAccuracy,
   OvershootCurve,
+  Point,
   PreviewPlayMode,
   SpringCurve,
   WiggleCurve,
@@ -50,18 +55,21 @@ export type EasingState = {
   springStiffness: SpringInput['stiffness'];
   springDamping: SpringInput['damping'];
   springValue: string;
+  springPoints: Point[];
   springIsCustom: boolean;
   // Bounce
   bounceCurve: BounceCurve;
   bounceBounces: BounceInput['bounces'];
   bounceDamping: BounceInput['damping'];
   bounceValue: string;
+  bouncePoints: Point[];
   bounceIsCustom: boolean;
   // Wiggle
   wiggleCurve: WiggleCurve;
   wiggleWiggles: WiggleInput['wiggles'];
   wiggleDamping: WiggleInput['damping'];
   wiggleValue: string;
+  wigglePoints: Point[];
   wiggleIsCustom: boolean;
   // Overeshoot
   overshootStyle: OvershootInput['style'];
@@ -69,6 +77,7 @@ export type EasingState = {
   overshootMass: OvershootInput['mass'];
   overshootDamping: OvershootInput['damping'];
   overshootValue: string;
+  overshootPoints: Point[];
   overshootIsCustom: boolean;
   // Preview
   previewDuration: number;
@@ -104,7 +113,7 @@ const defaultBezierState: EasingStateBlock<'bezier'> = {
   bezierIsCustom: false,
 };
 
-export const bezierStateKeys = Object.keys(defaultBezierState) as (keyof EasingState)[];
+export const bezierStateKeys = Object.keys(defaultBezierState) as (keyof typeof defaultBezierState)[];
 
 const defaultSpringState: EasingStateBlock<'spring'> = {
   springCurve: defaultSpringCurve,
@@ -112,30 +121,33 @@ const defaultSpringState: EasingStateBlock<'spring'> = {
   springDamping: defaultSpringFunction.damping,
   springMass: defaultSpringFunction.mass,
   springValue: defaultSpringValue,
+  springPoints: defaultSpringPoints,
   springIsCustom: false,
 };
 
-export const springStateKeys = Object.keys(defaultSpringState) as (keyof EasingState)[];
+export const springStateKeys = Object.keys(defaultSpringState) as (keyof typeof defaultSpringState)[];
 
 const defaultBounceState: EasingStateBlock<'bounce'> = {
   bounceCurve: defaultBounceCurve,
   bounceBounces: defaultBounceFunction.bounces,
   bounceDamping: defaultBounceFunction.damping,
   bounceValue: defaultBounceValue,
+  bouncePoints: defaultBouncePoints,
   bounceIsCustom: false,
 };
 
-export const bounceStateKeys = Object.keys(defaultBounceState) as (keyof EasingState)[];
+export const bounceStateKeys = Object.keys(defaultBounceState) as (keyof typeof defaultBounceState)[];
 
 const defaultWiggleState: EasingStateBlock<'wiggle'> = {
   wiggleCurve: defaultWiggleCurve,
   wiggleDamping: defaultWiggleFunction.damping,
   wiggleWiggles: defaultWiggleFunction.wiggles,
   wiggleValue: defaultWiggleValue,
+  wigglePoints: defaultWigglePoints,
   wiggleIsCustom: false,
 };
 
-export const wiggleStateKeys = Object.keys(defaultWiggleState) as (keyof EasingState)[];
+export const wiggleStateKeys = Object.keys(defaultWiggleState) as (keyof typeof defaultWiggleState)[];
 
 const defaultOvershootState: EasingStateBlock<'overshoot'> = {
   overshootStyle: defaultOvershootStyle,
@@ -143,26 +155,31 @@ const defaultOvershootState: EasingStateBlock<'overshoot'> = {
   overshootDamping: defaultOvershootFunction.damping,
   overshootMass: defaultOvershootFunction.mass,
   overshootValue: defaultOvershootValue,
+  overshootPoints: defaultOvershootPoints,
   overshootIsCustom: false,
 };
 
-export const overshootStateKeys = Object.keys(defaultOvershootState) as (keyof EasingState)[];
+export const overshootStateKeys = Object.keys(defaultOvershootState) as (keyof typeof defaultOvershootState)[];
 
 const defaultRestState = {
   easingType: EasingType.BEZIER,
   previewDuration: 750,
   previewAnimationType: AnimationType.MOVE_X,
-  editorExtraSpaceTop: false,
-  editorExtraSpaceBottom: false,
   editorAccuracy: LinearEasingAccuracy.HIGH,
 };
 
-export const restStateKeys = Object.keys(defaultRestState) as (keyof EasingState)[];
+export const restStateKeys = Object.keys(defaultRestState) as (keyof typeof defaultRestState)[];
 
-export const defaultEasingContext: EasingState = {
+export const defaultOtherState = {
+  editorExtraSpaceTop: false,
+  editorExtraSpaceBottom: false,
   previewPlayMode: PreviewPlayMode.INFINITE,
   previewShowLinear: false,
   foundEasterEgg: false,
+};
+
+export const defaultEasingContext: EasingState = {
+  ...defaultOtherState,
   ...defaultRestState,
   ...defaultBezierState,
   ...defaultOvershootState,
@@ -197,5 +214,9 @@ export const useEasingStore = create<EasingState & EasingAction>((set, get) => (
     }
   },
   setState: (state: Partial<EasingState>) => set(state),
-  getCurrentState: () => get(),
+  getCurrentState: () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { setEasingType, setState, getCurrentState, ...rest } = get();
+    return rest as EasingState;
+  },
 }));

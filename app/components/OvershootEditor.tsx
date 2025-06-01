@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
 import { EasingState, useEasingStore } from '~/state/easing-store';
-import { EasingType, LinearEasingAccuracy, Point } from '~/types-and-enums';
+import { EasingType, LinearEasingAccuracy } from '~/types-and-enums';
 import { generateLinearEasing } from '~/utils/easing';
 import { generateOvershootSVGPolyline } from '~/utils/svg';
 import EditorBase from './EditorBase';
@@ -13,25 +12,30 @@ export default function OvershootEditor() {
   const overshootStyle = useEasingStore((state) => state.overshootStyle);
   const overshootDamping = useEasingStore((state) => state.overshootDamping);
   const overshootMass = useEasingStore((state) => state.overshootMass);
+  const overshootPoints = useEasingStore((state) => state.overshootPoints);
   const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
   const setState = useEasingStore((state) => state.setState);
-  const [points, setPoints] = useState<Point[]>([]);
-
-  useEffect(() => {
-    // Recalculate when parameters change
-    const { easingValue, sampledPoints } = generateLinearEasing({
-      type: EasingType.OVERSHOOT,
-      accuracy: editorAccuracy,
-      damping: overshootDamping,
-      mass: overshootMass,
-      style: overshootStyle,
-    });
-    setPoints(sampledPoints);
-    setState({ overshootValue: easingValue });
-  }, [overshootDamping, overshootMass, overshootStyle, editorAccuracy, setState]);
 
   const handleChange = (state: Partial<EasingState>) => {
-    setState({ ...state, overshootIsCustom: true });
+    const newState: Partial<EasingState> = {
+      overshootMass,
+      overshootDamping,
+      // If editorAccuracy is not provided, we assume it's a custom curve
+      ...(state.editorAccuracy ? {} : { overshootIsCustom: true }),
+      ...state,
+    };
+    const { easingValue, sampledPoints } = generateLinearEasing({
+      type: EasingType.OVERSHOOT,
+      style: overshootStyle,
+      accuracy: newState.editorAccuracy || editorAccuracy,
+      mass: newState.overshootMass || overshootMass,
+      damping: newState.overshootDamping || overshootDamping,
+    });
+    setState({
+      ...newState,
+      overshootValue: easingValue,
+      overshootPoints: sampledPoints,
+    });
   };
 
   return (
@@ -39,8 +43,8 @@ export default function OvershootEditor() {
       <EditorBase>
         {/* Overshoot Curve */}
         <EditorBaseLine>
-          <polyline strokeWidth="2" points={generateOvershootSVGPolyline(points)} />
-          <polyline strokeWidth="6" points={generateOvershootSVGPolyline(points)} filter='url("#f1")' />
+          <polyline strokeWidth="2" points={generateOvershootSVGPolyline(overshootPoints)} />
+          <polyline strokeWidth="6" points={generateOvershootSVGPolyline(overshootPoints)} filter='url("#f1")' />
         </EditorBaseLine>
       </EditorBase>
 
@@ -57,7 +61,7 @@ export default function OvershootEditor() {
           label="Damping"
           value={overshootDamping}
           onChange={(value) => handleChange({ overshootDamping: value })}
-          min={50}
+          min={0}
           max={100}
           step={1}
         />
@@ -66,7 +70,7 @@ export default function OvershootEditor() {
           label="Accuracy"
           value={editorAccuracy}
           options={Object.values(LinearEasingAccuracy).map((value) => value)}
-          onChange={(value) => setState({ editorAccuracy: value })}
+          onChange={(value) => handleChange({ editorAccuracy: value })}
         />
       </InputGroup>
     </div>

@@ -37,13 +37,13 @@ export const SpringInput = z.object({
     .transform((val) => roundTo(val, 1)),
   stiffness: z
     .number()
-    .min(1)
-    .max(500)
+    .min(0)
+    .max(100)
     .transform((val) => roundTo(val, 0)),
   damping: z
     .number()
-    .min(5)
-    .max(25)
+    .min(0)
+    .max(100)
     .transform((val) => roundTo(val, 0)),
   accuracy: z.enum(LinearEasingAccuracy),
 });
@@ -58,8 +58,8 @@ export const BounceInput = z.object({
     .transform((val) => roundTo(val, 0)),
   damping: z
     .number()
-    .min(-2)
-    .max(2)
+    .min(0)
+    .max(100)
     .transform((val) => roundTo(val, 1)),
   accuracy: z.enum(LinearEasingAccuracy),
 });
@@ -75,7 +75,7 @@ export const WiggleInput = z.object({
   damping: z
     .number()
     .min(0)
-    .max(20)
+    .max(100)
     .transform((val) => roundTo(val, 1)),
   accuracy: z.enum(LinearEasingAccuracy),
 });
@@ -91,7 +91,7 @@ export const OvershootInput = z.object({
     .transform((val) => roundTo(val, 1)),
   damping: z
     .number()
-    .min(50)
+    .min(0)
     .max(100)
     .transform((val) => roundTo(val, 0)),
   accuracy: z.enum(LinearEasingAccuracy),

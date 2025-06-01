@@ -1,6 +1,6 @@
 import { EasingType, LinearEasingAccuracy, OvershootStyle, Point } from '~/types-and-enums';
 import { BezierInput, BounceInput, OvershootInput, SpringInput, WiggleInput } from '~/validations/easing';
-import { roundTo } from './numbers';
+import { mapRange, roundTo } from './numbers';
 
 export function createCubicBezierString({ x1, y1, x2, y2 }: BezierInput): string {
   return `cubic-bezier(${x1}, ${y1}, ${x2}, ${y2})`;
@@ -77,68 +77,6 @@ export function generateLinearEasing(config: LinearEasingFunctionInput) {
   return { easingValue, sampledPoints };
 }
 
-// OVERSHOOT
-export function createOvershootFunction({
-  damping,
-  mass,
-  style,
-}: {
-  damping: number; // Controls the X position of the overshoot
-  mass: number; // Controls the Y extension of the overshoot
-  style: OvershootStyle; // Style of easing
-}): (t: number) => number {
-  // Adjust overshoot amount based on mass
-  const overshoot = Math.min(Math.max(mass, 1), 10); // You can adjust this scaling as needed
-
-  const normalizedDamping = Math.min(Math.max(damping, 50), 200) / 100; // Clamp stiffness between 50 and 200 and normalize
-  // Adjust time based on stiffness
-  const adjustTime = (t: number): number => {
-    // Non-linear time adjustment
-    if (style === OvershootStyle.IN_OUT) {
-      if (t < 0.5) {
-        return Math.pow(t * 2, 1 / normalizedDamping) / 2;
-      } else {
-        return 1 - Math.pow((1 - t) * 2, 1 / normalizedDamping) / 2;
-      }
-    } else {
-      return Math.pow(t, 1 / normalizedDamping);
-    }
-  };
-
-  // Base easing functions with adjusted time and overshoot
-  const easeIn = (t: number): number => {
-    const tAdjusted = adjustTime(t);
-    return tAdjusted * tAdjusted * ((overshoot + 1) * tAdjusted - overshoot);
-  };
-
-  const easeOut = (t: number): number => {
-    // use easeIn function to get the easeOut function by flipping the time
-    return 1 - easeIn(1 - t);
-  };
-
-  const easeInOut = (t: number): number => {
-    let tAdjusted = adjustTime(t) * 2;
-    if (tAdjusted < 1) {
-      return 0.5 * (tAdjusted * tAdjusted * ((overshoot * 1.525 + 1) * tAdjusted - overshoot * 1.525));
-    } else {
-      tAdjusted -= 2;
-      return 0.5 * (tAdjusted * tAdjusted * ((overshoot * 1.525 + 1) * tAdjusted + overshoot * 1.525) + 2);
-    }
-  };
-
-  // Return the appropriate function based on the style
-  switch (style) {
-    case OvershootStyle.IN:
-      return easeIn;
-    case OvershootStyle.OUT:
-      return easeOut;
-    case OvershootStyle.IN_OUT:
-      return easeInOut;
-    default:
-      throw new Error("Invalid style. Must be 'IN', 'OUT', or 'IN_OUT'.");
-  }
-}
-
 // SPRING
 export function createSpringFunction({
   stiffness,
@@ -149,9 +87,9 @@ export function createSpringFunction({
   mass: number;
   damping: number;
 }): (t: number) => number {
-  const k = stiffness; // Spring constant
+  const k = mapRange(stiffness, 0, 100, 1, 500); // Spring constant
   const m = mass; // Mass
-  const c = damping; // Damping coefficient
+  const c = mapRange(damping, 0, 100, 5, 25); // Damping coefficient
 
   const omega0 = Math.sqrt(k / m); // Natural angular frequency
   const zeta = c / (2 * Math.sqrt(k * m)); // Damping ratio
@@ -199,6 +137,7 @@ export function createBounceFunction({
   damping: number;
 }): (t: number) => number {
   const totalTime = 1; // Total time for the bounce function to settle
+  const normalizedDamping = mapRange(damping, 0, 100, -2, 2);
 
   // Start at 0 and bounce to 1
   return function (time: number) {
@@ -211,7 +150,7 @@ export function createBounceFunction({
       1 -
       Math.pow(1 - normalizedTime, 1.5) *
         Math.abs(Math.cos(Math.pow(normalizedTime, 2) * (bounces + 0.5) * Math.PI)) *
-        Math.exp(-damping * normalizedTime);
+        Math.exp(-normalizedDamping * normalizedTime);
     return position; // Round to two decimal places
   };
 }
@@ -225,7 +164,7 @@ export function createWiggleFunction({
   damping: number; // Damping ratio
 }): (t: number) => number {
   const totalTime = 1; // Total time for the wiggle function to settle
-  const normalizedDampingRatio = Math.min(Math.max(damping / 100, 0), 0.2); // Clamp damping ratio between 0 and 0.2
+  const normalizedDampingRatio = mapRange(damping, 0, 100, 0, 0.2); // Clamp damping ratio between 0 and 0.2
 
   const omega0 = (wiggles * Math.PI) / totalTime;
   const zeta = normalizedDampingRatio;
@@ -252,6 +191,68 @@ export function createWiggleFunction({
 
     return x;
   };
+}
+
+// OVERSHOOT
+export function createOvershootFunction({
+  damping,
+  mass,
+  style,
+}: {
+  damping: number; // Controls the X position of the overshoot
+  mass: number; // Controls the Y extension of the overshoot
+  style: OvershootStyle; // Style of easing
+}): (t: number) => number {
+  // Adjust overshoot amount based on mass
+  const overshoot = Math.min(Math.max(mass, 1), 10); // You can adjust this scaling as needed
+
+  const normalizedDamping = mapRange(damping, 0, 100, 0.5, 1); // Normalize damping to a range between 0.5 and 1
+  // Adjust time based on stiffness
+  const adjustTime = (t: number): number => {
+    // Non-linear time adjustment
+    if (style === OvershootStyle.IN_OUT) {
+      if (t < 0.5) {
+        return Math.pow(t * 2, 1 / normalizedDamping) / 2;
+      } else {
+        return 1 - Math.pow((1 - t) * 2, 1 / normalizedDamping) / 2;
+      }
+    } else {
+      return Math.pow(t, 1 / normalizedDamping);
+    }
+  };
+
+  // Base easing functions with adjusted time and overshoot
+  const easeIn = (t: number): number => {
+    const tAdjusted = adjustTime(t);
+    return tAdjusted * tAdjusted * ((overshoot + 1) * tAdjusted - overshoot);
+  };
+
+  const easeOut = (t: number): number => {
+    // use easeIn function to get the easeOut function by flipping the time
+    return 1 - easeIn(1 - t);
+  };
+
+  const easeInOut = (t: number): number => {
+    let tAdjusted = adjustTime(t) * 2;
+    if (tAdjusted < 1) {
+      return 0.5 * (tAdjusted * tAdjusted * ((overshoot * 1.525 + 1) * tAdjusted - overshoot * 1.525));
+    } else {
+      tAdjusted -= 2;
+      return 0.5 * (tAdjusted * tAdjusted * ((overshoot * 1.525 + 1) * tAdjusted + overshoot * 1.525) + 2);
+    }
+  };
+
+  // Return the appropriate function based on the style
+  switch (style) {
+    case OvershootStyle.IN:
+      return easeIn;
+    case OvershootStyle.OUT:
+      return easeOut;
+    case OvershootStyle.IN_OUT:
+      return easeInOut;
+    default:
+      throw new Error("Invalid style. Must be 'IN', 'OUT', or 'IN_OUT'.");
+  }
 }
 
 // Function to estimate the total time for the animation to settle
