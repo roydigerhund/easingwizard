@@ -14,12 +14,17 @@ export function crc8(buf: Uint8Array, poly = 0x07): number {
   return crc; // 0 – 255
 }
 
-export const ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+export const BASE62_DICTIONARY = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 export function toBase62(n: number): string {
-  return ALPHABET[n >> 6] + ALPHABET[n & 0x3f]; // 0…63 je Zeichen
+  const hi = Math.floor(n / 62);
+  const lo = n % 62; // 0‒61
+  return BASE62_DICTIONARY[hi] + BASE62_DICTIONARY[lo]; // always two chars
 }
 
 export function fromBase62(s: string): number {
-  return (ALPHABET.indexOf(s[0]) << 6) | ALPHABET.indexOf(s[1]);
+  const hi = BASE62_DICTIONARY.indexOf(s[0]);
+  const lo = BASE62_DICTIONARY.indexOf(s[1]);
+  if (hi === -1 || lo === -1) throw new Error('Invalid base-62 chars');
+  return hi * 62 + lo;
 }

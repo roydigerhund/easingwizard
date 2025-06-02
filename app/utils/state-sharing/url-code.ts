@@ -1,5 +1,5 @@
 import { EasingStateShare, EasingStateShareKey, EasingStateValue } from '~/types-and-enums';
-import { ALPHABET, crc8, fromBase62, toBase62 } from './crc';
+import { BASE62_DICTIONARY, crc8, fromBase62, toBase62 } from './crc';
 import { decodeValue, encodeValue } from './encoding';
 import { MINI_MAP, REVERSE_MINI_MAP } from './maps';
 
@@ -27,7 +27,7 @@ export function encodeState(stateObj: EasingStateShare) {
 export function decodeState(shareString: string) {
   if (shareString.length < 3) throw Error('too short');
 
-  const version = ALPHABET.indexOf(shareString[0]); // 0–61
+  const version = BASE62_DICTIONARY.indexOf(shareString[0]); // 0–61
   if (version < 0) throw Error('invalid version');
 
   const state = verifyAndStrip(shareString.slice(1));
