@@ -15,7 +15,10 @@ import {
 } from '~/types-and-enums';
 import { BezierInput } from '~/validations/easing';
 
-export const bezierEasings = {
+export const bezierEasings: Record<
+  BezierStyle,
+  Partial<Record<BezierCurve, BezierInput & { mathFunction: (t: number) => number }>>
+> = {
   in: {
     // In Sine
     sine: {
@@ -202,18 +205,18 @@ export const bezierEasings = {
       },
     },
   },
-  inverseInOut: {
-    // Inverse In Out Sine
-    sine: {
-      x1: 0,
-      y1: 0.36,
-      x2: 1,
-      y2: 0.64,
-      mathFunction: function (x: number): number {
-        return Math.asin(x * 2 - 1) / Math.PI + 0.5;
-      },
-    },
-  },
+  // inverseInOut: {
+  //   // Inverse In Out Sine
+  //   sine: {
+  //     x1: 0,
+  //     y1: 0.36,
+  //     x2: 1,
+  //     y2: 0.64,
+  //     mathFunction: function (x: number): number {
+  //       return Math.asin(x * 2 - 1) / Math.PI + 0.5;
+  //     },
+  //   },
+  // },
   out: {
     // Out Sine
     sine: {
@@ -388,18 +391,18 @@ export const bezierEasings = {
       },
     },
   },
-  inverseOutIn: {
-    // Inverse Out In Sine
-    sine: {
-      x1: 1,
-      y1: 0.64,
-      x2: 0,
-      y2: 0.36,
-      mathFunction: function (x: number): number {
-        return x < 0.5 ? Math.asin((x + 0.5) * 2 - 1) / Math.PI : Math.asin((x - 0.5) * 2 - 1) / Math.PI + 1;
-      },
-    },
-  },
+  // inverseOutIn: {
+  //   // Inverse Out In Sine
+  //   sine: {
+  //     x1: 1,
+  //     y1: 0.64,
+  //     x2: 0,
+  //     y2: 0.36,
+  //     mathFunction: function (x: number): number {
+  //       return x < 0.5 ? Math.asin((x + 0.5) * 2 - 1) / Math.PI : Math.asin((x - 0.5) * 2 - 1) / Math.PI + 1;
+  //     },
+  //   },
+  // },
 };
 
 export const bezierStyleFunctions: Record<BezierStyle, BezierInput> = {

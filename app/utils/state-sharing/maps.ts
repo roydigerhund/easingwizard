@@ -77,7 +77,8 @@ export const BEZIER_CURVE_IDX: Record<BezierCurve, number> = {
   [BezierCurve.EXPO]: 5,
   [BezierCurve.CIRC]: 6,
   [BezierCurve.BACK]: 7,
-  [BezierCurve.ANTICIPATE]: 8,
+  [BezierCurve.JUMP]: 8,
+  [BezierCurve.ANTICIPATE]: 9,
 };
 
 export const SPRING_CURVE_IDX: Record<SpringCurve, number> = {

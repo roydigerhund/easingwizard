@@ -35,6 +35,7 @@ export enum BezierCurve {
   EXPO = 'expo',
   CIRC = 'circ',
   BACK = 'back',
+  JUMP = 'jump',
   ANTICIPATE = 'anticipate',
 }
 

@@ -36,7 +36,7 @@ export default function Index() {
       if (searchParams.get('easingType')) {
         // Legacy sharing mode
         const newState = rehydrateShareStateLegacy(searchParams);
-
+        
         setState(newState);
         setSearchParams(new URLSearchParams());
       } else if (hash && hash.length > 1) {
@@ -45,11 +45,11 @@ export default function Index() {
         const decodedState = decodeState(hash.slice(1));
         const rehydratedState = rehydrateShareState(decodedState);
         setState(rehydratedState);
-        window.history.replaceState(null, '', window.location.pathname);
       }
     } catch (error) {
       console.error('Error parsing value:', error);
     } finally {
+      window.history.replaceState(null, '', window.location.pathname);
       setShowUI(true);
     }
   }, [searchParams, setSearchParams, setState, hash]);
