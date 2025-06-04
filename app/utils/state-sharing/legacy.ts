@@ -27,6 +27,7 @@ export function rehydrateShareStateLegacy(searchParams: URLSearchParams) {
     }
     if (key in LEGACY_NUMBER_RANGE_MAPPINGS && LEGACY_NUMBER_RANGE_MAPPINGS[key]) {
       const [fromOld, toOld, fromNew, toNew] = LEGACY_NUMBER_RANGE_MAPPINGS[key];
+      // all are integers, so we can round the result
       return Math.round(mapRange(parsedValue, fromOld, toOld, fromNew, toNew));
     }
     return parsedValue;

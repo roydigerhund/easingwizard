@@ -84,136 +84,96 @@ export function rehydrateShareState(state: EasingStateShare, version: number = 0
   const fullState = { ...base, ...state } as EasingState;
 
   const easingType = (state.easingType || base.easingType) as EasingType;
-
+  
   switch (easingType) {
     case EasingType.BEZIER: {
       fullState.bezierIsCustom = isAnyDefined(state.bezierX1, state.bezierX2, state.bezierY1, state.bezierY2);
-      if (fullState.bezierIsCustom) {
-        fullState.bezierValue = createCubicBezierString({
-          x1: fullState.bezierX1,
-          y1: fullState.bezierY1,
-          x2: fullState.bezierX2,
-          y2: fullState.bezierY2,
-        });
-      } else {
+      if (!fullState.bezierIsCustom) {
         const bezierFunction = bezierFunctions[fullState.bezierStyle][fullState.bezierCurve] as BezierInput;
         fullState.bezierX1 = bezierFunction.x1;
         fullState.bezierY1 = bezierFunction.y1;
         fullState.bezierX2 = bezierFunction.x2;
         fullState.bezierY2 = bezierFunction.y2;
-        fullState.bezierValue = createCubicBezierString(bezierFunction);
       }
+      fullState.bezierValue = createCubicBezierString({
+        x1: fullState.bezierX1,
+        y1: fullState.bezierY1,
+        x2: fullState.bezierX2,
+        y2: fullState.bezierY2,
+      });
       fullState.editorExtraSpaceTop = Math.max(fullState.bezierY1, fullState.bezierY2) > 1;
       fullState.editorExtraSpaceBottom = Math.min(fullState.bezierY1, fullState.bezierY2) < 0;
       break;
     }
     case EasingType.SPRING: {
       fullState.springIsCustom = isAnyDefined(state.springMass, state.springStiffness, state.springDamping);
-      if (fullState.springIsCustom) {
-        const { easingValue, sampledPoints } = generateLinearEasing({
-          type: easingType,
-          accuracy: fullState.editorAccuracy,
-          mass: fullState.springMass,
-          stiffness: fullState.springStiffness,
-          damping: fullState.springDamping,
-        });
-        fullState.springValue = easingValue;
-        fullState.springPoints = sampledPoints;
-      } else {
+      if (!fullState.springIsCustom) {
         const springFunction = springFunctions[fullState.springCurve];
         fullState.springMass = springFunction.mass;
         fullState.springStiffness = springFunction.stiffness;
         fullState.springDamping = springFunction.damping;
-        const { easingValue, sampledPoints } = generateLinearEasing({
-          type: easingType,
-          accuracy: fullState.editorAccuracy,
-          mass: fullState.springMass,
-          stiffness: fullState.springStiffness,
-          damping: fullState.springDamping,
-        });
-        fullState.springValue = easingValue;
-        fullState.springPoints = sampledPoints;
       }
+      const { easingValue, sampledPoints } = generateLinearEasing({
+        type: easingType,
+        accuracy: fullState.editorAccuracy,
+        mass: fullState.springMass,
+        stiffness: fullState.springStiffness,
+        damping: fullState.springDamping,
+      });
+      fullState.springValue = easingValue;
+      fullState.springPoints = sampledPoints;
       break;
     }
     case EasingType.BOUNCE: {
       fullState.bounceIsCustom = isAnyDefined(state.bounceBounces, state.bounceDamping);
-      if (fullState.bounceIsCustom) {
-        const { easingValue, sampledPoints } = generateLinearEasing({
-          type: easingType,
-          accuracy: fullState.editorAccuracy,
-          bounces: fullState.bounceBounces,
-          damping: fullState.bounceDamping,
-        });
-        fullState.bounceValue = easingValue;
-        fullState.bouncePoints = sampledPoints;
-      } else {
+      if (!fullState.bounceIsCustom) {
         const bounceFunction = bounceFunctions[fullState.bounceCurve];
         fullState.bounceBounces = bounceFunction.bounces;
         fullState.bounceDamping = bounceFunction.damping;
-        const { easingValue, sampledPoints } = generateLinearEasing({
-          type: easingType,
-          accuracy: fullState.editorAccuracy,
-          bounces: fullState.bounceBounces,
-          damping: fullState.bounceDamping,
-        });
-        fullState.bounceValue = easingValue;
-        fullState.bouncePoints = sampledPoints;
       }
+      const { easingValue, sampledPoints } = generateLinearEasing({
+        type: easingType,
+        accuracy: fullState.editorAccuracy,
+        bounces: fullState.bounceBounces,
+        damping: fullState.bounceDamping,
+      });
+      fullState.bounceValue = easingValue;
+      fullState.bouncePoints = sampledPoints;
       break;
     }
     case EasingType.WIGGLE: {
       fullState.wiggleIsCustom = isAnyDefined(state.wiggleWiggles, state.wiggleDamping);
-      if (fullState.wiggleIsCustom) {
-        const { easingValue, sampledPoints } = generateLinearEasing({
-          type: easingType,
-          accuracy: fullState.editorAccuracy,
-          wiggles: fullState.wiggleWiggles,
-          damping: fullState.wiggleDamping,
-        });
-        fullState.wiggleValue = easingValue;
-        fullState.wigglePoints = sampledPoints;
-      } else {
+      if (!fullState.wiggleIsCustom) {
         const wiggleFunction = wiggleFunctions[fullState.wiggleCurve];
         fullState.wiggleWiggles = wiggleFunction.wiggles;
         fullState.wiggleDamping = wiggleFunction.damping;
-        const { easingValue, sampledPoints } = generateLinearEasing({
-          type: easingType,
-          accuracy: fullState.editorAccuracy,
-          wiggles: fullState.wiggleWiggles,
-          damping: fullState.wiggleDamping,
-        });
-        fullState.wiggleValue = easingValue;
-        fullState.wigglePoints = sampledPoints;
       }
+      const { easingValue, sampledPoints } = generateLinearEasing({
+        type: easingType,
+        accuracy: fullState.editorAccuracy,
+        wiggles: fullState.wiggleWiggles,
+        damping: fullState.wiggleDamping,
+      });
+      fullState.wiggleValue = easingValue;
+      fullState.wigglePoints = sampledPoints;
       break;
     }
     case EasingType.OVERSHOOT: {
       fullState.overshootIsCustom = isAnyDefined(state.overshootMass, state.overshootDamping);
-      if (fullState.overshootIsCustom) {
-        const { easingValue, sampledPoints } = generateLinearEasing({
-          type: easingType,
-          accuracy: fullState.editorAccuracy,
-          style: fullState.overshootStyle,
-          mass: fullState.overshootMass,
-          damping: fullState.overshootDamping,
-        });
-        fullState.overshootValue = easingValue;
-        fullState.overshootPoints = sampledPoints;
-      } else {
+      if (!fullState.overshootIsCustom) {
         const overshootFunction = overshootFunctions[fullState.overshootStyle][fullState.overshootCurve];
         fullState.overshootMass = overshootFunction.mass;
         fullState.overshootDamping = overshootFunction.damping;
-        const { easingValue, sampledPoints } = generateLinearEasing({
-          type: easingType,
-          accuracy: fullState.editorAccuracy,
-          style: fullState.overshootStyle,
-          mass: fullState.overshootMass,
-          damping: fullState.overshootDamping,
-        });
-        fullState.overshootValue = easingValue;
-        fullState.overshootPoints = sampledPoints;
       }
+      const { easingValue, sampledPoints } = generateLinearEasing({
+        type: easingType,
+        accuracy: fullState.editorAccuracy,
+        style: fullState.overshootStyle,
+        mass: fullState.overshootMass,
+        damping: fullState.overshootDamping,
+      });
+      fullState.overshootValue = easingValue;
+      fullState.overshootPoints = sampledPoints;
       break;
     }
   }
