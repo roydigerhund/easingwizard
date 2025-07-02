@@ -1,7 +1,8 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from '@vercel/remix';
 import z from 'zod/v4';
-import { apiOrigin, productionOrigin } from '~/data/globals';
+import { apiRoot, productionOrigin } from '~/data/globals';
 import { getApiResponseFromInput, getApiResponseFromState } from '~/utils/api';
+import { generateSvgPreview } from '~/utils/state-sharing/preview';
 import { rehydrateShareState } from '~/utils/state-sharing/state-serialization';
 import { decodeState, encodeState } from '~/utils/state-sharing/url-code';
 import { EasingTypeInput } from '~/validations/easing';
@@ -28,8 +29,8 @@ export async function loader({ params }: LoaderFunctionArgs) {
       output,
       // HATEOAS
       links: {
-        self: `${apiOrigin}/curves/${id}`,
-        preview_svg: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0,100 C${rehydratedState.bezierX1 * 100},${100 - rehydratedState.bezierY1 * 100} ${rehydratedState.bezierX2 * 100},${100 - rehydratedState.bezierY2 * 100} 100,0" fill="none" stroke="currentColor" stroke-width="2"/></svg>`,
+        self: `${apiRoot}/curves/${id}`,
+        preview_svg: generateSvgPreview(output),
         share_url: `${productionOrigin}/#${id}`,
       },
     };
@@ -65,9 +66,10 @@ export async function action({ request, params }: ActionFunctionArgs) {
       output,
       // HATEOAS
       links: {
-        self: `${apiOrigin}/curves/${id}`,
+        self: `${apiRoot}/curves/${id}`,
         preview_svg: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0,100 C${config.x1 * 100},${100 - config.y1 * 100} ${config.x2 * 100},${100 - config.y2 * 100} 100,0" fill="none" stroke="currentColor" stroke-width="2"/></svg>`,
         share_url: `${productionOrigin}/#${id}`,
+        create: `${apiRoot}/curves/${type}`,
       },
     };
   } catch (error) {

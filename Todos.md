@@ -4,6 +4,9 @@
 - present nice error message when easing state is invalid
 - add FAQ section for SEO and also mention API and MCP
 
+- add IDs to self links in presets API route
+  - and preview and share links
+
 
 # Features
 

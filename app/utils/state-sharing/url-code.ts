@@ -10,10 +10,14 @@ export function encodeState(stateObj: EasingStateShare) {
 
   const mini: Record<string, EasingStateValue> = {};
 
-  for (const [key, value] of Object.entries(stateObj)) {
-    const shortKey = MINI_MAP[key as EasingStateShareKey];
-    if (shortKey) {
-      mini[shortKey] = encodeValue(key as EasingStateShareKey, value);
+  for (const longKey of Object.keys(MINI_MAP)) {
+    if (Object.prototype.hasOwnProperty.call(stateObj, longKey)) {
+      const shortKey = MINI_MAP[longKey as EasingStateShareKey];
+      const value = stateObj[longKey as EasingStateShareKey];
+      if (!shortKey || value === undefined) {
+        continue; // Skip if the key is not in MINI_MAP or value is undefined
+      }
+      mini[shortKey] = encodeValue(longKey as EasingStateShareKey, value);
     }
   }
 
