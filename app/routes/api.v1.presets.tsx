@@ -1,68 +1,45 @@
 import { LoaderFunctionArgs } from '@vercel/remix';
 import { createHash } from 'crypto';
-import z from 'zod/v4';
-import { bezierFunctions, bounceFunctions, overshootFunctions, springFunctions, wiggleFunctions } from '~/data/easing';
-import { apiOrigin } from '~/data/globals';
+import { z } from 'zod/v4';
+import { apiRoot, productionOrigin } from '~/data/globals';
 import { EasingType } from '~/types-and-enums';
+import { 
+  getAllPresets, 
+  getBezierPresets, 
+  getSpringPresets, 
+  getBouncePresets, 
+  getWigglePresets, 
+  getOvershootPresets 
+} from '~/generated/preset-data';
 import { EasingTypeInput } from '~/validations/easing';
 
-const bezierPresets = Object.entries(bezierFunctions).flatMap(([style, curves]) => {
-  return Object.entries(curves).map(([curve, params]) => ({
-    id: `${EasingType.BEZIER}.${style}.${curve}`,
-    type: EasingType.BEZIER,
-    style,
-    curve,
-    params,
-    links: {
-      self: `${apiOrigin}/curves/${EasingType.BEZIER}`,
-    },
-  }));
+type PresetData = {
+  id: string;
+  type: string;
+  style?: string;
+  curve?: string;
+  params: unknown;
+  output: {
+    css: string;
+    tailwind_css: string;
+    svg_path?: string;
+    svg_polyline?: string;
+  };
+};
+
+// Enhanced preset data with API links
+const enhancePresetWithApiData = (preset: PresetData) => ({
+  ...preset,
+  links: {
+    self: `${apiRoot}/curves/${preset.id}`,
+    share_url: `${productionOrigin}/#${preset.id}`,
+    create: `${apiRoot}/curves/${preset.type}`,
+  },
 });
 
-const springPresets = Object.entries(springFunctions).map(([curve, params]) => ({
-  id: `${EasingType.SPRING}.${curve}`,
-  type: EasingType.SPRING,
-  curve,
-  params,
-  links: {
-    self: `${apiOrigin}/curves/${EasingType.SPRING}`,
-  },
-}));
+// Get all presets with enhanced API data
+const allPresets = getAllPresets().map(enhancePresetWithApiData);
 
-const bouncePresets = Object.entries(bounceFunctions).map(([curve, params]) => ({
-  id: `${EasingType.BOUNCE}.${curve}`,
-  type: EasingType.BOUNCE,
-  curve,
-  params,
-  links: {
-    self: `${apiOrigin}/curves/${EasingType.BOUNCE}`,
-  },
-}));
-
-const wigglePresets = Object.entries(wiggleFunctions).map(([curve, params]) => ({
-  id: `${EasingType.WIGGLE}.${curve}`,
-  type: EasingType.WIGGLE,
-  curve,
-  params,
-  links: {
-    self: `${apiOrigin}/curves/${EasingType.WIGGLE}`,
-  },
-}));
-
-const overshootPresets = Object.entries(overshootFunctions).flatMap(([style, curves]) => {
-  return Object.entries(curves).map(([curve, params]) => ({
-    id: `${EasingType.OVERSHOOT}.${style}.${curve}`,
-    type: EasingType.OVERSHOOT,
-    style,
-    curve,
-    params,
-    links: {
-      self: `${apiOrigin}/curves/${EasingType.OVERSHOOT}`,
-    },
-  }));
-});
-
-const allPresets = [...bezierPresets, ...springPresets, ...bouncePresets, ...wigglePresets, ...overshootPresets];
 // Create a version string based on allPresets data
 const version = createHash('sha256').update(JSON.stringify(allPresets)).digest('hex').slice(0, 8);
 
@@ -71,15 +48,15 @@ const getPresetsByType = (type?: EasingType) => {
 
   switch (type) {
     case EasingType.BEZIER:
-      return bezierPresets;
+      return getBezierPresets().map(enhancePresetWithApiData);
     case EasingType.SPRING:
-      return springPresets;
+      return getSpringPresets().map(enhancePresetWithApiData);
     case EasingType.BOUNCE:
-      return bouncePresets;
+      return getBouncePresets().map(enhancePresetWithApiData);
     case EasingType.WIGGLE:
-      return wigglePresets;
+      return getWigglePresets().map(enhancePresetWithApiData);
     case EasingType.OVERSHOOT:
-      return overshootPresets;
+      return getOvershootPresets().map(enhancePresetWithApiData);
   }
 };
 
@@ -96,7 +73,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       presets,
       // HATEOAS
       links: {
-        self: `${apiOrigin}/presets${type ? `?type=${type}` : ''}`,
+        create: `${apiRoot}/presets${type ? `?type=${type}` : ''}`,
         filter: '/api/v1/presets{?type}', // RFC 6570 URI-Template
       },
     };

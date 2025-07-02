@@ -1,4 +1,4 @@
-import { apiDescription, apiOrigin } from '~/data/globals';
+import { apiDescription, apiRoot } from '~/data/globals';
 import { EasingType } from '~/types-and-enums';
 
 export async function loader() {
@@ -12,7 +12,7 @@ export async function loader() {
     },
     servers: [
       {
-        url: `${apiOrigin}`,
+        url: `${apiRoot}`,
       },
     ],
     paths: {
