@@ -2,7 +2,6 @@ import { ActionFunctionArgs, LoaderFunctionArgs } from '@vercel/remix';
 import z from 'zod/v4';
 import { apiRoot, productionOrigin } from '~/data/globals';
 import { getApiResponseFromInput, getApiResponseFromState } from '~/utils/api';
-import { generateSvgPreview } from '~/utils/state-sharing/preview';
 import { rehydrateShareState } from '~/utils/state-sharing/state-serialization';
 import { decodeState, encodeState } from '~/utils/state-sharing/url-code';
 import { EasingTypeInput } from '~/validations/easing';
@@ -30,7 +29,6 @@ export async function loader({ params }: LoaderFunctionArgs) {
       // HATEOAS
       links: {
         self: `${apiRoot}/curves/${id}`,
-        preview_svg: generateSvgPreview(output),
         share_url: `${productionOrigin}/#${id}`,
       },
     };
