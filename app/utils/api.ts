@@ -8,7 +8,7 @@ import {
   generateSpringSVGPolyline,
   generateWiggleSVGPolyline,
 } from '~/utils/svg';
-import { BezierInput, BounceInput, OvershootInput, SpringInput, WiggleInput } from '~/validations/easing';
+import { BezierInputSchema, BounceInputSchema, OvershootInputSchema, SpringInputSchema, WiggleInputSchema } from '~/validations/easing';
 
 export function getApiResponseFromState(state: EasingState) {
   switch (state.easingType) {
@@ -96,7 +96,7 @@ export function getApiResponseFromState(state: EasingState) {
 export function getApiResponseFromInput(type: EasingType, config: unknown) {
   switch (type) {
     case EasingType.BEZIER: {
-      const bezierConfig = BezierInput.parse(config);
+      const bezierConfig = BezierInputSchema.parse(config);
       const bezierString = createCubicBezierString(bezierConfig);
       const shareState: EasingStateShare = {
         easingType: EasingType.BEZIER,
@@ -117,7 +117,7 @@ export function getApiResponseFromInput(type: EasingType, config: unknown) {
       };
     }
     case EasingType.SPRING: {
-      const springConfig = SpringInput.parse(config);
+      const springConfig = SpringInputSchema.parse(config);
       const { easingValue, sampledPoints } = generateLinearEasing({ type, ...springConfig });
       const shareState: EasingStateShare = {
         easingType: EasingType.SPRING,
@@ -138,7 +138,7 @@ export function getApiResponseFromInput(type: EasingType, config: unknown) {
       };
     }
     case EasingType.BOUNCE: {
-      const bounceConfig = BounceInput.parse(config);
+      const bounceConfig = BounceInputSchema.parse(config);
       const { easingValue, sampledPoints } = generateLinearEasing({ type, ...bounceConfig });
       const shareState: EasingStateShare = {
         easingType: EasingType.BOUNCE,
@@ -158,7 +158,7 @@ export function getApiResponseFromInput(type: EasingType, config: unknown) {
       };
     }
     case EasingType.WIGGLE: {
-      const wiggleConfig = WiggleInput.parse(config);
+      const wiggleConfig = WiggleInputSchema.parse(config);
       const { easingValue, sampledPoints } = generateLinearEasing({ type, ...wiggleConfig });
       const shareState: EasingStateShare = {
         easingType: EasingType.WIGGLE,
@@ -178,7 +178,7 @@ export function getApiResponseFromInput(type: EasingType, config: unknown) {
       };
     }
     case EasingType.OVERSHOOT: {
-      const overshootConfig = OvershootInput.parse(config);
+      const overshootConfig = OvershootInputSchema.parse(config);
       const { easingValue, sampledPoints } = generateLinearEasing({ type, ...overshootConfig });
       const shareState: EasingStateShare = {
         easingType: EasingType.OVERSHOOT,

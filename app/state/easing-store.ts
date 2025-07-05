@@ -35,7 +35,7 @@ import {
   WiggleCurve,
 } from '~/types-and-enums';
 import { createCubicBezierString } from '~/utils/easing';
-import { BezierInput, BounceInput, OvershootInput, SpringInput, WiggleInput } from '~/validations/easing';
+import type { BezierInput, BounceInput, OvershootInput, SpringInput, WiggleInput } from '~/validations/easing';
 
 export type EasingState = {
   // General
