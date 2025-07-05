@@ -13,7 +13,7 @@ import {
   SpringCurve,
   WiggleCurve,
 } from '~/types-and-enums';
-import { BezierInput } from '~/validations/easing';
+import type { BezierInput } from '~/validations/easing';
 
 export const bezierEasings: Record<
   BezierStyle,

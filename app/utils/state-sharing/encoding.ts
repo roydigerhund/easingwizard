@@ -1,4 +1,4 @@
-import { EasingStateValue } from '~/types-and-enums';
+import type { EasingStateValue } from '~/types-and-enums';
 import { easingStateEnumMaps } from './maps';
 
 // we only have numbers and enums

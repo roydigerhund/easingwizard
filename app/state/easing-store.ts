@@ -21,18 +21,19 @@ import {
   defaultWigglePoints,
   defaultWiggleValue,
 } from '~/data/easing';
-import {
-  AnimationType,
+import type {
   BezierCurve,
   BezierStyle,
   BounceCurve,
-  EasingType,
-  LinearEasingAccuracy,
   OvershootCurve,
   Point,
-  PreviewPlayMode,
   SpringCurve,
-  WiggleCurve,
+  WiggleCurve} from '~/types-and-enums';
+import {
+  AnimationType,
+  EasingType,
+  LinearEasingAccuracy,
+  PreviewPlayMode
 } from '~/types-and-enums';
 import { createCubicBezierString } from '~/utils/easing';
 import type { BezierInput, BounceInput, OvershootInput, SpringInput, WiggleInput } from '~/validations/easing';

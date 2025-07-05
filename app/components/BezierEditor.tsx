@@ -2,7 +2,7 @@ import { useEasingStore } from '~/state/easing-store';
 import { createCubicBezierString } from '~/utils/easing';
 import { roundTo } from '~/utils/numbers';
 import { generateBezierSVGPath } from '~/utils/svg';
-import { BezierInput } from '~/validations/easing';
+import type { BezierInput } from '~/validations/easing';
 import Drag from './Drag';
 import EditorBase from './EditorBase';
 import EditorBaseLine from './EditorBaseLine';

@@ -1,5 +1,6 @@
 import { classNames } from '~/utils/class-names';
-import IconTextButton, { IconTextButtonProps } from './IconTextButton';
+import type { IconTextButtonProps } from './IconTextButton';
+import IconTextButton from './IconTextButton';
 
 export default function CurveIconTextButton({ isActive, icon, ...props }: IconTextButtonProps) {
   return (

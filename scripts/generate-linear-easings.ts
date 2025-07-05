@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { bounceFunctions, overshootFunctions, springFunctions, wiggleFunctions } from '~/data/easing';
-import { EasingType, LinearEasingAccuracy, OvershootStyle } from '~/types-and-enums';
+import type { OvershootStyle } from '~/types-and-enums';
+import { EasingType, LinearEasingAccuracy } from '~/types-and-enums';
 import { generateLinearEasing } from '~/utils/easing';
 
 function main() {

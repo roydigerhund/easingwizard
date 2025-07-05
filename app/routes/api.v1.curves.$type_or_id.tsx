@@ -1,5 +1,5 @@
-import { ActionFunctionArgs, LoaderFunctionArgs } from '@vercel/remix';
-import z from 'zod/v4';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@vercel/remix';
+import { z } from 'zod/v4';
 import { apiRoot, productionOrigin } from '~/data/globals';
 import { getApiResponseFromInput, getApiResponseFromState } from '~/utils/api';
 import { rehydrateShareState } from '~/utils/state-sharing/state-serialization';

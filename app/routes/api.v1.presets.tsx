@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs } from '@vercel/remix';
+import type { LoaderFunctionArgs } from '@vercel/remix';
 import { createHash } from 'crypto';
 import { z } from 'zod/v4';
 import { apiRoot, productionOrigin } from '~/data/globals';
