@@ -1,10 +1,11 @@
-import { EasingState } from '~/state/easing-store';
+import type { EasingState } from '~/state/easing-store';
+import type {
+  EasingStateShareKey} from '~/types-and-enums';
 import {
   AnimationType,
   BezierCurve,
   BezierStyle,
   BounceCurve,
-  EasingStateShareKey,
   EasingType,
   LinearEasingAccuracy,
   OvershootCurve,

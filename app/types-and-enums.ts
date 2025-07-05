@@ -1,4 +1,4 @@
-import { EASING_STATE_SHARE_KEYS_V0 } from './utils/state-sharing/v0';
+import type { EASING_STATE_SHARE_KEYS_V0 } from './utils/state-sharing/v0';
 
 export type Point = {
   x: number;

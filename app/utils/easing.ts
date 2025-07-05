@@ -1,5 +1,6 @@
-import { EasingType, LinearEasingAccuracy, OvershootStyle, Point } from '~/types-and-enums';
-import { BezierInput, BounceInput, OvershootInput, SpringInput, WiggleInput } from '~/validations/easing';
+import type { Point } from '~/types-and-enums';
+import { EasingType, LinearEasingAccuracy, OvershootStyle } from '~/types-and-enums';
+import type { BezierInput, BounceInput, OvershootInput, SpringInput, WiggleInput } from '~/validations/easing';
 import { mapRange, roundTo } from './numbers';
 
 export function createCubicBezierString({ x1, y1, x2, y2 }: BezierInput): string {

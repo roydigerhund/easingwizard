@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { bezierFunctions, bounceFunctions, overshootFunctions, springFunctions, wiggleFunctions } from '~/data/easing';
-import { EasingStateShare, EasingType, LinearEasingAccuracy, OvershootStyle } from '~/types-and-enums';
+import type { EasingStateShare, OvershootStyle } from '~/types-and-enums';
+import { EasingType, LinearEasingAccuracy } from '~/types-and-enums';
 import { createCubicBezierString, cssStringToTailwind, generateLinearEasing } from '~/utils/easing';
 import {
   generateBezierSVGPath,

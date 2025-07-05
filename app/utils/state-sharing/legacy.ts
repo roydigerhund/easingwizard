@@ -1,4 +1,5 @@
-import { defaultEasingContext, EasingState } from '~/state/easing-store';
+import type { EasingState } from '~/state/easing-store';
+import { defaultEasingContext } from '~/state/easing-store';
 import { EasingType } from '~/types-and-enums';
 import { BounceInputSchema, OvershootInputSchema, SpringInputSchema, WiggleInputSchema } from '~/validations/easing';
 import { generateLinearEasing } from '../easing';

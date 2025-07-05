@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useEasingStore } from '~/state/easing-store';
 import MeshBase from './MeshBase';
 

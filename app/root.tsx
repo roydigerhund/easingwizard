@@ -1,7 +1,7 @@
 import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration, useRouteError } from '@remix-run/react';
 import type { LinksFunction, MetaFunction } from '@vercel/remix';
 
-import React from 'react';
+import type React from 'react';
 import { description, productionOrigin, title } from './data/globals';
 import './tailwind.css';
 

@@ -4,7 +4,7 @@ import { EasingType, LinearEasingAccuracy } from '~/types-and-enums';
 import { classNames } from '~/utils/class-names';
 import { createCubicBezierString, generateLinearEasing } from '~/utils/easing';
 import { humanize } from '~/utils/string';
-import { BezierInput } from '~/validations/easing';
+import type { BezierInput } from '~/validations/easing';
 import EditorBase from './EditorBase';
 import EditorBaseLine from './EditorBaseLine';
 import MeshBase from './MeshBase';

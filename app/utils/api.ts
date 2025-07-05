@@ -1,5 +1,6 @@
-import { EasingState } from '~/state/easing-store';
-import { EasingStateShare, EasingType } from '~/types-and-enums';
+import type { EasingState } from '~/state/easing-store';
+import type { EasingStateShare} from '~/types-and-enums';
+import { EasingType } from '~/types-and-enums';
 import { createCubicBezierString, cssStringToTailwind, generateLinearEasing } from '~/utils/easing';
 import {
   generateBezierSVGPath,

@@ -1,4 +1,4 @@
-import { EasingStateShare, EasingStateShareKey, EasingStateValue } from '~/types-and-enums';
+import type { EasingStateShare, EasingStateShareKey, EasingStateValue } from '~/types-and-enums';
 import { BASE62_DICTIONARY, crc8, fromBase62, toBase62 } from './crc';
 import { decodeValue, encodeValue } from './encoding';
 import { MINI_MAP, REVERSE_MINI_MAP } from './maps';

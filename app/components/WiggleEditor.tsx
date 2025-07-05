@@ -1,4 +1,5 @@
-import { EasingState, useEasingStore } from '~/state/easing-store';
+import type { EasingState} from '~/state/easing-store';
+import { useEasingStore } from '~/state/easing-store';
 import { EasingType, LinearEasingAccuracy } from '~/types-and-enums';
 import { generateLinearEasing } from '~/utils/easing';
 import { generateWiggleSVGPolyline } from '~/utils/svg';

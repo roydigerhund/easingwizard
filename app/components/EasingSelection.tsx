@@ -14,15 +14,16 @@ import {
   wiggleCalculations,
 } from '~/generated/linear-easings';
 import { useEasingStore } from '~/state/easing-store';
-import {
-  BezierCurve,
+import type {
   BezierStyle,
   BounceCurve,
-  EasingType,
   OvershootCurve,
   OvershootStyle,
   SpringCurve,
-  WiggleCurve,
+  WiggleCurve} from '~/types-and-enums';
+import {
+  BezierCurve,
+  EasingType
 } from '~/types-and-enums';
 import { createCubicBezierString, generateLinearEasing } from '~/utils/easing';
 import { humanize } from '~/utils/string';

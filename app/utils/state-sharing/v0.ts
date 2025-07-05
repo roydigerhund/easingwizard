@@ -1,4 +1,5 @@
-import { defaultEasingContext, EasingState } from '~/state/easing-store';
+import type { EasingState } from '~/state/easing-store';
+import { defaultEasingContext } from '~/state/easing-store';
 
 // Replace the following with the fixed default values when V2 is introduced
 export const DEFAULTS_V0 = defaultEasingContext;
