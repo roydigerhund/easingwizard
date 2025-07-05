@@ -4,7 +4,7 @@ import { apiRoot, productionOrigin } from '~/data/globals';
 import { getApiResponseFromInput, getApiResponseFromState } from '~/utils/api';
 import { rehydrateShareState } from '~/utils/state-sharing/state-serialization';
 import { decodeState, encodeState } from '~/utils/state-sharing/url-code';
-import { EasingTypeInput } from '~/validations/easing';
+import { EasingTypeInputSchema } from '~/validations/easing';
 
 export async function loader({ params }: LoaderFunctionArgs) {
   try {
@@ -49,7 +49,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const config = await request.json();
 
   try {
-    const type = EasingTypeInput.parse(params.type_or_id);
+    const type = EasingTypeInputSchema.parse(params.type_or_id);
 
     const { input, output, shareState } = getApiResponseFromInput(type, config);
 

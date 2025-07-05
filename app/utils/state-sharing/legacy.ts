@@ -1,6 +1,6 @@
 import { defaultEasingContext, EasingState } from '~/state/easing-store';
 import { EasingType } from '~/types-and-enums';
-import { BounceInput, OvershootInput, SpringInput, WiggleInput } from '~/validations/easing';
+import { BounceInputSchema, OvershootInputSchema, SpringInputSchema, WiggleInputSchema } from '~/validations/easing';
 import { generateLinearEasing } from '../easing';
 import { mapRange } from '../numbers';
 
@@ -51,7 +51,7 @@ export function rehydrateShareStateLegacy(searchParams: URLSearchParams) {
     }
   });
   if (newState.easingType === EasingType.SPRING) {
-    const values = SpringInput.parse({
+    const values = SpringInputSchema.parse({
       mass: newState.springMass,
       stiffness: newState.springStiffness,
       damping: newState.springDamping,
@@ -68,7 +68,7 @@ export function rehydrateShareStateLegacy(searchParams: URLSearchParams) {
     newState.springPoints = sampledPoints;
   }
   if (newState.easingType === EasingType.BOUNCE) {
-    const values = BounceInput.parse({
+    const values = BounceInputSchema.parse({
       bounces: newState.bounceBounces,
       damping: newState.bounceDamping,
       accuracy: newState.editorAccuracy,
@@ -83,7 +83,7 @@ export function rehydrateShareStateLegacy(searchParams: URLSearchParams) {
     newState.bouncePoints = sampledPoints;
   }
   if (newState.easingType === EasingType.WIGGLE) {
-    const values = WiggleInput.parse({
+    const values = WiggleInputSchema.parse({
       wiggles: newState.wiggleWiggles,
       damping: newState.wiggleDamping,
       accuracy: newState.editorAccuracy,
@@ -98,7 +98,7 @@ export function rehydrateShareStateLegacy(searchParams: URLSearchParams) {
     newState.wigglePoints = sampledPoints;
   }
   if (newState.easingType === EasingType.OVERSHOOT) {
-    const values = OvershootInput.parse({
+    const values = OvershootInputSchema.parse({
       style: newState.overshootStyle,
       mass: newState.overshootMass,
       damping: newState.overshootDamping,

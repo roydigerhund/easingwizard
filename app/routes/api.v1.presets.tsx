@@ -2,16 +2,16 @@ import { LoaderFunctionArgs } from '@vercel/remix';
 import { createHash } from 'crypto';
 import { z } from 'zod/v4';
 import { apiRoot, productionOrigin } from '~/data/globals';
-import { EasingType } from '~/types-and-enums';
-import { 
-  getAllPresets, 
-  getBezierPresets, 
-  getSpringPresets, 
-  getBouncePresets, 
-  getWigglePresets, 
-  getOvershootPresets 
+import {
+  getAllPresets,
+  getBezierPresets,
+  getBouncePresets,
+  getOvershootPresets,
+  getSpringPresets,
+  getWigglePresets,
 } from '~/generated/preset-data';
-import { EasingTypeInput } from '~/validations/easing';
+import { EasingType } from '~/types-and-enums';
+import { EasingTypeInputSchema } from '~/validations/easing';
 
 type PresetData = {
   id: string;
@@ -65,7 +65,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const typeSearchParam = url.searchParams.get('type');
 
   try {
-    const type = typeSearchParam ? EasingTypeInput.parse(typeSearchParam) : undefined;
+    const type = typeSearchParam ? EasingTypeInputSchema.parse(typeSearchParam) : undefined;
     const presets = getPresetsByType(type);
 
     return {

@@ -10,7 +10,9 @@
     "start": "remix-serve ./build/server/index.js",
     "typecheck": "tsc",
     "generate-linear-easings": "tsx ./scripts/generate-linear-easings.ts && prettier --write ./app/generated/linear-easings.ts",
-    "generate-preset-data": "tsx ./scripts/generate-preset-data.ts && prettier --write ./app/generated/preset-data.ts"
+    "generate-preset-data": "tsx ./scripts/generate-preset-data.ts && prettier --write ./app/generated/preset-data.ts",
+    "generate-openapi": "tsx ./scripts/generate-openapi.ts && prettier --write ./app/generated/openapi.json",
+    "generate-all": "npm run generate-linear-easings && npm run generate-preset-data && npm run generate-openapi"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
@@ -25,6 +27,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "zod": "^3.25.20",
+    "zod-openapi": "^5.0.0-beta.18",
     "zustand": "^5.0.0"
   },
   "devDependencies": {
@@ -52,6 +55,6 @@
     "vite-tsconfig-paths": "^4.2.1"
   },
   "engines": {
-    "node": "^20"
+    "node": "^22"
   }
 }

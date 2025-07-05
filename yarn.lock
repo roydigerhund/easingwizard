@@ -6856,6 +6856,11 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
+zod-openapi@^5.0.0-beta.18:
+  version "5.0.0-beta.18"
+  resolved "https://registry.yarnpkg.com/zod-openapi/-/zod-openapi-5.0.0-beta.18.tgz#07ae0b75a1f149686f28a54d74c61ce9ac671736"
+  integrity sha512-y8iqDiZi/KdzU7K2GnqTjRniAuh723m8t6bfKeQ5/Gf/0/drBKXcanuDiy+64T8mPHPWtpliXKBjN4cz5Srfrw==
+
 zod@^3.25.20:
   version "3.25.20"
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.25.20.tgz#c36739c52f6d01cf04c53bf56d99f2f5488739ee"
