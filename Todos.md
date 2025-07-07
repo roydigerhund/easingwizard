@@ -7,6 +7,9 @@
 
 - force type imports
 
+- switch to vite + react-router
+  - check if cache headers for files are set correctly by vercel
+
 # Features
 
 - Pause between animation preview
