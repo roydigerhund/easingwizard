@@ -22,6 +22,13 @@ import { classNames } from '~/utils/class-names';
 import { rehydrateShareStateLegacy } from '~/utils/state-sharing/legacy';
 import { rehydrateShareState } from '~/utils/state-sharing/state-serialization';
 import { decodeState } from '~/utils/state-sharing/url-code';
+import type { Route } from './+types/home';
+
+export function headers(_: Route.HeadersArgs) {
+  return {
+    'Cache-Control': 's-maxage=600, stale-while-revalidate=3600, public',
+  };
+}
 
 export default function Index() {
   const [searchParams, setSearchParams] = useSearchParams();
