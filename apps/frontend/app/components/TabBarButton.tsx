@@ -14,7 +14,7 @@ export default function TabBarButton({ isActive, children, icon, onClick }: Prop
         'group relative z-0 flex items-center gap-2 py-2.5',
         isActive ? 'text-zinc-100' : 'text-zinc-500 hover:text-zinc-400',
         'ease-out-sine transition-all duration-300 will-change-transform',
-        'rounded-xl focus:outline-none outline-none',
+        'rounded-xl focus:outline-hidden outline-hidden',
       )}
       onClick={onClick}
     >
@@ -25,8 +25,8 @@ export default function TabBarButton({ isActive, children, icon, onClick }: Prop
           'group-hover:ease-in-sine group-hover:duration-200',
           'group-focus:ease-in-sine group-focus:duration-200',
           isActive
-            ? 'bg-[--border-active] group-hover:scale-y-0 group-focus:scale-y-0'
-            : 'bg-[--border-inactive] group-hover:scale-y-0 group-focus:scale-y-0',
+            ? 'bg-(--border-active) group-hover:scale-y-0 group-focus:scale-y-0'
+            : 'bg-(--border-inactive) group-hover:scale-y-0 group-focus:scale-y-0',
         )}
       />
       <span

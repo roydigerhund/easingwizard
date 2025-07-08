@@ -22,7 +22,7 @@ export default function CodeBlock({ children }: Props) {
           'absolute right-1.5 top-1.5 z-10 flex select-none items-center justify-center gap-2 px-3 py-2.5',
           'bg-zinc-950 text-zinc-100',
           'transition-all duration-300 ease-out-sine will-change-transform',
-          'rounded-lg outline-none focus:outline-none',
+          'rounded-lg outline-hidden focus:outline-hidden',
           'shadow-element_inactive hover:shadow-element_focused focus:shadow-element_focused active:shadow-element_pressed',
           '[--shadow-retract:-0.6rem]',
           'opacity-0 group-hover:opacity-100',
@@ -50,7 +50,7 @@ export default function CodeBlock({ children }: Props) {
         className={classNames(
           'relative break-all',
           'font-monospace text-zinc-400',
-          'rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-950 p-4',
+          'rounded-xl bg-linear-to-r from-zinc-900 to-zinc-950 p-4',
           'transition-all duration-300 ease-out-sine',
           'shadow-[0_0_0_1px_var(--tw-shadow-color)] shadow-zinc-950',
           'hover:text-zinc-300 hover:shadow-zinc-700',

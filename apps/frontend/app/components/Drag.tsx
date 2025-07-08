@@ -94,9 +94,9 @@ export default function Drag(props: DragProps) {
         className={classNames(
           'stroke-current opacity-0',
           'transition-[stroke-width,opacity]',
-          'duration-[300ms] ease-in',
-          'group-hover:duration-[1500ms] group-hover:ease-spring',
-          'group-hover:stroke-[6] group-hover:opacity-50',
+          'duration-300 ease-in',
+          'group-hover:duration-1500 group-hover:ease-spring',
+          'group-hover:stroke-6 group-hover:opacity-50',
         )}
         cx={x}
         cy={y}

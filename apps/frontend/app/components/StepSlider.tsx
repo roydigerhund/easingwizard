@@ -69,7 +69,7 @@ export default function StepSlider<T>({ className, label, value, options, onChan
               'absolute top-0.5 z-20 size-7 rounded-full bg-zinc-950 p-1.5',
               '-translate-x-1/2',
               'transition-shadow duration-300 ease-out-sine will-change-transform',
-              'focus:outline-none outline-none',
+              'focus:outline-hidden outline-hidden',
               'shadow-element_inactive focus:shadow-element_focused group-hover/input:shadow-element_focused',
               '[--shadow-retract:-0.05rem]',
             )}

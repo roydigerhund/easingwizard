@@ -97,7 +97,7 @@ export default function BezierComparison() {
         <MeshBase>
           <div className="absolute inset-0 z-10 grid items-center justify-items-center">
             <div
-              className="col-span-full row-span-full size-1/4 rounded-xl !border-none bg-grdt-from"
+              className="col-span-full row-span-full size-1/4 rounded-xl border-none! bg-grdt-from"
               style={animationStyles(createCubicBezierString(bezierValue))}
             />
             <div

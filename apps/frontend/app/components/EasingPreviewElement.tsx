@@ -76,8 +76,8 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
         className={classNames(
           'absolute inset-0 z-20 grid items-center justify-items-center',
           'transition-all duration-300',
-          'outline-none focus:outline-none',
-          clicked ? 'scale-0 opacity-0 ease-[cubic-bezier(0.55,_0,_1,_0.45)]' : 'ease-[cubic-bezier(0,_0.55,_0.45,_1)]',
+          'outline-hidden focus:outline-hidden',
+          clicked ? 'scale-0 opacity-0 ease-[cubic-bezier(0.55,0,1,0.45)]' : 'ease-[cubic-bezier(0,0.55,0.45,1)]',
         )}
         style={{
           // settings for 3d perspective
@@ -89,7 +89,7 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
         <div
           role="button"
           tabIndex={-1}
-          className="relative z-10 col-span-full row-span-full size-1/4 cursor-help rounded-xl !border-none bg-grdt-from"
+          className="relative z-10 col-span-full row-span-full size-1/4 cursor-help rounded-xl border-none! bg-grdt-from"
           style={animationStyles(value)}
           onClick={handleClick}
           onKeyUp={(e) => e.key === 'Enter' && handleClick()}
