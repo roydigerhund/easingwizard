@@ -28,7 +28,7 @@ export default function IconButton({
         'shadow-element_inactive',
         !disabled && 'hover:shadow-element_focused focus:shadow-element_focused active:shadow-element_pressed',
         disabled && 'cursor-not-allowed',
-        'rounded-xl focus:outline-none outline-none',
+        'rounded-xl focus:outline-hidden outline-hidden',
         'transition-all duration-300 ease-out-sine will-change-transform',
       )}
       onClick={() => !disabled && onClick()}

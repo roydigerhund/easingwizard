@@ -12,7 +12,7 @@ export default function EasingTypeSelection() {
       className={classNames(
         'animate-appear [--animation-delay:0.25s]',
         'relative mx-auto flex items-center justify-between gap-2 rounded-full p-1',
-        'max-sm:max-w-[24rem] max-sm:flex-wrap max-sm:justify-center max-sm:gap-3',
+        'max-sm:max-w-96 max-sm:flex-wrap max-sm:justify-center max-sm:gap-3',
         'md:gap-4 lg:gap-8 lg:bg-zinc-950',
       )}
     >
@@ -29,7 +29,7 @@ export default function EasingTypeSelection() {
         <button
           key={type}
           className={classNames(
-            'group relative z-0 rounded-full p-0.5 outline-none focus:outline-none',
+            'group relative z-0 rounded-full p-0.5 outline-hidden focus:outline-hidden',
             'transition-all duration-200 ease-linear',
             // somehow fixes a UI bug in safari when the stars are not visible
             'max-lg:will-change-transform',
@@ -39,7 +39,7 @@ export default function EasingTypeSelection() {
         >
           <span
             className={classNames(
-              'absolute inset-0 -z-10 rounded-full bg-gradient-to-tr from-grdt-from via-grdt-via to-grdt-to',
+              'absolute inset-0 -z-10 rounded-full bg-linear-to-tr from-grdt-from via-grdt-via to-grdt-to',
               'transition-all duration-200 ease-linear',
               easingType === type
                 ? 'opacity-100'
@@ -49,7 +49,7 @@ export default function EasingTypeSelection() {
           <span className={classNames('absolute inset-0 -z-20 rounded-full bg-zinc-950')} />
           <span
             className={classNames(
-              'absolute inset-0 -z-30 rounded-full bg-gradient-to-tr from-grdt-from via-grdt-via to-grdt-to blur-[0.5rem]',
+              'absolute inset-0 -z-30 rounded-full bg-linear-to-tr from-grdt-from via-grdt-via to-grdt-to blur-[0.5rem]',
               'transition-all duration-200 ease-linear',
               easingType === type ? 'opacity-100' : 'opacity-0 group-focus:opacity-100',
             )}
