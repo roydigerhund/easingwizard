@@ -7,7 +7,7 @@ import {
   SpringCurve,
   WiggleCurve,
 } from '~/types';
-import type { BezierInput } from '~/validations/easing';
+import type { BezierInput } from '~/validations';
 
 export const bezierEasings: Record<
   BezierStyle,

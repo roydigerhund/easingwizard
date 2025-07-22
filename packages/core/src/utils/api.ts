@@ -1,14 +1,14 @@
 import type { EasingState, EasingStateShare} from '~/types';
 import { EasingType } from '~/types';
-import { createCubicBezierString, cssStringToTailwind, generateLinearEasing } from '~/utils/easing';
+import { createCubicBezierString, cssStringToTailwind, generateLinearEasing } from '~/utils';
 import {
   generateBezierSVGPath,
   generateBounceSVGPolyline,
   generateOvershootSVGPolyline,
   generateSpringSVGPolyline,
   generateWiggleSVGPolyline,
-} from '~/utils/svg';
-import { BezierInputSchema, BounceInputSchema, OvershootInputSchema, SpringInputSchema, WiggleInputSchema } from '~/validations/easing';
+} from '~/utils';
+import { BezierInputSchema, BounceInputSchema, OvershootInputSchema, SpringInputSchema, WiggleInputSchema } from '~/validations';
 
 type ApiResponse = {
   input: Record<string, unknown>;

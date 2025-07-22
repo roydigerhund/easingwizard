@@ -1,7 +1,7 @@
 import fs from 'fs';
-import { bounceFunctions, overshootFunctions, springFunctions, wiggleFunctions } from '~/data/easing-functions';
+import { bounceFunctions, overshootFunctions, springFunctions, wiggleFunctions } from '~/data';
 import { EasingType, LinearEasingAccuracy, type OvershootStyle } from '~/types';
-import { generateLinearEasing } from '~/utils/easing';
+import { generateLinearEasing } from '~/utils';
 
 function main() {
   const springCalculations = Object.fromEntries(

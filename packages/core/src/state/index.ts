@@ -19,7 +19,7 @@ import {
   defaultWiggleFunction,
   defaultWigglePoints,
   defaultWiggleValue,
-} from '~/data/easing-defaults';
+} from '~/data';
 import {
   AnimationType,
   EasingType,
@@ -28,7 +28,7 @@ import {
   type EasingState,
   type EasingStateBlock,
 } from '~/types';
-import { createCubicBezierString } from '~/utils/easing';
+import { createCubicBezierString } from '~/utils';
 
 const defaultBezierState: EasingStateBlock<'bezier'> = {
   bezierX1: defaultBezierFunction.x1,

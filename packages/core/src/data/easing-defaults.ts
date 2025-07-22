@@ -3,7 +3,7 @@ import {
   overshootCalculations,
   springCalculations,
   wiggleCalculations,
-} from '~/generated/linear-easings';
+} from '~/generated';
 import {
   BezierCurve,
   BezierStyle,
@@ -13,7 +13,7 @@ import {
   SpringCurve,
   WiggleCurve,
 } from '~/types';
-import type { BezierInput } from '~/validations/easing';
+import type { BezierInput } from '~/validations';
 import {
   bezierFunctions,
   bounceFunctions,

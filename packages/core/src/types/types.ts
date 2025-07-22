@@ -1,6 +1,6 @@
 import type { EASING_STATE_SHARE_KEYS_V0 } from "~/utils/state-sharing/v0";
 import type { AnimationType, BezierCurve, BezierStyle, BounceCurve, EasingType, LinearEasingAccuracy, OvershootCurve, PreviewPlayMode, SpringCurve, WiggleCurve } from "./enums";
-import type { BezierInput, SpringInput, BounceInput, WiggleInput, OvershootInput } from "~/validations/easing";
+import type { BezierInput, SpringInput, BounceInput, WiggleInput, OvershootInput } from "~/validations";
 
 export type Point = {
   x: number;
