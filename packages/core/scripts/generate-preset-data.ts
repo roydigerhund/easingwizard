@@ -1,0 +1,209 @@
+import fs from 'fs';
+import {
+  bezierFunctions,
+  bounceFunctions,
+  overshootFunctions,
+  springFunctions,
+  wiggleFunctions,
+} from '~/data/easing-functions';
+import { EasingStateShare, EasingType, LinearEasingAccuracy, OvershootStyle } from '~/types';
+import { createCubicBezierString, cssStringToTailwind, generateLinearEasing } from '~/utils/easing';
+import { encodeState } from '~/utils/state-sharing/url-code';
+import {
+  generateBezierSVGPath,
+  generateBounceSVGPolyline,
+  generateOvershootSVGPolyline,
+  generateSpringSVGPolyline,
+  generateWiggleSVGPolyline,
+} from '~/utils/svg';
+
+const accuracy = LinearEasingAccuracy.HIGH;
+
+function main() {
+  // Generate Bezier presets
+  const bezierPresets = Object.entries(bezierFunctions).flatMap(([style, curves]) => {
+    return Object.entries(curves).map(([curve, params]) => {
+      if (!params) {
+        throw new Error(`Missing parameters for Bezier curve: ${style} - ${curve}`);
+      }
+      const shareState: EasingStateShare = {
+        easingType: EasingType.BEZIER,
+        bezierStyle: style,
+        bezierCurve: curve,
+      };
+      const id = encodeState(shareState);
+      const bezierString = createCubicBezierString(params);
+
+      return {
+        id,
+        type: EasingType.BEZIER,
+        style,
+        curve,
+        params,
+        output: {
+          css: bezierString,
+          tailwind_css: cssStringToTailwind(bezierString),
+          svg_path: generateBezierSVGPath(params),
+        },
+      };
+    });
+  });
+
+  // Generate Spring presets
+  const springPresets = Object.entries(springFunctions).map(([curve, params]) => {
+    const shareState: EasingStateShare = {
+      easingType: EasingType.SPRING,
+      springCurve: curve,
+    };
+    const id = encodeState(shareState);
+    const { easingValue, sampledPoints } = generateLinearEasing({
+      type: EasingType.SPRING,
+      accuracy,
+      ...params,
+    });
+
+    return {
+      id,
+      type: EasingType.SPRING,
+      curve,
+      params: { ...params, accuracy },
+      output: {
+        css: easingValue,
+        tailwind_css: cssStringToTailwind(easingValue),
+        svg_polyline: generateSpringSVGPolyline(sampledPoints),
+      },
+    };
+  });
+
+  // Generate Bounce presets
+  const bouncePresets = Object.entries(bounceFunctions).map(([curve, params]) => {
+    const shareState: EasingStateShare = {
+      easingType: EasingType.BOUNCE,
+      bounceCurve: curve,
+    };
+    const id = encodeState(shareState);
+    const { easingValue, sampledPoints } = generateLinearEasing({
+      type: EasingType.BOUNCE,
+      accuracy,
+      ...params,
+    });
+
+    return {
+      id,
+      type: EasingType.BOUNCE,
+      curve,
+      params: { ...params, accuracy },
+      output: {
+        css: easingValue,
+        tailwind_css: cssStringToTailwind(easingValue),
+        svg_polyline: generateBounceSVGPolyline(sampledPoints),
+      },
+    };
+  });
+
+  // Generate Wiggle presets
+  const wigglePresets = Object.entries(wiggleFunctions).map(([curve, params]) => {
+    const shareState: EasingStateShare = {
+      easingType: EasingType.WIGGLE,
+      wiggleCurve: curve,
+    };
+    const id = encodeState(shareState);
+    const { easingValue, sampledPoints } = generateLinearEasing({
+      type: EasingType.WIGGLE,
+      accuracy,
+      ...params,
+    });
+
+    return {
+      id,
+      type: EasingType.WIGGLE,
+      curve,
+      params: { ...params, accuracy },
+      output: {
+        css: easingValue,
+        tailwind_css: cssStringToTailwind(easingValue),
+        svg_polyline: generateWiggleSVGPolyline(sampledPoints),
+      },
+    };
+  });
+
+  // Generate Overshoot presets
+  const overshootPresets = Object.entries(overshootFunctions).flatMap(([style, curves]) => {
+    return Object.entries(curves).map(([curve, params]) => {
+      const shareState: EasingStateShare = {
+        easingType: EasingType.OVERSHOOT,
+        overshootStyle: style,
+        overshootCurve: curve,
+      };
+      const id = encodeState(shareState);
+      const { easingValue, sampledPoints } = generateLinearEasing({
+        type: EasingType.OVERSHOOT,
+        accuracy,
+        style: style as OvershootStyle,
+        ...params,
+      });
+
+      return {
+        id,
+        type: EasingType.OVERSHOOT,
+        style,
+        curve,
+        params: { ...params, accuracy },
+        output: {
+          css: easingValue,
+          tailwind_css: cssStringToTailwind(easingValue),
+          svg_polyline: generateOvershootSVGPolyline(sampledPoints),
+        },
+      };
+    });
+  });
+
+  // Combine all presets
+  const allPresets = {
+    bezier: bezierPresets,
+    spring: springPresets,
+    bounce: bouncePresets,
+    wiggle: wigglePresets,
+    overshoot: overshootPresets,
+  };
+
+  // Write the file ./app/generated/preset-data.ts with the content of the presets
+  const content = `// This file is generated by scripts/generate-preset-data.ts
+// Do not modify it manually
+
+export const presetData = ${JSON.stringify(allPresets, null, 2)};
+
+// Helper functions to get presets by type
+export const getBezierPresets = () => presetData.bezier;
+export const getSpringPresets = () => presetData.spring;
+export const getBouncePresets = () => presetData.bounce;
+export const getWigglePresets = () => presetData.wiggle;
+export const getOvershootPresets = () => presetData.overshoot;
+
+export const getAllPresets = () => [
+  ...presetData.bezier,
+  ...presetData.spring,
+  ...presetData.bounce,
+  ...presetData.wiggle,
+  ...presetData.overshoot,
+];
+
+export const getPresetById = (id: string) => {
+  return getAllPresets().find(preset => preset.id === id);
+};
+`;
+
+  fs.writeFileSync('./src/generated/preset-data.ts', content);
+
+  console.log('✅ Generated preset data successfully!');
+  console.log(`📊 Generated ${allPresets.bezier.length} bezier presets`);
+  console.log(`📊 Generated ${allPresets.spring.length} spring presets`);
+  console.log(`📊 Generated ${allPresets.bounce.length} bounce presets`);
+  console.log(`📊 Generated ${allPresets.wiggle.length} wiggle presets`);
+  console.log(`📊 Generated ${allPresets.overshoot.length} overshoot presets`);
+  console.log(
+    `📊 Total: ${allPresets.bezier.length + allPresets.spring.length + allPresets.bounce.length + allPresets.wiggle.length + allPresets.overshoot.length} presets`,
+  );
+}
+
+main();

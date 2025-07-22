@@ -1,11 +1,20 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
+    "module": "NodeNext",
     "strict": true,
-    "verbatimModuleSyntax": true
-  }
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true,
+    "types": [
+      "node"
+    ],
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx",
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "easing-wizard-frontend/*": ["../frontend/app/*"]
+    }
+  },
+  "exclude": ["node_modules"]
 }
