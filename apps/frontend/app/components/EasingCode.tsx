@@ -1,14 +1,13 @@
+import { EasingType, cssStringToTailwind } from 'easing-wizard-core';
 import { useEffect, useState } from 'react';
+import { paragraph } from '~/css/common-classes';
 import { useEasingStore } from '~/state/easing-store';
-import { EasingType } from '~/types-and-enums';
-import { paragraph } from '~/utils/common-classes';
 import CodeBlock from './CodeBlock';
 import ClipboardIcon from './icons/ClipboardIcon';
 import CSSIcon from './icons/CSSIcon';
 import TailwindCSSIcon from './icons/TailwindCSSIcon';
 import IconTextButton from './IconTextButton';
 import TabBarButton from './TabBarButton';
-import { cssStringToTailwind } from '~/utils/easing';
 
 export enum CodeType {
   CSS = 'CSS',

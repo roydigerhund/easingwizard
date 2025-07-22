@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { classNames } from '~/utils/class-names';
+import { classNames } from '~/css/class-names';
 
 type DragElement = {
   active: boolean;

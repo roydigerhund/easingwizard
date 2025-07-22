@@ -1,9 +1,8 @@
-import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
-
 import type React from 'react';
-import { description, productionOrigin, title } from './data/globals';
-import './css/app.css';
+import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
 import type { Route } from './+types/root';
+import './css/app.css';
+import { description, frontendUrl, title } from './data/globals';
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -14,8 +13,8 @@ export const meta: Route.MetaFunction = () => {
     { name: 'apple-mobile-web-app-title', content: 'Easing Wizard' },
     { property: 'og:type', content: 'website' },
     { property: 'og:title', content: title },
-    { property: 'og:url', content: productionOrigin },
-    { property: 'og:image', content: `${productionOrigin}/share-image.png` },
+    { property: 'og:url', content: frontendUrl },
+    { property: 'og:image', content: `${frontendUrl}/share-image.png` },
     { property: 'og:description', content: description },
   ];
 };
@@ -41,7 +40,7 @@ export const links: Route.LinksFunction = () => [
   { rel: 'shortcut icon', href: '/favicon.ico' },
   { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
   { rel: 'manifest', href: '/site.webmanifest' },
-  { rel: 'canonical', href: productionOrigin + '/' },
+  { rel: 'canonical', href: frontendUrl + '/' },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {

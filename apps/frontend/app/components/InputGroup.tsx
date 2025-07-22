@@ -1,4 +1,4 @@
-import { classNames } from '~/utils/class-names';
+import { classNames } from '~/css/class-names';
 
 type Props = {
   className?: string;

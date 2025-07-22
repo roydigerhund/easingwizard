@@ -29,6 +29,9 @@ importers:
       '@hono/node-server':
         specifier: ^1.17.1
         version: 1.17.1(hono@4.8.5)
+      dotenv:
+        specifier: ^17.2.0
+        version: 17.2.0
       easing-wizard-core:
         specifier: workspace:*
         version: link:../../packages/core
@@ -40,14 +43,14 @@ importers:
         version: 4.0.5
     devDependencies:
       '@types/node':
-        specifier: ^20.11.17
+        specifier: ^20.19.9
         version: 20.19.9
+      tsc-alias:
+        specifier: ^1.8.16
+        version: 1.8.16
       tsx:
         specifier: ^4.7.1
         version: 4.20.3
-      typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
 
   apps/frontend:
     dependencies:
@@ -1245,6 +1248,10 @@ packages:
   dir-glob@3.0.1:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
     engines: {node: '>=8'}
+
+  dotenv@17.2.0:
+    resolution: {integrity: sha512-Q4sgBT60gzd0BB0lSyYD3xM4YxrXA9y4uBDof1JNYGzOXrQdQ6yX+7XIAqoFOGQFOTK1D3Hts5OllpxMDZFONQ==}
+    engines: {node: '>=12'}
 
   eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
@@ -3436,6 +3443,8 @@ snapshots:
   dir-glob@3.0.1:
     dependencies:
       path-type: 4.0.0
+
+  dotenv@17.2.0: {}
 
   eastasianwidth@0.2.0: {}
 

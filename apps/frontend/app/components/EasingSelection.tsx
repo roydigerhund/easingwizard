@@ -1,32 +1,30 @@
 import {
-  bezierFunctions,
-  bezierStyleFunctions,
-  bounceFunctions,
-  defaultOvershootCurve,
-  overshootFunctions,
-  springFunctions,
-  wiggleFunctions,
-} from '~/data/easing';
-import {
-  bounceCalculations,
-  overshootCalculations,
-  springCalculations,
-  wiggleCalculations,
-} from '~/generated/linear-easings';
-import { useEasingStore } from '~/state/easing-store';
-import type {
-  BezierStyle,
-  BounceCurve,
-  OvershootCurve,
-  OvershootStyle,
-  SpringCurve,
-  WiggleCurve} from '~/types-and-enums';
-import {
   BezierCurve,
-  EasingType
-} from '~/types-and-enums';
-import { createCubicBezierString, generateLinearEasing } from '~/utils/easing';
-import { humanize } from '~/utils/string';
+  bezierFunctions,
+  BezierStyle,
+  bezierStyleFunctions,
+  bounceCalculations,
+  BounceCurve,
+  bounceFunctions,
+  createCubicBezierString,
+  defaultOvershootCurve,
+  EasingType,
+  generateLinearEasing,
+  humanize,
+  isBezierStyle,
+  isOvershootStyle,
+  overshootCalculations,
+  OvershootCurve,
+  overshootFunctions,
+  OvershootStyle,
+  springCalculations,
+  SpringCurve,
+  springFunctions,
+  wiggleCalculations,
+  WiggleCurve,
+  wiggleFunctions,
+} from 'easing-wizard-core';
+import { useEasingStore } from '~/state/easing-store';
 import CardHeadline from './CardHeadline';
 import CurveIconTextButton from './CurveIconTextButton';
 
@@ -144,28 +142,30 @@ export default function EasingSelection() {
       {easingType === EasingType.BEZIER && (
         <>
           <div className="flex flex-wrap gap-4">
-            {Object.keys(bezierFunctions).map((style) => {
-              const values = bezierStyleFunctions[style as BezierStyle];
-              return (
-                <CurveIconTextButton
-                  key={style}
-                  isActive={!bezierIsCustom && bezierStyle === style}
-                  onClick={() => {
-                    if (bezierCurve in bezierFunctions[style as BezierStyle]) {
-                      onBezierValueChange(style as BezierStyle, bezierCurve);
-                    } else {
-                      onBezierValueChange(style as BezierStyle, BezierCurve.SINE);
+            {Object.keys(bezierFunctions)
+              .filter(isBezierStyle)
+              .map((style) => {
+                const values = bezierStyleFunctions[style];
+                return (
+                  <CurveIconTextButton
+                    key={style}
+                    isActive={!bezierIsCustom && bezierStyle === style}
+                    onClick={() => {
+                      if (bezierCurve in bezierFunctions[style]) {
+                        onBezierValueChange(style, bezierCurve);
+                      } else {
+                        onBezierValueChange(style, BezierCurve.SINE);
+                      }
+                    }}
+                    text={humanize(style)}
+                    icon={
+                      <path
+                        d={`M0,100 C${values.x1 * 100},${100 - values.y1 * 100} ${values.x2 * 100},${100 - values.y2 * 100} 100,0`}
+                      />
                     }
-                  }}
-                  text={humanize(style)}
-                  icon={
-                    <path
-                      d={`M0,100 C${values.x1 * 100},${100 - values.y1 * 100} ${values.x2 * 100},${100 - values.y2 * 100} 100,0`}
-                    />
-                  }
-                />
-              );
-            })}
+                  />
+                );
+              })}
           </div>
           <hr
             className="my-5 border-t border-zinc-700"
@@ -195,25 +195,27 @@ export default function EasingSelection() {
       {easingType === EasingType.OVERSHOOT && (
         <>
           <div className="flex flex-wrap gap-4">
-            {Object.keys(overshootFunctions).map((style) => {
-              return (
-                <CurveIconTextButton
-                  key={style}
-                  isActive={overshootStyle === style}
-                  onClick={() => {
-                    onOvershootValueChange(style as OvershootStyle, overshootIsCustom ? undefined : overshootCurve);
-                  }}
-                  text={humanize(style)}
-                  icon={
-                    <polyline
-                      points={overshootCalculations[style as OvershootStyle][defaultOvershootCurve].sampledPoints
-                        .map((point) => `${point.x},${point.y / 2 + 25}`)
-                        .join(' ')}
-                    />
-                  }
-                />
-              );
-            })}
+            {Object.keys(overshootFunctions)
+              .filter(isOvershootStyle)
+              .map((style) => {
+                return (
+                  <CurveIconTextButton
+                    key={style}
+                    isActive={overshootStyle === style}
+                    onClick={() => {
+                      onOvershootValueChange(style, overshootIsCustom ? undefined : overshootCurve);
+                    }}
+                    text={humanize(style)}
+                    icon={
+                      <polyline
+                        points={overshootCalculations[style][defaultOvershootCurve].sampledPoints
+                          .map((point) => `${point.x},${point.y / 2 + 25}`)
+                          .join(' ')}
+                      />
+                    }
+                  />
+                );
+              })}
           </div>
           <hr
             className="my-5 border-t border-zinc-700"

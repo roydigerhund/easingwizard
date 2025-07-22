@@ -1,3 +1,4 @@
+import { decodeState, EasingType, rehydrateShareState, rehydrateShareStateLegacy } from 'easing-wizard-core';
 import { useEffect, useState } from 'react';
 import { useLocation, useSearchParams } from 'react-router';
 import BezierEditor from '~/components/BezierEditor';
@@ -16,12 +17,8 @@ import Share from '~/components/Share';
 import ShootingStars from '~/components/ShootingStars';
 import SpringEditor from '~/components/SpringEditor';
 import WiggleEditor from '~/components/WiggleEditor';
+import { classNames } from '~/css/class-names';
 import { useEasingStore } from '~/state/easing-store';
-import { EasingType } from '~/types-and-enums';
-import { classNames } from '~/utils/class-names';
-import { rehydrateShareStateLegacy } from '~/utils/state-sharing/legacy';
-import { rehydrateShareState } from '~/utils/state-sharing/state-serialization';
-import { decodeState } from '~/utils/state-sharing/url-code';
 import type { Route } from './+types/home';
 
 export function headers(_: Route.HeadersArgs) {
@@ -43,7 +40,7 @@ export default function Index() {
       if (searchParams.get('easingType')) {
         // Legacy sharing mode
         const newState = rehydrateShareStateLegacy(searchParams);
-        
+
         setState(newState);
         setSearchParams(new URLSearchParams());
       } else if (hash && hash.length > 1) {

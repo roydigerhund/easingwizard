@@ -1,6 +1,6 @@
 import { useRef } from 'react';
-import { classNames } from '~/utils/class-names';
-import { shortTransition } from '~/utils/common-classes';
+import { classNames } from '~/css/class-names';
+import { shortTransition } from '~/css/common-classes';
 
 type Props = {
   className?: string;
@@ -28,7 +28,7 @@ export default function Toggle({ className, label, value, onChange }: Props) {
         <button
           ref={buttonRef}
           className={classNames(
-            'relative block h-7 w-14 cursor-pointer rounded-full focus:outline-hidden outline-hidden',
+            'relative block h-7 w-14 cursor-pointer rounded-full outline-hidden focus:outline-hidden',
             'shadow-element_inactive group-focus-within:shadow-element_focused group-hover:shadow-element_focused group-active:shadow-element_pressed',
             'transition-all duration-300 ease-out-sine will-change-transform',
           )}

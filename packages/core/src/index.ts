@@ -1,7 +1,6 @@
 // DATA
 export * from './data/easing-defaults';
 export * from './data/easing-functions';
-export * from './data/globals';
 
 // GENERATED
 export * from './generated/linear-easings';
@@ -12,6 +11,7 @@ export * from './state';
 
 // TYPES
 export * from './types/enums';
+export * from './types/guards';
 export * from './types/types';
 
 // UTILS STATE SHARING

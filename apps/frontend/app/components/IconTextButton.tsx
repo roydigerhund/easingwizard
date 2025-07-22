@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { classNames } from '~/utils/class-names';
+import { classNames } from '~/css/class-names';
 
 export type IconTextButtonProps = {
   className?: string;

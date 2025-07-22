@@ -1,5 +1,5 @@
 import { shootingStars } from '~/data/shooting-stars';
-import { classNames } from '~/utils/class-names';
+import { classNames } from '~/css/class-names';
 
 export default function ShootingStars() {
   return (

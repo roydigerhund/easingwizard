@@ -1,4 +1,4 @@
-import { classNames } from '~/utils/class-names';
+import { classNames } from '~/css/class-names';
 import BlueskyIcon from './icons/BlueskyIcon';
 import XIcon from './icons/XIcon';
 

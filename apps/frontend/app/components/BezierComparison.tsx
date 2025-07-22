@@ -1,10 +1,14 @@
+import {
+  EasingType,
+  LinearEasingAccuracy,
+  bezierEasings,
+  createCubicBezierString,
+  generateLinearEasing,
+  humanize,
+  type BezierInput,
+} from 'easing-wizard-core';
 import { useMemo, useState } from 'react';
-import { bezierEasings } from '~/data/easing';
-import { EasingType, LinearEasingAccuracy } from '~/types-and-enums';
-import { classNames } from '~/utils/class-names';
-import { createCubicBezierString, generateLinearEasing } from '~/utils/easing';
-import { humanize } from '~/utils/string';
-import type { BezierInput } from '~/validations/easing';
+import { classNames } from '~/css/class-names';
 import EditorBase from './EditorBase';
 import EditorBaseLine from './EditorBaseLine';
 import MeshBase from './MeshBase';

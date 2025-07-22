@@ -1,8 +1,11 @@
-import type { EasingState} from '~/state/easing-store';
+import {
+  EasingType,
+  generateBounceSVGPolyline,
+  generateLinearEasing,
+  LinearEasingAccuracy,
+  type EasingState,
+} from 'easing-wizard-core';
 import { useEasingStore } from '~/state/easing-store';
-import { EasingType, LinearEasingAccuracy } from '~/types-and-enums';
-import { generateLinearEasing } from '~/utils/easing';
-import { generateBounceSVGPolyline } from '~/utils/svg';
 import EditorBase from './EditorBase';
 import EditorBaseLine from './EditorBaseLine';
 import InputGroup from './InputGroup';

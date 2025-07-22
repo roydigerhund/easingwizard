@@ -1,7 +1,7 @@
 import { Transition } from '@headlessui/react';
 import { useEffect, useState } from 'react';
 import { useEasingStore } from '~/state/easing-store';
-import { classNames } from '~/utils/class-names';
+import { classNames } from '~/css/class-names';
 
 export default function Notification() {
   const foundEasterEgg = useEasingStore((state) => state.foundEasterEgg);

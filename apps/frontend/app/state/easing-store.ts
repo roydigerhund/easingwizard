@@ -1,5 +1,5 @@
+import { defaultEasingState, EasingType, type EasingState } from 'easing-wizard-core';
 import { create } from 'zustand';
-import { EasingType } from '~/types-and-enums';
 
 type EasingAction = {
   setEasingType: (easingType: EasingType) => void;

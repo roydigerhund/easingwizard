@@ -1,17 +1,17 @@
 import {
+  EasingType,
+  EasingTypeInputSchema,
   getAllPresets,
   getBezierPresets,
   getBouncePresets,
   getOvershootPresets,
   getSpringPresets,
   getWigglePresets,
-} from 'easing-wizard-frontend/generated/preset-data.js';
-import { EasingType } from 'easing-wizard-frontend/types-and-enums.js';
-import { EasingTypeInputSchema } from 'easing-wizard-frontend/validations/easing.js';
+} from 'easing-wizard-core';
 import { Hono } from 'hono';
-import { API_VERSION } from 'src/data/globals.js';
-import { getEnv } from 'src/utils/env.js';
 import { z } from 'zod/v4';
+import { API_VERSION } from '~/data/globals';
+import { getEnv } from '~/utils/env';
 
 const app = new Hono();
 
