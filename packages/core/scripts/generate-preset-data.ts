@@ -5,17 +5,17 @@ import {
   overshootFunctions,
   springFunctions,
   wiggleFunctions,
-} from '~/data/easing-functions';
+} from '~/data';
 import { EasingStateShare, EasingType, LinearEasingAccuracy, OvershootStyle } from '~/types';
-import { createCubicBezierString, cssStringToTailwind, generateLinearEasing } from '~/utils/easing';
-import { encodeState } from '~/utils/state-sharing/url-code';
+import { createCubicBezierString, cssStringToTailwind, generateLinearEasing } from '~/utils';
+import { encodeState } from '~/utils';
 import {
   generateBezierSVGPath,
   generateBounceSVGPolyline,
   generateOvershootSVGPolyline,
   generateSpringSVGPolyline,
   generateWiggleSVGPolyline,
-} from '~/utils/svg';
+} from '~/utils';
 
 const accuracy = LinearEasingAccuracy.HIGH;
 

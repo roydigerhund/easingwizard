@@ -1,6 +1,6 @@
 import { z } from 'zod/v4';
 import { EasingType, LinearEasingAccuracy, OvershootStyle } from '~/types';
-import { roundTo } from '~/utils/numbers';
+import { roundTo } from '~/utils';
 
 export const EasingTypeInputSchema = z.enum(EasingType).meta({
   id: 'EasingType',

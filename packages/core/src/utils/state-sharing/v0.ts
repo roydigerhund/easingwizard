@@ -1,4 +1,4 @@
-import { defaultEasingState } from '~/state/easing-state';
+import { defaultEasingState } from '~/state';
 import type { EasingState } from '~/types';
 
 // Replace the following with the fixed default values when V2 is introduced

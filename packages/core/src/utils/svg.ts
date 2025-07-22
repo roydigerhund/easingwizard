@@ -1,5 +1,5 @@
 import type { Point } from '~/types';
-import type { BezierInput } from '~/validations/easing';
+import type { BezierInput } from '~/validations';
 
 export const generateBezierSVGPath = ({ x1, y1, x2, y2 }: BezierInput) => {
   return `M0,100 C${x1 * 100},${100 - y1 * 100} ${x2 * 100},${100 - y2 * 100} 100,0`;

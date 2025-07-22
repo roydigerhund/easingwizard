@@ -1,6 +1,6 @@
-import { defaultEasingState } from '~/state/easing-state';
+import { defaultEasingState } from '~/state';
 import { EasingType, type EasingState } from '~/types';
-import { BounceInputSchema, OvershootInputSchema, SpringInputSchema, WiggleInputSchema } from '~/validations/easing';
+import { BounceInputSchema, OvershootInputSchema, SpringInputSchema, WiggleInputSchema } from '~/validations';
 import { generateLinearEasing } from '../easing';
 import { mapRange } from '../numbers';
 
