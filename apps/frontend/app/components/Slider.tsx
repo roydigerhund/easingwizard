@@ -1,9 +1,8 @@
 import * as RSlider from '@radix-ui/react-slider';
+import { checkCommaRegex, floatSafeModulo, isNil, trailingZeroRegex } from 'easing-wizard-core';
 import { useRef, useState } from 'react';
-import { classNames } from '~/utils/class-names';
-import { shortTransition } from '~/utils/common-classes';
-import { checkCommaRegex, floatSafeModulo, trailingZeroRegex } from '~/utils/numbers';
-import { isNil } from '~/utils/string';
+import { classNames } from '~/css/class-names';
+import { shortTransition } from '~/css/common-classes';
 
 type Props = {
   className?: string;
@@ -98,7 +97,7 @@ export default function Slider({ className, label, value, onChange, min, max, st
         </button>
         <div
           className={classNames(
-            'relative flex grow touch-none rounded-xl select-none px-1.5',
+            'relative flex grow touch-none rounded-xl px-1.5 select-none',
             'shadow-element_inactive focus-within:shadow-element_focused hover:shadow-element_focused active:shadow-element_pressed',
             'transition-all duration-300 ease-out-sine will-change-transform',
             '[--shadow-retract:-0.6rem]',
@@ -117,7 +116,7 @@ export default function Slider({ className, label, value, onChange, min, max, st
             </RSlider.Track>
             <RSlider.Thumb
               ref={sliderRef}
-              className="block h-9 w-3 rounded-full border-4 border-zinc-950 bg-zinc-100 focus:outline-hidden outline-hidden"
+              className="block h-9 w-3 rounded-full border-4 border-zinc-950 bg-zinc-100 outline-hidden focus:outline-hidden"
               aria-label={label}
             />
           </RSlider.Root>
@@ -127,7 +126,7 @@ export default function Slider({ className, label, value, onChange, min, max, st
         className={classNames(
           'ml-3 w-16 rounded-xl bg-transparent text-center text-zinc-100',
           'transition-all duration-300 ease-out-sine will-change-transform',
-          'focus:outline-hidden outline-hidden',
+          'outline-hidden focus:outline-hidden',
           'shadow-element_inactive hover:shadow-element_focused focus:shadow-element_focused active:shadow-element_pressed',
           '[--shadow-retract:-0.4rem]',
         )}

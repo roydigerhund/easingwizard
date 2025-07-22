@@ -1,8 +1,7 @@
-import { description, productionOrigin } from '~/data/globals';
+import { encodeState, reduceStateForShare } from 'easing-wizard-core';
+import { paragraph } from '~/css/common-classes';
+import { description, frontendUrl } from '~/data/globals';
 import { useEasingStore } from '~/state/easing-store';
-import { paragraph } from '~/utils/common-classes';
-import { reduceStateForShare } from '~/utils/state-sharing/state-serialization';
-import { encodeState } from '~/utils/state-sharing/url-code';
 import CardHeadline from './CardHeadline';
 import BlueskyIcon from './icons/BlueskyIcon';
 import ShareIcon from './icons/ShareIcon';
@@ -62,7 +61,7 @@ export default function Share() {
             icon={<XIcon className="size-6" />}
             onClick={() => {
               window.open(
-                `https://x.com/intent/tweet?text=${encodeURI(description)}&url=${productionOrigin}`,
+                `https://x.com/intent/tweet?text=${encodeURI(description)}&url=${frontendUrl}`,
                 '_blank',
                 'noopener noreferrer',
               );
@@ -74,7 +73,7 @@ export default function Share() {
             icon={<BlueskyIcon className="size-6" />}
             onClick={() => {
               window.open(
-                `https://bsky.app/intent/compose?text=${encodeURI(description)}%0A${productionOrigin}`,
+                `https://bsky.app/intent/compose?text=${encodeURI(description)}%0A${frontendUrl}`,
                 '_blank',
                 'noopener noreferrer',
               );

@@ -1,7 +1,6 @@
+import { EasingType, humanize } from 'easing-wizard-core';
+import { classNames } from '~/css/class-names';
 import { useEasingStore } from '~/state/easing-store';
-import { EasingType } from '~/types-and-enums';
-import { classNames } from '~/utils/class-names';
-import { humanize } from '~/utils/string';
 
 export default function EasingTypeSelection() {
   const easingType = useEasingStore((state) => state.easingType);
@@ -56,7 +55,7 @@ export default function EasingTypeSelection() {
           />
           <span
             className={classNames(
-              'relative z-10 block rounded-full bg-zinc-950 px-4 py-2 text-xs uppercase tracking-widest min-[360px]:text-sm md:px-5',
+              'relative z-10 block rounded-full bg-zinc-950 px-4 py-2 text-xs tracking-widest uppercase min-[360px]:text-sm md:px-5',
             )}
           >
             {type === EasingType.BEZIER ? 'Bézier' : humanize(type)}

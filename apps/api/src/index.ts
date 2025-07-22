@@ -1,7 +1,8 @@
 import { serve } from '@hono/node-server';
+import 'dotenv/config';
 import { Hono } from 'hono';
-import curves from './routes/curves.js';
-import presets from './routes/presets.js';
+import curves from './routes/curves';
+import presets from './routes/presets';
 
 const app = new Hono().basePath('/v1');
 

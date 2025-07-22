@@ -1,7 +1,6 @@
+import { AnimationType, EasingType, humanize, PreviewPlayMode } from 'easing-wizard-core';
 import { useEffect, useState } from 'react';
 import { useEasingStore } from '~/state/easing-store';
-import { AnimationType, EasingType, PreviewPlayMode } from '~/types-and-enums';
-import { humanize } from '~/utils/string';
 import CardHeadline from './CardHeadline';
 import EasingPreviewElement from './EasingPreviewElement';
 import IconButton from './IconButton';
@@ -68,7 +67,7 @@ export default function EasingPreview() {
             disabled={!allowPreviewShowLinear}
             isActive={previewShowLinear && allowPreviewShowLinear}
             onClick={() => setState({ previewShowLinear: !previewShowLinear })}
-            position='left'
+            position="left"
           >
             <CloneIcon className="size-7" />
           </IconButton>
@@ -94,7 +93,7 @@ export default function EasingPreview() {
                     previewPlayMode === PreviewPlayMode.ONCE ? PreviewPlayMode.INFINITE : PreviewPlayMode.ONCE,
                 })
               }
-              position='right'
+              position="right"
             >
               <InfinityIcon className="size-7" />
             </IconButton>

@@ -1,6 +1,6 @@
 import { useRef } from 'react';
-import { classNames } from '~/utils/class-names';
-import { shortTransition } from '~/utils/common-classes';
+import { classNames } from '~/css/class-names';
+import { shortTransition } from '~/css/common-classes';
 
 type Props<T> = {
   className?: string;
@@ -69,8 +69,8 @@ export default function StepSlider<T>({ className, label, value, options, onChan
               'absolute top-0.5 z-20 size-7 rounded-full bg-zinc-950 p-1.5',
               '-translate-x-1/2',
               'transition-shadow duration-300 ease-out-sine will-change-transform',
-              'focus:outline-hidden outline-hidden',
-              'shadow-element_inactive focus:shadow-element_focused group-hover/input:shadow-element_focused',
+              'outline-hidden focus:outline-hidden',
+              'shadow-element_inactive group-hover/input:shadow-element_focused focus:shadow-element_focused',
               '[--shadow-retract:-0.05rem]',
             )}
             value={indexValue}
@@ -83,7 +83,7 @@ export default function StepSlider<T>({ className, label, value, options, onChan
             <span className={classNames('block size-full rounded-full bg-zinc-100')} />
           </button>
         </div>
-        <span className="pointer-events-none absolute inset-0 flex w-full select-none items-center justify-between">
+        <span className="pointer-events-none absolute inset-0 flex w-full items-center justify-between select-none">
           {options.map((option) => (
             <span
               key={option + ''}

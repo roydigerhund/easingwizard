@@ -1,7 +1,7 @@
+import { AnimationType, EasingType, PreviewPlayMode } from 'easing-wizard-core';
 import { useEffect, useState } from 'react';
+import { classNames } from '~/css/class-names';
 import { useEasingStore } from '~/state/easing-store';
-import { AnimationType, EasingType, PreviewPlayMode } from '~/types-and-enums';
-import { classNames } from '~/utils/class-names';
 
 export default function EasingPreviewElement({ counter }: { counter: number }) {
   const easingType = useEasingStore((state) => state.easingType);
