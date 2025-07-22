@@ -1,6 +1,3 @@
-import type {
-  EasingState,
-  EasingStateShareKey} from '~/types';
 import {
   AnimationType,
   BezierCurve,
@@ -13,7 +10,8 @@ import {
   PreviewPlayMode,
   SpringCurve,
   WiggleCurve,
-} from '~/types';
+} from '~/types/enums';
+import type { EasingState, EasingStateShareKey } from '~/types/types';
 
 export const MINI_MAP: Record<EasingStateShareKey, string> = {
   // General

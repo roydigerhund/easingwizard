@@ -1,7 +1,7 @@
-import type { EasingStateShare, EasingStateShareKey, EasingStateValue } from '~/types';
 import { decodeValue, encodeValue } from './encoding';
 import { MINI_MAP, REVERSE_MINI_MAP } from './maps';
 import { BASE62_DICTIONARY, crc8, toBase62, fromBase62 } from './crc';
+import type { EasingStateShare, EasingStateValue, EasingStateShareKey } from '~/types/types';
 
 export function encodeState(stateObj: EasingStateShare) {
   if (!stateObj || Object.keys(stateObj).length === 0) {

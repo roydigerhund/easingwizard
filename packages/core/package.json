@@ -16,10 +16,11 @@
   ],
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "pnpm dependency-check && tsc && tsc-alias",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run clean && npm run build",
+    "dependency-check": "madge --circular --ts-config ./tsconfig.json --extensions ts,tsx src/",
+    "prepublish-only": "npm run clean && npm run build",
     "generate": "pnpm generate:linear-easings && pnpm generate:preset-data",
     "generate:linear-easings": "tsx ./scripts/generate-linear-easings.ts && prettier --write ./src/generated/linear-easings.ts",
     "generate:preset-data": "tsx ./scripts/generate-preset-data.ts && prettier --write ./src/generated/preset-data.ts"
@@ -30,6 +31,8 @@
   "devDependencies": {
     "@types/node": "^24.0.15",
     "fs": "0.0.1-security",
+    "madge": "^8.0.0",
+    "tsc-alias": "^1.8.16",
     "tsx": "^4.20.3"
   }
 }

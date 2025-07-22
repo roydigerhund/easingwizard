@@ -1,24 +1,27 @@
-import type { EasingState, EasingStateShare} from '~/types';
-import { EasingType } from '~/types';
-import { createCubicBezierString, cssStringToTailwind, generateLinearEasing } from '~/utils';
+import { EasingType } from '~/types/enums';
+import type { EasingState, EasingStateShare } from '~/types/types';
+import {
+  BezierInputSchema,
+  BounceInputSchema,
+  OvershootInputSchema,
+  SpringInputSchema,
+  WiggleInputSchema,
+} from '~/validations';
+import { createCubicBezierString, cssStringToTailwind, generateLinearEasing } from './easing';
 import {
   generateBezierSVGPath,
   generateBounceSVGPolyline,
   generateOvershootSVGPolyline,
   generateSpringSVGPolyline,
   generateWiggleSVGPolyline,
-} from '~/utils';
-import { BezierInputSchema, BounceInputSchema, OvershootInputSchema, SpringInputSchema, WiggleInputSchema } from '~/validations';
+} from './svg';
 
 type ApiResponse = {
   input: Record<string, unknown>;
   output: {
     css: string;
     tailwind_css: string;
-  } & (
-    | { svg_path: string; svg_polyline?: never }
-    | { svg_polyline: string; svg_path?: never }
-  );
+  } & ({ svg_path: string; svg_polyline?: never } | { svg_polyline: string; svg_path?: never });
 };
 
 export function getApiResponseFromState(state: EasingState): ApiResponse {
@@ -104,7 +107,10 @@ export function getApiResponseFromState(state: EasingState): ApiResponse {
   }
 }
 
-export function getApiResponseFromInput(type: EasingType, config: unknown): ApiResponse & { shareState: EasingStateShare } {
+export function getApiResponseFromInput(
+  type: EasingType,
+  config: unknown,
+): ApiResponse & { shareState: EasingStateShare } {
   switch (type) {
     case EasingType.BEZIER: {
       const bezierConfig = BezierInputSchema.parse(config);

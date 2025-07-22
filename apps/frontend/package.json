@@ -2,13 +2,6 @@
   "name": "easing-wizard-frontend",
   "private": true,
   "type": "module",
-  "exports": {
-    "./utils/*": "./app/utils/*.ts",
-    "./data/*": "./app/data/*.ts",
-    "./generated/*": "./app/generated/*",
-    "./validations/*": "./app/validations/*",
-    "./*": "./app/*"
-  },
   "scripts": {
     "build": "react-router build",
     "dev": "react-router dev",
@@ -25,7 +18,8 @@
     "react-dom": "^19.1.0",
     "react-router": "^7.6.3",
     "zod": "^3.25.75",
-    "zustand": "^5.0.6"
+    "zustand": "^5.0.6",
+    "easing-wizard-core": "workspace:*"
   },
   "devDependencies": {
     "@react-router/dev": "^7.6.3",

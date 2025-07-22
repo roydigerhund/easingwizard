@@ -1,6 +1,16 @@
-import type { EASING_STATE_SHARE_KEYS_V0 } from "~/utils/state-sharing/v0";
-import type { AnimationType, BezierCurve, BezierStyle, BounceCurve, EasingType, LinearEasingAccuracy, OvershootCurve, PreviewPlayMode, SpringCurve, WiggleCurve } from "./enums";
-import type { BezierInput, SpringInput, BounceInput, WiggleInput, OvershootInput } from "~/validations";
+import type { BezierInput, BounceInput, OvershootInput, SpringInput, WiggleInput } from '~/validations';
+import type {
+  AnimationType,
+  BezierCurve,
+  BezierStyle,
+  BounceCurve,
+  EasingType,
+  LinearEasingAccuracy,
+  OvershootCurve,
+  PreviewPlayMode,
+  SpringCurve,
+  WiggleCurve,
+} from './enums';
 
 export type Point = {
   x: number;
@@ -9,7 +19,38 @@ export type Point = {
 
 export type EasingStateValue = string | number | boolean | Point[];
 
-export type EasingStateShareKey = (typeof EASING_STATE_SHARE_KEYS_V0)[number];
+export type EasingStateShareKey = keyof EasingState &
+  // Rest state keys
+  (| 'easingType'
+    | 'previewDuration'
+    | 'previewAnimationType'
+    | 'editorAccuracy'
+    // Bezier
+    | 'bezierStyle'
+    | 'bezierCurve'
+    | 'bezierX1'
+    | 'bezierY1'
+    | 'bezierX2'
+    | 'bezierY2'
+    // Spring
+    | 'springCurve'
+    | 'springMass'
+    | 'springStiffness'
+    | 'springDamping'
+    // Bounce
+    | 'bounceCurve'
+    | 'bounceBounces'
+    | 'bounceDamping'
+    // Wiggle
+    | 'wiggleCurve'
+    | 'wiggleWiggles'
+    | 'wiggleDamping'
+    // Overshoot
+    | 'overshootStyle'
+    | 'overshootCurve'
+    | 'overshootMass'
+    | 'overshootDamping'
+  );
 
 export type EasingStateShare = Partial<Record<EasingStateShareKey, EasingStateValue>>;
 

@@ -1,4 +1,4 @@
-import type { Point } from '~/types';
+import type { Point } from '~/types/types';
 import type { BezierInput } from '~/validations';
 
 export const generateBezierSVGPath = ({ x1, y1, x2, y2 }: BezierInput) => {

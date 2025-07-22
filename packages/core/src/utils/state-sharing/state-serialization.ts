@@ -1,7 +1,13 @@
-import { bezierFunctions, bounceFunctions, overshootFunctions, springFunctions, wiggleFunctions } from '~/data';
+import {
+  bezierFunctions,
+  bounceFunctions,
+  overshootFunctions,
+  springFunctions,
+  wiggleFunctions,
+} from '~/data/easing-functions';
 import { restStateKeys } from '~/state';
-import type { EasingState, EasingStateShare, EasingStateShareKey } from '~/types';
-import { EasingType } from '~/types';
+import { EasingType } from '~/types/enums';
+import type { EasingState, EasingStateShare, EasingStateShareKey } from '~/types/types';
 import type { BezierInput } from '~/validations';
 import { createCubicBezierString, generateLinearEasing } from '../easing';
 import { isAnyDefined } from '../values';
