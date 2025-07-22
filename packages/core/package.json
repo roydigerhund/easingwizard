@@ -1,0 +1,35 @@
+{
+  "name": "easing-wizard-core",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Core easing curve calculation and generation utilities",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run clean && npm run build",
+    "generate": "pnpm generate:linear-easings && pnpm generate:preset-data",
+    "generate:linear-easings": "tsx ./scripts/generate-linear-easings.ts && prettier --write ./src/generated/linear-easings.ts",
+    "generate:preset-data": "tsx ./scripts/generate-preset-data.ts && prettier --write ./src/generated/preset-data.ts"
+  },
+  "dependencies": {
+    "zod": "^4.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.15",
+    "fs": "0.0.1-security",
+    "tsx": "^4.20.3"
+  }
+}

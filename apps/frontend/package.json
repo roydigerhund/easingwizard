@@ -1,7 +1,14 @@
 {
-  "name": "frontend",
+  "name": "easing-wizard-frontend",
   "private": true,
   "type": "module",
+  "exports": {
+    "./utils/*": "./app/utils/*.ts",
+    "./data/*": "./app/data/*.ts",
+    "./generated/*": "./app/generated/*",
+    "./validations/*": "./app/validations/*",
+    "./*": "./app/*"
+  },
   "scripts": {
     "build": "react-router build",
     "dev": "react-router dev",
@@ -27,7 +34,6 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vercel/react-router": "^1.1.2",
-    "fs": "0.0.1-security",
     "tailwindcss": "^4.1.11",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3",

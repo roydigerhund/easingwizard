@@ -1,5 +1,4 @@
 # dev
-.vercel/
 .yarn/
 !.yarn/releases
 .vscode/*
@@ -27,4 +26,5 @@ lerna-debug.log*
 
 # misc
 .DS_Store
-.vercel
+
+dist

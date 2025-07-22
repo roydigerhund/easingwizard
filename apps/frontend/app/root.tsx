@@ -2,7 +2,7 @@ import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration }
 
 import type React from 'react';
 import { description, productionOrigin, title } from './data/globals';
-import './app.css';
+import './css/app.css';
 import type { Route } from './+types/root';
 
 export const meta: Route.MetaFunction = () => {
