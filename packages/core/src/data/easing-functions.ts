@@ -1,12 +1,5 @@
-import {
-  BezierCurve,
-  BezierStyle,
-  BounceCurve,
-  OvershootCurve,
-  OvershootStyle,
-  SpringCurve,
-  WiggleCurve,
-} from '~/types';
+
+import type { BezierStyle, BezierCurve, SpringCurve, BounceCurve, WiggleCurve, OvershootCurve, OvershootStyle } from '~/types/enums';
 import type { BezierInput } from '~/validations';
 
 export const bezierEasings: Record<

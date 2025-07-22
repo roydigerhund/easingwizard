@@ -1,5 +1,5 @@
-import type { Point } from '~/types';
-import { EasingType, LinearEasingAccuracy, OvershootStyle } from '~/types';
+import { EasingType, LinearEasingAccuracy, OvershootStyle } from '~/types/enums';
+import type { Point } from '~/types/types';
 import type { BezierInput, BounceInput, OvershootInput, SpringInput, WiggleInput } from '~/validations';
 import { mapRange, roundTo } from './numbers';
 

@@ -1,11 +1,11 @@
+import { decodeState, encodeState } from 'easing-wizard-core';
 import { Hono } from 'hono';
 import { z } from 'zod/v4';
-import { getApiResponseFromInput, getApiResponseFromState } from 'easing-wizard-frontend/utils/api';
-import { rehydrateShareState } from 'easing-wizard-frontend/utils/state-sharing/state-serialization';
-import { decodeState, encodeState } from 'easing-wizard-frontend/utils/state-sharing/url-code';
-import { EasingTypeInputSchema } from 'easing-wizard-frontend/validations/easing.js';
-import { getEnv } from 'src/utils/env.js';
-import { API_VERSION } from 'src/data/globals.js';
+import { API_VERSION } from '~/data/globals.js';
+import { getEnv } from '~/utils/env.js';
+import { getApiResponseFromInput, getApiResponseFromState } from '../../../../frontend-old/app/utils/api.js';
+import { rehydrateShareState } from '../../../../frontend-old/app/utils/state-sharing/state-serialization.js';
+import { EasingTypeInputSchema } from '../../../../frontend-old/app/validations/easing.js';
 
 const app = new Hono();
 
@@ -37,11 +37,15 @@ app.get('/:id', async (c) => {
     if (error instanceof z.ZodError) {
       return c.json({ errors: error.issues }, 400);
     }
-    return c.json({
-      error: typeof error === 'object' && error && 'message' in error && typeof error.message === 'string'
-        ? error.message
-        : 'Invalid parameters'
-    }, 400);
+    return c.json(
+      {
+        error:
+          typeof error === 'object' && error && 'message' in error && typeof error.message === 'string'
+            ? error.message
+            : 'Invalid parameters',
+      },
+      400,
+    );
   }
 });
 
@@ -74,11 +78,15 @@ app.post('/:type', async (c) => {
     if (error instanceof z.ZodError) {
       return c.json({ errors: error.issues }, 400);
     }
-    return c.json({
-      error: typeof error === 'object' && error && 'message' in error && typeof error.message === 'string'
-        ? error.message
-        : 'Invalid parameters'
-    }, 400);
+    return c.json(
+      {
+        error:
+          typeof error === 'object' && error && 'message' in error && typeof error.message === 'string'
+            ? error.message
+            : 'Invalid parameters',
+      },
+      400,
+    );
   }
 });
 

@@ -34,7 +34,6 @@
     "allowImportingTsExtensions": false,
     
     // Path mapping
-    "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"]
     }
@@ -48,5 +47,13 @@
     "**/*.test.ts",
     "**/*.spec.ts",
     "scripts/**/*"
-  ]
+  ],
+  "tsc-alias": {
+    "verbose": false,
+    "resolveFullPaths": true,
+    "fileExtensions": {
+      "inputGlob": "{js,jsx,mjs}",
+      "outputCheck": ["js", "json", "jsx", "mjs"]
+    }
+  }
 }
