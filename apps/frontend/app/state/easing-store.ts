@@ -34,8 +34,7 @@ export const useEasingStore = create<EasingState & EasingAction>((set, get) => (
   },
   setState: (state: Partial<EasingState>) => set(state),
   getCurrentState: () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { setEasingType, setState, getCurrentState, ...rest } = get();
+    const { setEasingType: _t, setState: _s, getCurrentState: _c, ...rest } = get();
     return rest as EasingState;
   },
 }));
