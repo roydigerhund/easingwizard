@@ -10,3 +10,12 @@ export const humanize = (value?: string) =>
           (match, group) => (match.length > 1 ? " " : "") + group.toUpperCase(),
         )
         .replace(/([a-z])(?=[A-Z])/g, "$1 ");
+
+
+export const toScreamingSnakeCase = (value?: string) =>
+  isNil(value)
+    ? ""
+    : value
+        .replace(/([a-z])([A-Z])/g, "$1_$2")
+        .replace(/[- ]/g, "_")
+        .toUpperCase();

@@ -111,7 +111,9 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
           <div
             className={classNames(
               'rounded-xl border border-grdt-to',
-              [AnimationType.ROTATE_X, AnimationType.ROTATE_Y].includes(previewAnimationType) ? 'size-3/6' : 'size-1/4',
+              ([AnimationType.ROTATE_X, AnimationType.ROTATE_Y] as string[]).includes(previewAnimationType)
+                ? 'size-3/6'
+                : 'size-1/4',
             )}
             style={animationStyles('linear')}
           />

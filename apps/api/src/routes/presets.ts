@@ -1,38 +1,29 @@
 import {
+  API_VERSION,
   EasingType,
-  EasingTypeInputSchema,
+  EasingTypeSchema,
   getAllPresets,
   getBezierPresets,
   getBouncePresets,
   getOvershootPresets,
   getSpringPresets,
   getWigglePresets,
+  PresetSchema,
+  type EasingTypeKey,
+  type PresetsResponse,
 } from 'easing-wizard-core';
 import { Hono } from 'hono';
 import { z } from 'zod/v4';
-import { API_VERSION } from '~/data/globals';
 import { getEnv } from '~/utils/env';
 
 const app = new Hono();
 
-type PresetData = {
-  id: string;
-  type: string;
-  style?: string;
-  curve?: string;
-  params: unknown;
-  output: {
-    css: string;
-    tailwind_css: string;
-    svg_path?: string;
-    svg_polyline?: string;
-  };
-};
-
 const frontendUrl = getEnv().FRONTEND_URL;
 
+type Preset = z.infer<typeof PresetSchema>;
+
 // Enhanced preset data with API links
-const enhancePresetWithApiData = (preset: PresetData) => ({
+const enhancePresetWithApiData = (preset: Preset) => ({
   ...preset,
   links: {
     self: `${API_VERSION}/curves/${preset.id}`,
@@ -55,7 +46,7 @@ const createVersion = async (data: unknown) => {
   return hashHex.slice(0, 8);
 };
 
-const getPresetsByType = (type?: EasingType) => {
+const getPresetsByType = (type?: EasingTypeKey) => {
   if (!type) return allPresets;
 
   switch (type) {
@@ -76,19 +67,19 @@ app.get('/', async (c) => {
   const typeSearchParam = c.req.query('type');
 
   try {
-    const type = typeSearchParam ? EasingTypeInputSchema.parse(typeSearchParam) : undefined;
+    const type = EasingTypeSchema.optional().parse(typeSearchParam);
     const presets = getPresetsByType(type);
 
     // Create version asynchronously
     const version = await createVersion(allPresets);
 
-    return c.json({
+    return c.json<PresetsResponse>({
       version,
       presets,
       // HATEOAS
       links: {
-        create: `${API_VERSION}/presets${type ? `?type=${type}` : ''}`,
-        filter: '/v1/presets{?type}', // RFC 6570 URI-Template
+        self: `${API_VERSION}/presets${type ? `?type=${type}` : ''}`,
+        filter: `/${API_VERSION}/presets{?type}`, // RFC 6570 URI-Template
       },
     });
   } catch (error) {

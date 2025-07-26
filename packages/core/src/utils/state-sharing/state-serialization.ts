@@ -6,9 +6,9 @@ import {
   wiggleFunctions,
 } from '~/data/easing-functions';
 import { restStateKeys } from '~/state';
-import { EasingType } from '~/types/enums';
+import { EasingType, type EasingTypeKey } from '~/types/enums';
 import type { EasingState, EasingStateShare, EasingStateShareKey } from '~/types/types';
-import type { BezierInput } from '~/validations';
+import type { BezierInput } from '~/validations/input';
 import { createCubicBezierString, generateLinearEasing } from '../easing';
 import { isAnyDefined } from '../values';
 import { DEFAULTS_V0 } from './v0';
@@ -90,7 +90,7 @@ export function rehydrateShareState(state: EasingStateShare, version: number = 0
   const base = getDefaults(version);
   const fullState = { ...base, ...state } as EasingState;
 
-  const easingType = (state.easingType || base.easingType) as EasingType;
+  const easingType = (state.easingType || base.easingType) as EasingTypeKey;
 
   switch (easingType) {
     case EasingType.BEZIER: {

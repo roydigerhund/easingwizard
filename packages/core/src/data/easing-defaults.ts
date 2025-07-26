@@ -4,7 +4,16 @@ import {
   springCalculations,
   wiggleCalculations,
 } from '~/generated/linear-easings';
-import type { BezierInput } from '~/validations';
+import {
+  BezierCurve,
+  BezierStyle,
+  BounceCurve,
+  OvershootCurve,
+  OvershootStyle,
+  SpringCurve,
+  WiggleCurve,
+} from '~/types/enums';
+import type { BezierInput } from '~/validations/input';
 import {
   bezierFunctions,
   bounceFunctions,
@@ -12,7 +21,6 @@ import {
   springFunctions,
   wiggleFunctions,
 } from './easing-functions';
-import { BezierStyle, BezierCurve, SpringCurve, BounceCurve, WiggleCurve, OvershootStyle, OvershootCurve } from '~/types/enums';
 
 export const defaultBezierStyle = BezierStyle.IN_OUT;
 export const defaultBezierCurve = BezierCurve.CUBIC;

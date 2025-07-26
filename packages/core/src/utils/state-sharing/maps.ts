@@ -10,6 +10,17 @@ import {
   PreviewPlayMode,
   SpringCurve,
   WiggleCurve,
+  type AnimationTypeKey,
+  type BezierCurveKey,
+  type BezierStyleKey,
+  type BounceCurveKey,
+  type EasingTypeKey,
+  type LinearEasingAccuracyKey,
+  type OvershootCurveKey,
+  type OvershootStyleKey,
+  type PreviewPlayModeKey,
+  type SpringCurveKey,
+  type WiggleCurveKey,
 } from '~/types/enums';
 import type { EasingState, EasingStateShareKey } from '~/types/types';
 
@@ -52,7 +63,7 @@ export const REVERSE_MINI_MAP: Record<string, EasingStateShareKey> = Object.from
   Object.entries(MINI_MAP).map(([key, value]) => [value, key as EasingStateShareKey]),
 );
 
-export const EASING_TYPE_IDX: Record<EasingType, number> = {
+export const EASING_TYPE_IDX: Record<EasingTypeKey, number> = {
   [EasingType.BEZIER]: 0,
   [EasingType.SPRING]: 1,
   [EasingType.BOUNCE]: 2,
@@ -60,14 +71,14 @@ export const EASING_TYPE_IDX: Record<EasingType, number> = {
   [EasingType.OVERSHOOT]: 4,
 };
 
-export const BEZIER_STYLE_IDX: Record<BezierStyle, number> = {
+export const BEZIER_STYLE_IDX: Record<BezierStyleKey, number> = {
   [BezierStyle.IN]: 0,
   [BezierStyle.OUT]: 1,
   [BezierStyle.IN_OUT]: 2,
   [BezierStyle.OUT_IN]: 3,
 };
 
-export const BEZIER_CURVE_IDX: Record<BezierCurve, number> = {
+export const BEZIER_CURVE_IDX: Record<BezierCurveKey, number> = {
   [BezierCurve.SINE]: 0,
   [BezierCurve.QUAD]: 1,
   [BezierCurve.CUBIC]: 2,
@@ -80,7 +91,7 @@ export const BEZIER_CURVE_IDX: Record<BezierCurve, number> = {
   [BezierCurve.ANTICIPATE]: 9,
 };
 
-export const SPRING_CURVE_IDX: Record<SpringCurve, number> = {
+export const SPRING_CURVE_IDX: Record<SpringCurveKey, number> = {
   [SpringCurve.HEAVY]: 0,
   [SpringCurve.BOUNCY]: 1,
   [SpringCurve.DROP]: 2,
@@ -90,7 +101,7 @@ export const SPRING_CURVE_IDX: Record<SpringCurve, number> = {
   [SpringCurve.ELASTIC]: 6,
 };
 
-export const BOUNCE_CURVE_IDX: Record<BounceCurve, number> = {
+export const BOUNCE_CURVE_IDX: Record<BounceCurveKey, number> = {
   [BounceCurve.FIRM]: 0,
   [BounceCurve.SOFT]: 1,
   [BounceCurve.SHARP]: 2,
@@ -99,7 +110,7 @@ export const BOUNCE_CURVE_IDX: Record<BounceCurve, number> = {
   [BounceCurve.SPRINGY]: 5,
 };
 
-export const WIGGLE_CURVE_IDX: Record<WiggleCurve, number> = {
+export const WIGGLE_CURVE_IDX: Record<WiggleCurveKey, number> = {
   [WiggleCurve.SUBTLE]: 0,
   [WiggleCurve.ENERGETIC]: 1,
   [WiggleCurve.PLAYFUL]: 2,
@@ -109,13 +120,13 @@ export const WIGGLE_CURVE_IDX: Record<WiggleCurve, number> = {
   [WiggleCurve.DYNAMIC]: 6,
 };
 
-export const OVERSHOOT_STYLE_IDX: Record<OvershootStyle, number> = {
+export const OVERSHOOT_STYLE_IDX: Record<OvershootStyleKey, number> = {
   [OvershootStyle.IN]: 0,
   [OvershootStyle.OUT]: 1,
   [OvershootStyle.IN_OUT]: 2,
 };
 
-export const OVERSHOOT_CURVE_IDX: Record<OvershootCurve, number> = {
+export const OVERSHOOT_CURVE_IDX: Record<OvershootCurveKey, number> = {
   [OvershootCurve.SOFT]: 0,
   [OvershootCurve.FIRM]: 1,
   [OvershootCurve.SMOOTH]: 2,
@@ -123,7 +134,7 @@ export const OVERSHOOT_CURVE_IDX: Record<OvershootCurve, number> = {
   [OvershootCurve.DRAMATIC]: 4,
 };
 
-export const ANIMATION_TYPE_IDX: Record<AnimationType, number> = {
+export const ANIMATION_TYPE_IDX: Record<AnimationTypeKey, number> = {
   [AnimationType.MOVE_X]: 0,
   [AnimationType.MOVE_Y]: 1,
   [AnimationType.WIDTH]: 2,
@@ -136,12 +147,12 @@ export const ANIMATION_TYPE_IDX: Record<AnimationType, number> = {
   [AnimationType.SHAPE]: 9,
 };
 
-export const PREVIEW_PLAY_MODE_IDX: Record<PreviewPlayMode, number> = {
+export const PREVIEW_PLAY_MODE_IDX: Record<PreviewPlayModeKey, number> = {
   [PreviewPlayMode.INFINITE]: 0,
   [PreviewPlayMode.ONCE]: 1,
 };
 
-export const LINEAR_EASING_ACCURACY_IDX: Record<LinearEasingAccuracy, number> = {
+export const LINEAR_EASING_ACCURACY_IDX: Record<LinearEasingAccuracyKey, number> = {
   [LinearEasingAccuracy.LOW]: 0,
   [LinearEasingAccuracy.MEDIUM]: 1,
   [LinearEasingAccuracy.HIGH]: 2,

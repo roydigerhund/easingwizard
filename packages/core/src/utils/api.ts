@@ -1,4 +1,4 @@
-import { EasingType } from '~/types/enums';
+import { EasingType, type EasingTypeKey } from '~/types/enums';
 import type { EasingState, EasingStateShare } from '~/types/types';
 import {
   BezierInputSchema,
@@ -6,7 +6,7 @@ import {
   OvershootInputSchema,
   SpringInputSchema,
   WiggleInputSchema,
-} from '~/validations';
+} from '~/validations/input';
 import { createCubicBezierString, cssStringToTailwind, generateLinearEasing } from './easing';
 import {
   generateBezierSVGPath,
@@ -108,7 +108,7 @@ export function getApiResponseFromState(state: EasingState): ApiResponse {
 }
 
 export function getApiResponseFromInput(
-  type: EasingType,
+  type: EasingTypeKey,
   config: unknown,
 ): ApiResponse & { shareState: EasingStateShare } {
   switch (type) {

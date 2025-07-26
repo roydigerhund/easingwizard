@@ -1,3 +1,7 @@
+CHECK LEGACY SHARING CODE BECAUSE OF NEW ENUMS
+
+- damped outIn for bezier
+
 - move bezier can still break on touch
 - test mix of , and . in numbers
 
