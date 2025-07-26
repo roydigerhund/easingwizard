@@ -1,4 +1,4 @@
-import { AnimationType, EasingType, humanize, PreviewPlayMode } from 'easing-wizard-core';
+import { AnimationType, EasingType, humanize, PreviewPlayMode, type AnimationTypeKey } from 'easing-wizard-core';
 import { useEffect, useState } from 'react';
 import { useEasingStore } from '~/state/easing-store';
 import CardHeadline from './CardHeadline';
@@ -136,7 +136,7 @@ export default function EasingPreview() {
   );
 }
 
-const icons: Record<AnimationType, React.ReactNode> = {
+const icons: Record<AnimationTypeKey, React.ReactNode> = {
   [AnimationType.MOVE_X]: <MoveXIcon className="size-7" />,
   [AnimationType.MOVE_Y]: <MoveYIcon className="size-7" />,
   [AnimationType.WIDTH]: <WidthIcon className="size-7" />,

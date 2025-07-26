@@ -1,10 +1,8 @@
 import {
   BezierCurve,
   bezierFunctions,
-  BezierStyle,
   bezierStyleFunctions,
   bounceCalculations,
-  BounceCurve,
   bounceFunctions,
   createCubicBezierString,
   defaultOvershootCurve,
@@ -14,15 +12,18 @@ import {
   isBezierStyle,
   isOvershootStyle,
   overshootCalculations,
-  OvershootCurve,
   overshootFunctions,
-  OvershootStyle,
   springCalculations,
-  SpringCurve,
   springFunctions,
   wiggleCalculations,
-  WiggleCurve,
   wiggleFunctions,
+  type BezierCurveKey,
+  type BezierStyleKey,
+  type BounceCurveKey,
+  type OvershootCurveKey,
+  type OvershootStyleKey,
+  type SpringCurveKey,
+  type WiggleCurveKey,
 } from 'easing-wizard-core';
 import { useEasingStore } from '~/state/easing-store';
 import CardHeadline from './CardHeadline';
@@ -45,7 +46,7 @@ export default function EasingSelection() {
   const overshootCurve = useEasingStore((state) => state.overshootCurve);
   const setState = useEasingStore((state) => state.setState);
 
-  const onBezierValueChange = (style: BezierStyle, curve: BezierCurve) => {
+  const onBezierValueChange = (style: BezierStyleKey, curve: BezierCurveKey) => {
     const value = bezierFunctions[style][curve]!;
     setState({
       bezierX1: value.x1,
@@ -61,7 +62,7 @@ export default function EasingSelection() {
     });
   };
 
-  const onSpringValueChange = (curve: SpringCurve) => {
+  const onSpringValueChange = (curve: SpringCurveKey) => {
     const { easingValue, sampledPoints } = generateLinearEasing({
       type: EasingType.SPRING,
       accuracy: editorAccuracy,
@@ -78,7 +79,7 @@ export default function EasingSelection() {
     });
   };
 
-  const onBounceValueChange = (curve: BounceCurve) => {
+  const onBounceValueChange = (curve: BounceCurveKey) => {
     const { easingValue, sampledPoints } = generateLinearEasing({
       type: EasingType.BOUNCE,
       accuracy: editorAccuracy,
@@ -94,7 +95,7 @@ export default function EasingSelection() {
     });
   };
 
-  const onWiggleValueChange = (curve: WiggleCurve) => {
+  const onWiggleValueChange = (curve: WiggleCurveKey) => {
     const { easingValue, sampledPoints } = generateLinearEasing({
       type: EasingType.WIGGLE,
       accuracy: editorAccuracy,
@@ -110,7 +111,7 @@ export default function EasingSelection() {
     });
   };
 
-  const onOvershootValueChange = (style: OvershootStyle, curve?: OvershootCurve) => {
+  const onOvershootValueChange = (style: OvershootStyleKey, curve?: OvershootCurveKey) => {
     const { easingValue, sampledPoints } = generateLinearEasing({
       type: EasingType.OVERSHOOT,
       accuracy: editorAccuracy,
@@ -181,7 +182,7 @@ export default function EasingSelection() {
             <CurveIconTextButton
               key={curve}
               isActive={!bezierIsCustom && bezierCurve === curve}
-              onClick={() => onBezierValueChange(bezierStyle, curve as BezierCurve)}
+              onClick={() => onBezierValueChange(bezierStyle, curve as BezierCurveKey)}
               text={humanize(curve)}
               icon={
                 <path
@@ -231,11 +232,11 @@ export default function EasingSelection() {
             <CurveIconTextButton
               key={curve}
               isActive={!springIsCustom && springCurve === curve}
-              onClick={() => onSpringValueChange(curve as SpringCurve)}
+              onClick={() => onSpringValueChange(curve as SpringCurveKey)}
               text={humanize(curve)}
               icon={
                 <polyline
-                  points={springCalculations[curve as SpringCurve].sampledPoints
+                  points={springCalculations[curve as SpringCurveKey].sampledPoints
                     .map((point) => `${point.x},${point.y / 2 + 50}`)
                     .join(' ')}
                 />
@@ -250,11 +251,11 @@ export default function EasingSelection() {
             <CurveIconTextButton
               key={curve}
               isActive={!bounceIsCustom && bounceCurve === curve}
-              onClick={() => onBounceValueChange(curve as BounceCurve)}
+              onClick={() => onBounceValueChange(curve as BounceCurveKey)}
               text={humanize(curve)}
               icon={
                 <polyline
-                  points={bounceCalculations[curve as BounceCurve].sampledPoints
+                  points={bounceCalculations[curve as BounceCurveKey].sampledPoints
                     .map((point) => `${point.x},${100 - point.y}`)
                     .join(' ')}
                 />
@@ -269,11 +270,11 @@ export default function EasingSelection() {
             <CurveIconTextButton
               key={curve}
               isActive={!wiggleIsCustom && wiggleCurve === curve}
-              onClick={() => onWiggleValueChange(curve as WiggleCurve)}
+              onClick={() => onWiggleValueChange(curve as WiggleCurveKey)}
               text={humanize(curve)}
               icon={
                 <polyline
-                  points={wiggleCalculations[curve as WiggleCurve].sampledPoints
+                  points={wiggleCalculations[curve as WiggleCurveKey].sampledPoints
                     .map((point) => `${point.x},${point.y / 2}`)
                     .join(' ')}
                 />
@@ -288,11 +289,11 @@ export default function EasingSelection() {
             <CurveIconTextButton
               key={curve}
               isActive={!overshootIsCustom && overshootCurve === curve}
-              onClick={() => onOvershootValueChange(overshootStyle, curve as OvershootCurve)}
+              onClick={() => onOvershootValueChange(overshootStyle, curve as OvershootCurveKey)}
               text={humanize(curve)}
               icon={
                 <polyline
-                  points={overshootCalculations[overshootStyle][curve as OvershootCurve].sampledPoints
+                  points={overshootCalculations[overshootStyle][curve as OvershootCurveKey].sampledPoints
                     .map((point) => `${point.x},${point.y / 2 + 25}`)
                     .join(' ')}
                 />

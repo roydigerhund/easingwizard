@@ -2,16 +2,47 @@ import { z } from 'zod/v4';
 import { EasingType, LinearEasingAccuracy, OvershootStyle } from '~/types/enums';
 import { roundTo } from '~/utils/numbers';
 
-export const EasingTypeInputSchema = z.enum(EasingType).meta({
-  id: 'EasingType',
+export const EasingTypeSchema = z.enum(EasingType).meta({
+  id: 'EasingTypeInput',
   description: 'Type of easing function',
   example: 'bezier',
 });
 
-export const LinearAccuracyInputSchema = z.enum(LinearEasingAccuracy).meta({
+export const LinearAccuracySchema = z.enum(LinearEasingAccuracy).meta({
+  id: 'LinearAccuracyInput',
   description: 'Accuracy level for the linear easing approximation',
   example: 'high',
 });
+
+const dampingFactorSchema = z
+  .number()
+  .min(0)
+  .max(100)
+  .transform((val) => roundTo(val, 0))
+  .meta({
+    description: 'Damping (0-100)',
+    example: 50,
+  });
+
+const stiffnessFactorSchema = z
+  .number()
+  .min(0)
+  .max(100)
+  .transform((val) => roundTo(val, 0))
+  .meta({
+    description: 'Stiffness (0-100)',
+    example: 50,
+  });
+
+const massFactorSchema = z
+  .number()
+  .min(1)
+  .max(5)
+  .transform((val) => roundTo(val, 1))
+  .meta({
+    description: 'Mass (1-5)',
+    example: 2.5,
+  });
 
 export const BezierInputSchema = z
   .object({
@@ -54,41 +85,17 @@ export const BezierInputSchema = z
   })
   .meta({
     id: 'BezierInput',
-    description: 'Bezier curve configuration with two control points',
+    description: 'Bezier curve configuration',
   });
 
 export type BezierInput = z.infer<typeof BezierInputSchema>;
 
 export const SpringInputSchema = z
   .object({
-    mass: z
-      .number()
-      .min(1)
-      .max(5)
-      .transform((val) => roundTo(val, 1))
-      .meta({
-        description: 'Mass of the spring (1-5)',
-        example: 1.5,
-      }),
-    stiffness: z
-      .number()
-      .min(0)
-      .max(100)
-      .transform((val) => roundTo(val, 0))
-      .meta({
-        description: 'Stiffness of the spring (0-100)',
-        example: 80,
-      }),
-    damping: z
-      .number()
-      .min(0)
-      .max(100)
-      .transform((val) => roundTo(val, 0))
-      .meta({
-        description: 'Damping factor of the spring (0-100)',
-        example: 10,
-      }),
-    accuracy: LinearAccuracyInputSchema,
+    mass: massFactorSchema,
+    stiffness: stiffnessFactorSchema,
+    damping: dampingFactorSchema,
+    accuracy: LinearAccuracySchema,
   })
   .meta({
     id: 'SpringInput',
@@ -108,16 +115,8 @@ export const BounceInputSchema = z
         description: 'Number of bounces (1-10)',
         example: 3,
       }),
-    damping: z
-      .number()
-      .min(0)
-      .max(100)
-      .transform((val) => roundTo(val, 1))
-      .meta({
-        description: 'Damping factor for bounce decay (0-100)',
-        example: 2.5,
-      }),
-    accuracy: LinearAccuracyInputSchema,
+    damping: dampingFactorSchema,
+    accuracy: LinearAccuracySchema,
   })
   .meta({
     id: 'BounceInput',
@@ -137,16 +136,8 @@ export const WiggleInputSchema = z
         description: 'Number of wiggle oscillations (1-10)',
         example: 5,
       }),
-    damping: z
-      .number()
-      .min(0)
-      .max(100)
-      .transform((val) => roundTo(val, 1))
-      .meta({
-        description: 'Damping factor for wiggle decay (0-100)',
-        example: 15.5,
-      }),
-    accuracy: LinearAccuracyInputSchema,
+    damping: dampingFactorSchema,
+    accuracy: LinearAccuracySchema,
   })
   .meta({
     id: 'WiggleInput',
@@ -155,31 +146,22 @@ export const WiggleInputSchema = z
 
 export type WiggleInput = z.infer<typeof WiggleInputSchema>;
 
+export const OvershootStyleK = {
+  IN: 'in',
+  OUT: 'out',
+  IN_OUT: 'inOut',
+} as const;
+
+
 export const OvershootInputSchema = z
   .object({
     style: z.enum(OvershootStyle).meta({
       description: 'Style of overshoot animation',
       example: 'out',
     }),
-    mass: z
-      .number()
-      .min(1)
-      .max(5)
-      .transform((val) => roundTo(val, 1))
-      .meta({
-        description: 'Mass factor (1-5)',
-        example: 2.5,
-      }),
-    damping: z
-      .number()
-      .min(0)
-      .max(100)
-      .transform((val) => roundTo(val, 0))
-      .meta({
-        description: 'Damping factor (0-100)',
-        example: 50,
-      }),
-    accuracy: LinearAccuracyInputSchema,
+    mass: massFactorSchema,
+    damping: dampingFactorSchema,
+    accuracy: LinearAccuracySchema,
   })
   .meta({
     id: 'OvershootInput',

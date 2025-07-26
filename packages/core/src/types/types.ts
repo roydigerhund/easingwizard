@@ -1,15 +1,15 @@
-import type { BezierInput, BounceInput, OvershootInput, SpringInput, WiggleInput } from '~/validations';
+import type { BezierInput, BounceInput, OvershootInput, SpringInput, WiggleInput } from '~/validations/input';
 import type {
-  AnimationType,
-  BezierCurve,
-  BezierStyle,
-  BounceCurve,
-  EasingType,
-  LinearEasingAccuracy,
-  OvershootCurve,
-  PreviewPlayMode,
-  SpringCurve,
-  WiggleCurve,
+  AnimationTypeKey,
+  BezierCurveKey,
+  BezierStyleKey,
+  BounceCurveKey,
+  EasingTypeKey,
+  LinearEasingAccuracyKey,
+  OvershootCurveKey,
+  PreviewPlayModeKey,
+  SpringCurveKey,
+  WiggleCurveKey,
 } from './enums';
 
 export type Point = {
@@ -60,10 +60,10 @@ export type EasingStateBlock<Prefix extends string> = {
 
 export type EasingState = {
   // General
-  easingType: EasingType;
+  easingType: EasingTypeKey;
   // Bezier
-  bezierStyle: BezierStyle;
-  bezierCurve: BezierCurve;
+  bezierStyle: BezierStyleKey;
+  bezierCurve: BezierCurveKey;
   bezierX1: BezierInput['x1'];
   bezierY1: BezierInput['y1'];
   bezierX2: BezierInput['x2'];
@@ -71,7 +71,7 @@ export type EasingState = {
   bezierValue: string;
   bezierIsCustom: boolean;
   // Spring
-  springCurve: SpringCurve;
+  springCurve: SpringCurveKey;
   springMass: SpringInput['mass'];
   springStiffness: SpringInput['stiffness'];
   springDamping: SpringInput['damping'];
@@ -79,14 +79,14 @@ export type EasingState = {
   springPoints: Point[];
   springIsCustom: boolean;
   // Bounce
-  bounceCurve: BounceCurve;
+  bounceCurve: BounceCurveKey;
   bounceBounces: BounceInput['bounces'];
   bounceDamping: BounceInput['damping'];
   bounceValue: string;
   bouncePoints: Point[];
   bounceIsCustom: boolean;
   // Wiggle
-  wiggleCurve: WiggleCurve;
+  wiggleCurve: WiggleCurveKey;
   wiggleWiggles: WiggleInput['wiggles'];
   wiggleDamping: WiggleInput['damping'];
   wiggleValue: string;
@@ -94,7 +94,7 @@ export type EasingState = {
   wiggleIsCustom: boolean;
   // Overeshoot
   overshootStyle: OvershootInput['style'];
-  overshootCurve: OvershootCurve;
+  overshootCurve: OvershootCurveKey;
   overshootMass: OvershootInput['mass'];
   overshootDamping: OvershootInput['damping'];
   overshootValue: string;
@@ -102,13 +102,13 @@ export type EasingState = {
   overshootIsCustom: boolean;
   // Preview
   previewDuration: number;
-  previewPlayMode: PreviewPlayMode;
-  previewAnimationType: AnimationType;
+  previewPlayMode: PreviewPlayModeKey;
+  previewAnimationType: AnimationTypeKey;
   previewShowLinear: boolean;
   // Editor
   editorExtraSpaceTop: boolean;
   editorExtraSpaceBottom: boolean;
-  editorAccuracy: LinearEasingAccuracy;
+  editorAccuracy: LinearEasingAccuracyKey;
   // Easter Egg
   foundEasterEgg: boolean;
 };

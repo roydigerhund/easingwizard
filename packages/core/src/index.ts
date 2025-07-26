@@ -1,6 +1,7 @@
 // DATA
 export * from './data/easing-defaults';
 export * from './data/easing-functions';
+export * from './data/globals';
 
 // GENERATED
 export * from './generated/linear-easings';
@@ -32,4 +33,6 @@ export * from './utils/svg';
 export * from './utils/values';
 
 // VALIDATIONS
-export * from './validations';
+export * from './validations/input';
+export * from './validations/preset';
+export * from './validations/response';

@@ -1,95 +1,106 @@
-export enum EasingType {
-  BEZIER = 'bezier',
-  SPRING = 'spring',
-  BOUNCE = 'bounce',
-  WIGGLE = 'wiggle',
-  OVERSHOOT = 'overshoot',
-}
+export const EasingType = {
+  BEZIER: 'BEZIER',
+  SPRING: 'SPRING',
+  BOUNCE: 'BOUNCE',
+  WIGGLE: 'WIGGLE',
+  OVERSHOOT: 'OVERSHOOT',
+} as const;
+export type EasingTypeKey = keyof typeof EasingType;
 
-export enum BezierStyle {
-  IN = 'in',
-  OUT = 'out',
-  IN_OUT = 'inOut',
-  OUT_IN = 'outIn',
-}
+export const BezierStyle = {
+  IN: 'IN',
+  OUT: 'OUT',
+  IN_OUT: 'IN_OUT',
+  OUT_IN: 'OUT_IN',
+} as const;
+export type BezierStyleKey = keyof typeof BezierStyle;
 
-export enum BezierCurve {
-  SINE = 'sine',
-  QUAD = 'quad',
-  CUBIC = 'cubic',
-  QUART = 'quart',
-  QUINT = 'quint',
-  EXPO = 'expo',
-  CIRC = 'circ',
-  BACK = 'back',
-  JUMP = 'jump',
-  ANTICIPATE = 'anticipate',
-}
+export const BezierCurve = {
+  SINE: 'SINE',
+  QUAD: 'QUAD',
+  CUBIC: 'CUBIC',
+  QUART: 'QUART',
+  QUINT: 'QUINT',
+  EXPO: 'EXPO',
+  CIRC: 'CIRC',
+  BACK: 'BACK',
+  JUMP: 'JUMP',
+  ANTICIPATE: 'ANTICIPATE',
+} as const;
+export type BezierCurveKey = keyof typeof BezierCurve;
 
-export enum OvershootStyle {
-  IN = 'in',
-  OUT = 'out',
-  IN_OUT = 'inOut',
-}
+export const OvershootStyle = {
+  IN: 'IN',
+  OUT: 'OUT',
+  IN_OUT: 'IN_OUT',
+} as const;
+export type OvershootStyleKey = keyof typeof OvershootStyle;
 
-export enum SpringCurve {
-  HEAVY = 'heavy',
-  BOUNCY = 'bouncy',
-  DROP = 'drop',
-  GLIDE = 'glide',
-  SNAP = 'snap',
-  LAZY = 'lazy',
-  ELASTIC = 'elastic',
-}
+export const SpringCurve = {
+  HEAVY: 'HEAVY',
+  BOUNCY: 'BOUNCY',
+  DROP: 'DROP',
+  GLIDE: 'GLIDE',
+  SNAP: 'SNAP',
+  LAZY: 'LAZY',
+  ELASTIC: 'ELASTIC',
+} as const;
+export type SpringCurveKey = keyof typeof SpringCurve;
 
-export enum BounceCurve {
-  FIRM = 'firm',
-  SOFT = 'soft',
-  SHARP = 'sharp',
-  SUBTLE = 'subtle',
-  PLAYFUL = 'playful',
-  SPRINGY = 'springy',
-}
+export const BounceCurve = {
+  FIRM: 'FIRM',
+  SOFT: 'SOFT',
+  SHARP: 'SHARP',
+  SUBTLE: 'SUBTLE',
+  PLAYFUL: 'PLAYFUL',
+  SPRINGY: 'SPRINGY',
+} as const;
+export type BounceCurveKey = keyof typeof BounceCurve;
 
-export enum WiggleCurve {
-  SUBTLE = 'subtle',
-  ENERGETIC = 'energetic',
-  PLAYFUL = 'playful',
-  SHARP = 'sharp',
-  SMOOTH = 'smooth',
-  INTENSE = 'intense',
-  DYNAMIC = 'dynamic',
-}
+export const WiggleCurve = {
+  SUBTLE: 'SUBTLE',
+  ENERGETIC: 'ENERGETIC',
+  PLAYFUL: 'PLAYFUL',
+  SHARP: 'SHARP',
+  SMOOTH: 'SMOOTH',
+  INTENSE: 'INTENSE',
+  DYNAMIC: 'DYNAMIC',
+} as const;
+export type WiggleCurveKey = keyof typeof WiggleCurve;
 
-export enum OvershootCurve {
-  SOFT = 'soft',
-  FIRM = 'firm',
-  SMOOTH = 'smooth',
-  DYNAMIC = 'dynamic',
-  DRAMATIC = 'dramatic',
-}
+export const OvershootCurve = {
+  SOFT: 'SOFT',
+  FIRM: 'FIRM',
+  SMOOTH: 'SMOOTH',
+  DYNAMIC: 'DYNAMIC',
+  DRAMATIC: 'DRAMATIC',
+} as const;
+export type OvershootCurveKey = keyof typeof OvershootCurve;
 
-export enum AnimationType {
-  MOVE_X = 'moveX',
-  MOVE_Y = 'moveY',
-  WIDTH = 'width',
-  HEIGHT = 'height',
-  SCALE = 'scale',
-  ROTATE = 'rotate',
-  OPACITY = 'opacity',
-  ROTATE_X = 'rotateX',
-  ROTATE_Y = 'rotateY',
-  SHAPE = 'shape',
-}
+export const AnimationType = {
+  MOVE_X: 'MOVE_X',
+  MOVE_Y: 'MOVE_Y',
+  WIDTH: 'WIDTH',
+  HEIGHT: 'HEIGHT',
+  SCALE: 'SCALE',
+  ROTATE: 'ROTATE',
+  OPACITY: 'OPACITY',
+  ROTATE_X: 'ROTATE_X',
+  ROTATE_Y: 'ROTATE_Y',
+  SHAPE: 'SHAPE',
+} as const;
+export type AnimationTypeKey = keyof typeof AnimationType;
 
-export enum PreviewPlayMode {
-  INFINITE = 'infinite',
-  ONCE = 'once',
-}
+export const PreviewPlayMode = {
+  INFINITE: 'INFINITE',
+  ONCE: 'ONCE',
+} as const;
+export type PreviewPlayModeKey = keyof typeof PreviewPlayMode;
 
-export enum LinearEasingAccuracy {
-  LOW = 'low',
-  MEDIUM = 'medium',
-  HIGH = 'high',
-  ULTRA = 'ultra',
-}
+export const LinearEasingAccuracy = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  ULTRA: 'ULTRA',
+} as const;
+export type LinearEasingAccuracyKey = keyof typeof LinearEasingAccuracy;

@@ -1,28 +1,29 @@
 import { serve } from '@hono/node-server';
+import { Scalar } from '@scalar/hono-api-reference';
 import 'dotenv/config';
 import { Hono } from 'hono';
 import curves from './routes/curves';
+import openapi from './routes/openapi';
 import presets from './routes/presets';
+import { API_VERSION } from 'easing-wizard-core';
 
-const app = new Hono().basePath('/v1');
+const app = new Hono().basePath(`/${API_VERSION}`);
 
 app.get('/', (c) => {
   return c.json({ message: 'Welcome to the Easing Wizard API!' });
 });
 
-// Your API endpoints
 app.get('/healthz', (c) => {
   return c.json({ status: 'ok' });
 });
 
-// Your API endpoints
 app.route('/curves', curves);
 
-app.get('/curves/spring', (c) => {
-  return c.json({ type: 'spring', message: 'Spring curves endpoint' });
-});
-
 app.route('/presets', presets);
+
+app.route('/openapi', openapi);
+
+app.get('/docs', Scalar({ url: `/${API_VERSION}/openapi` }));
 
 serve(
   {

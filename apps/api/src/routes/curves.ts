@@ -1,14 +1,15 @@
 import {
+  API_VERSION,
   decodeState,
-  EasingTypeInputSchema,
+  EasingTypeSchema,
   encodeState,
   getApiResponseFromInput,
   getApiResponseFromState,
   rehydrateShareState,
+  type EasingState,
 } from 'easing-wizard-core';
 import { Hono } from 'hono';
 import { z } from 'zod/v4';
-import { API_VERSION } from '~/data/globals.js';
 import { getEnv } from '~/utils/env.js';
 
 const app = new Hono();
@@ -20,14 +21,16 @@ app.get('/:id', async (c) => {
     const id = c.req.param('id');
 
     const decodedState = decodeState(id);
-    const rehydratedState = rehydrateShareState(decodedState);
+    const rehydratedState: EasingState = rehydrateShareState(decodedState);
 
     const { input, output } = getApiResponseFromState(rehydratedState);
+
+    const type = rehydratedState.easingType;
 
     return c.json({
       // metadata
       id,
-      type: rehydratedState.easingType,
+      type,
       generated_at: new Date().toISOString(),
       input,
       output,
@@ -35,6 +38,7 @@ app.get('/:id', async (c) => {
       links: {
         self: `${API_VERSION}/curves/${id}`,
         share_url: `${frontendUrl}/#${id}`,
+        create: `${API_VERSION}/curves/${type}`,
       },
     });
   } catch (error) {
@@ -57,7 +61,7 @@ app.post('/:type', async (c) => {
   const config = await c.req.json();
 
   try {
-    const type = EasingTypeInputSchema.parse(c.req.param('type'));
+    const type = EasingTypeSchema.parse(c.req.param('type'));
 
     const { input, output, shareState } = getApiResponseFromInput(type, config);
 
@@ -73,7 +77,6 @@ app.post('/:type', async (c) => {
       // HATEOAS
       links: {
         self: `${API_VERSION}/curves/${id}`,
-        preview_svg: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0,100 C${config.x1 * 100},${100 - config.y1 * 100} ${config.x2 * 100},${100 - config.y2 * 100} 100,0" fill="none" stroke="currentColor" stroke-width="2"/></svg>`,
         share_url: `${frontendUrl}/#${id}`,
         create: `${API_VERSION}/curves/${type}`,
       },

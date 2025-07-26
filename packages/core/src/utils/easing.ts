@@ -1,6 +1,12 @@
-import { EasingType, LinearEasingAccuracy, OvershootStyle } from '~/types/enums';
+import {
+  EasingType,
+  LinearEasingAccuracy,
+  OvershootStyle,
+  type LinearEasingAccuracyKey,
+  type OvershootStyleKey,
+} from '~/types/enums';
 import type { Point } from '~/types/types';
-import type { BezierInput, BounceInput, OvershootInput, SpringInput, WiggleInput } from '~/validations';
+import type { BezierInput, BounceInput, OvershootInput, SpringInput, WiggleInput } from '~/validations/input';
 import { mapRange, roundTo } from './numbers';
 
 export function createCubicBezierString({ x1, y1, x2, y2 }: BezierInput): string {
@@ -8,14 +14,14 @@ export function createCubicBezierString({ x1, y1, x2, y2 }: BezierInput): string
 }
 
 type LinearEasingFunctionInputBezier = {
-  type: EasingType.BEZIER;
-  accuracy: LinearEasingAccuracy;
+  type: typeof EasingType.BEZIER;
+  accuracy: LinearEasingAccuracyKey;
   mathFunction: (t: number) => number;
 }; // only used in BezierComparison component
-type LinearEasingFunctionInputSpring = SpringInput & { type: EasingType.SPRING; mathFunction?: never };
-type LinearEasingFunctionInputBounce = BounceInput & { type: EasingType.BOUNCE; mathFunction?: never };
-type LinearEasingFunctionInputWiggle = WiggleInput & { type: EasingType.WIGGLE; mathFunction?: never };
-type LinearEasingFunctionInputOvershoot = OvershootInput & { type: EasingType.OVERSHOOT; mathFunction?: never };
+type LinearEasingFunctionInputSpring = SpringInput & { type: typeof EasingType.SPRING; mathFunction?: never };
+type LinearEasingFunctionInputBounce = BounceInput & { type: typeof EasingType.BOUNCE; mathFunction?: never };
+type LinearEasingFunctionInputWiggle = WiggleInput & { type: typeof EasingType.WIGGLE; mathFunction?: never };
+type LinearEasingFunctionInputOvershoot = OvershootInput & { type: typeof EasingType.OVERSHOOT; mathFunction?: never };
 
 type LinearEasingFunctionInput =
   | LinearEasingFunctionInputBezier
@@ -35,7 +41,7 @@ const getEasingFunction = (config: LinearEasingFunctionInput) => {
     case EasingType.WIGGLE:
       return createWiggleFunction(config);
     case EasingType.OVERSHOOT:
-      return createOvershootFunction(config);
+      return createOvershootFunction(config as any);
   }
 };
 
@@ -202,7 +208,7 @@ export function createOvershootFunction({
 }: {
   damping: number; // Controls the X position of the overshoot
   mass: number; // Controls the Y extension of the overshoot
-  style: OvershootStyle; // Style of easing
+  style: OvershootStyleKey; // Style of easing
 }): (t: number) => number {
   // Adjust overshoot amount based on mass
   const overshoot = Math.min(Math.max(mass, 1), 10); // You can adjust this scaling as needed
@@ -295,7 +301,11 @@ function getTotalTime(springFunc: (t: number) => number, endValue?: number): num
 }
 
 // Function to get key times (times of peaks, troughs, and inflection points)
-function getKeyTimes(springFunc: (t: number) => number, totalTime: number, accuracy: LinearEasingAccuracy): number[] {
+function getKeyTimes(
+  springFunc: (t: number) => number,
+  totalTime: number,
+  accuracy: LinearEasingAccuracyKey,
+): number[] {
   // Define initial number of samples and tolerance based on accuracy level
   let initialSamples: number;
   let tolerance: number;

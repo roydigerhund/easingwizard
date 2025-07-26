@@ -1,14 +1,21 @@
-
-import type { BezierStyle, BezierCurve, SpringCurve, BounceCurve, WiggleCurve, OvershootCurve, OvershootStyle } from '~/types/enums';
-import type { BezierInput } from '~/validations';
+import {
+  type BezierCurveKey,
+  type BezierStyleKey,
+  type BounceCurveKey,
+  type OvershootCurveKey,
+  type OvershootStyleKey,
+  type SpringCurveKey,
+  type WiggleCurveKey,
+} from '~/types/enums';
+import type { BezierInput } from '~/validations/input';
 
 export const bezierEasings: Record<
-  BezierStyle,
-  Partial<Record<BezierCurve, BezierInput & { mathFunction: (t: number) => number }>>
+  BezierStyleKey,
+  Partial<Record<BezierCurveKey, BezierInput & { mathFunction: (t: number) => number }>>
 > = {
-  in: {
+  IN: {
     // In Sine
-    sine: {
+    SINE: {
       x1: 0.13,
       y1: 0,
       x2: 0.39,
@@ -18,7 +25,7 @@ export const bezierEasings: Record<
       },
     },
     // In Quad
-    quad: {
+    QUAD: {
       x1: 0.11,
       y1: 0,
       x2: 0.5,
@@ -28,7 +35,7 @@ export const bezierEasings: Record<
       },
     },
     // In Cubic
-    cubic: {
+    CUBIC: {
       x1: 0.32,
       y1: 0,
       x2: 0.67,
@@ -38,7 +45,7 @@ export const bezierEasings: Record<
       },
     },
     // In Quart
-    quart: {
+    QUART: {
       x1: 0.5,
       y1: 0,
       x2: 0.75,
@@ -48,7 +55,7 @@ export const bezierEasings: Record<
       },
     },
     // In Quint
-    quint: {
+    QUINT: {
       x1: 0.64,
       y1: 0,
       x2: 0.78,
@@ -58,7 +65,7 @@ export const bezierEasings: Record<
       },
     },
     // In Expo
-    expo: {
+    EXPO: {
       x1: 0.7,
       y1: 0,
       x2: 0.84,
@@ -68,7 +75,7 @@ export const bezierEasings: Record<
       },
     },
     // In Circ
-    circ: {
+    CIRC: {
       x1: 0.55,
       y1: 0,
       x2: 1,
@@ -78,7 +85,7 @@ export const bezierEasings: Record<
       },
     },
     // In Back
-    back: {
+    BACK: {
       x1: 0.36,
       y1: 0,
       x2: 0.66,
@@ -90,9 +97,9 @@ export const bezierEasings: Record<
       },
     },
   },
-  inOut: {
+  IN_OUT: {
     // In Out Sine
-    sine: {
+    SINE: {
       x1: 0.36,
       y1: 0,
       x2: 0.64,
@@ -102,7 +109,7 @@ export const bezierEasings: Record<
       },
     },
     // In Out Quad
-    quad: {
+    QUAD: {
       x1: 0.44,
       y1: 0,
       x2: 0.56,
@@ -112,7 +119,7 @@ export const bezierEasings: Record<
       },
     },
     // In Out Cubic
-    cubic: {
+    CUBIC: {
       x1: 0.66,
       y1: 0,
       x2: 0.34,
@@ -122,7 +129,7 @@ export const bezierEasings: Record<
       },
     },
     // In Out Quart
-    quart: {
+    QUART: {
       x1: 0.78,
       y1: 0,
       x2: 0.22,
@@ -132,7 +139,7 @@ export const bezierEasings: Record<
       },
     },
     // In Out Quint
-    quint: {
+    QUINT: {
       x1: 0.86,
       y1: 0,
       x2: 0.14,
@@ -142,7 +149,7 @@ export const bezierEasings: Record<
       },
     },
     // In Out Expo
-    expo: {
+    EXPO: {
       x1: 0.9,
       y1: 0,
       x2: 0.1,
@@ -158,7 +165,7 @@ export const bezierEasings: Record<
       },
     },
     // In Out Circ
-    circ: {
+    CIRC: {
       x1: 0.85,
       y1: 0.09,
       x2: 0.15,
@@ -170,7 +177,7 @@ export const bezierEasings: Record<
       },
     },
     // In Out Jump
-    jump: {
+    JUMP: {
       x1: 1,
       y1: 0,
       x2: 0,
@@ -182,7 +189,7 @@ export const bezierEasings: Record<
       },
     },
     // In Out Anticipate
-    anticipate: {
+    ANTICIPATE: {
       x1: 0.8,
       y1: -0.4,
       x2: 0.5,
@@ -192,9 +199,9 @@ export const bezierEasings: Record<
       },
     },
   },
-  // inverseInOut: {
+  // INVERSE_IN_OUT: {
   //   // Inverse In Out Sine
-  //   sine: {
+  //   SINE: {
   //     x1: 0,
   //     y1: 0.36,
   //     x2: 1,
@@ -204,9 +211,9 @@ export const bezierEasings: Record<
   //     },
   //   },
   // },
-  out: {
+  OUT: {
     // Out Sine
-    sine: {
+    SINE: {
       x1: 0.61,
       y1: 1,
       x2: 0.87,
@@ -216,7 +223,7 @@ export const bezierEasings: Record<
       },
     },
     // Out Quad
-    quad: {
+    QUAD: {
       x1: 0.5,
       y1: 1,
       x2: 0.89,
@@ -226,7 +233,7 @@ export const bezierEasings: Record<
       },
     },
     // Out Cubic
-    cubic: {
+    CUBIC: {
       x1: 0.33,
       y1: 1,
       x2: 0.68,
@@ -236,7 +243,7 @@ export const bezierEasings: Record<
       },
     },
     // Out Quart
-    quart: {
+    QUART: {
       x1: 0.25,
       y1: 1,
       x2: 0.5,
@@ -246,7 +253,7 @@ export const bezierEasings: Record<
       },
     },
     // Out Quint
-    quint: {
+    QUINT: {
       x1: 0.22,
       y1: 1,
       x2: 0.36,
@@ -256,7 +263,7 @@ export const bezierEasings: Record<
       },
     },
     // Out Expo
-    expo: {
+    EXPO: {
       x1: 0.16,
       y1: 1,
       x2: 0.3,
@@ -266,7 +273,7 @@ export const bezierEasings: Record<
       },
     },
     // Out Circ
-    circ: {
+    CIRC: {
       x1: 0,
       y1: 0.55,
       x2: 0.45,
@@ -276,7 +283,7 @@ export const bezierEasings: Record<
       },
     },
     // Out Back
-    back: {
+    BACK: {
       x1: 0.34,
       y1: 1.56,
       x2: 0.64,
@@ -288,9 +295,9 @@ export const bezierEasings: Record<
       },
     },
   },
-  outIn: {
+  OUT_IN: {
     // Out In Sine
-    sine: {
+    SINE: {
       x1: 0.64,
       y1: 1,
       x2: 0.36,
@@ -300,7 +307,7 @@ export const bezierEasings: Record<
       },
     },
     // Out In Quad
-    quad: {
+    QUAD: {
       x1: 0.56,
       y1: 1,
       x2: 0.44,
@@ -310,7 +317,7 @@ export const bezierEasings: Record<
       },
     },
     // Out In Cubic
-    cubic: {
+    CUBIC: {
       x1: 0.34,
       y1: 1,
       x2: 0.66,
@@ -320,7 +327,7 @@ export const bezierEasings: Record<
       },
     },
     // Out In Quart
-    quart: {
+    QUART: {
       x1: 0.22,
       y1: 1,
       x2: 0.78,
@@ -330,7 +337,7 @@ export const bezierEasings: Record<
       },
     },
     // Out In Quint
-    quint: {
+    QUINT: {
       x1: 0.14,
       y1: 1,
       x2: 0.86,
@@ -340,7 +347,7 @@ export const bezierEasings: Record<
       },
     },
     // Out In Expo
-    expo: {
+    EXPO: {
       x1: 0.1,
       y1: 1,
       x2: 0.9,
@@ -356,7 +363,7 @@ export const bezierEasings: Record<
       },
     },
     // Out In Circ
-    circ: {
+    CIRC: {
       x1: 0.15,
       y1: 0.91,
       x2: 0.85,
@@ -366,7 +373,7 @@ export const bezierEasings: Record<
       },
     },
     // Out In Jump
-    jump: {
+    JUMP: {
       x1: 0,
       y1: 1,
       x2: 1,
@@ -378,9 +385,9 @@ export const bezierEasings: Record<
       },
     },
   },
-  // inverseOutIn: {
+  // INVERSE_OUT_IN: {
   //   // Inverse Out In Sine
-  //   sine: {
+  //   SINE: {
   //     x1: 1,
   //     y1: 0.64,
   //     x2: 0,
@@ -392,148 +399,150 @@ export const bezierEasings: Record<
   // },
 };
 
-export const bezierStyleFunctions: Record<BezierStyle, BezierInput> = {
-  in: { x1: 0.75, y1: 0, x2: 1, y2: 1 },
-  out: { x1: 0, y1: 0, x2: 0.25, y2: 1 },
-  inOut: { x1: 0.6, y1: 0, x2: 0.4, y2: 1 },
-  outIn: { x1: 0.4, y1: 1, x2: 0.6, y2: 0 },
+export const bezierStyleFunctions: Record<BezierStyleKey, BezierInput> = {
+  IN: { x1: 0.75, y1: 0, x2: 1, y2: 1 },
+  OUT: { x1: 0, y1: 0, x2: 0.25, y2: 1 },
+  IN_OUT: { x1: 0.6, y1: 0, x2: 0.4, y2: 1 },
+  OUT_IN: { x1: 0.4, y1: 1, x2: 0.6, y2: 0 },
+};
+export const bezierFunctions: Record<BezierStyleKey, Partial<Record<BezierCurveKey, BezierInput>>> = {
+  IN: Object.fromEntries(
+    Object.entries(bezierEasings.IN).map(([curve, { x1, y1, x2, y2 }]) => [curve, { x1, y1, x2, y2 }]),
+  ),
+  OUT: Object.fromEntries(
+    Object.entries(bezierEasings.OUT).map(([curve, { x1, y1, x2, y2 }]) => [curve, { x1, y1, x2, y2 }]),
+  ),
+  IN_OUT: Object.fromEntries(
+    Object.entries(bezierEasings.IN_OUT).map(([curve, { x1, y1, x2, y2 }]) => [curve, { x1, y1, x2, y2 }]),
+  ),
+  OUT_IN: Object.fromEntries(
+    Object.entries(bezierEasings.OUT_IN).map(([curve, { x1, y1, x2, y2 }]) => [curve, { x1, y1, x2, y2 }]),
+  ),
 };
 
-export const bezierFunctions: Record<BezierStyle, Partial<Record<BezierCurve, BezierInput>>> = {
-  in: Object.fromEntries(
-    Object.entries(bezierEasings.in).map(([curve, { x1, y1, x2, y2 }]) => [curve, { x1, y1, x2, y2 }]),
-  ),
-  out: Object.fromEntries(
-    Object.entries(bezierEasings.out).map(([curve, { x1, y1, x2, y2 }]) => [curve, { x1, y1, x2, y2 }]),
-  ),
-  inOut: Object.fromEntries(
-    Object.entries(bezierEasings.inOut).map(([curve, { x1, y1, x2, y2 }]) => [curve, { x1, y1, x2, y2 }]),
-  ),
-  outIn: Object.fromEntries(
-    Object.entries(bezierEasings.outIn).map(([curve, { x1, y1, x2, y2 }]) => [curve, { x1, y1, x2, y2 }]),
-  ),
-};
-
-export const springFunctions: Record<SpringCurve, { stiffness: number; damping: number; mass: number }> = {
-  heavy: {
+export const springFunctions: Record<SpringCurveKey, { stiffness: number; damping: number; mass: number }> = {
+  HEAVY: {
     mass: 3.5,
     stiffness: 20,
     damping: 26,
   },
-  bouncy: {
+  BOUNCY: {
     mass: 1.0,
     stiffness: 80,
     damping: 0,
   },
-  drop: {
+  DROP: {
     mass: 4,
     stiffness: 10,
     damping: 5,
   },
-  glide: {
+  GLIDE: {
     mass: 1.0,
     stiffness: 10,
     damping: 75,
   },
-  snap: {
+  SNAP: {
     mass: 0.5,
     stiffness: 60,
     damping: 50,
   },
-  lazy: {
+  LAZY: {
     mass: 2.5,
     stiffness: 4,
     damping: 15,
   },
-  elastic: {
+  ELASTIC: {
     mass: 0.6,
     stiffness: 30,
     damping: 35,
   },
 };
 
-export const bounceFunctions: Record<BounceCurve, { bounces: number; damping: number }> = {
-  firm: {
+export const bounceFunctions: Record<BounceCurveKey, { bounces: number; damping: number }> = {
+  FIRM: {
     bounces: 4,
     damping: 60,
   },
-  soft: {
+  SOFT: {
     bounces: 2,
     damping: 75,
   },
-  sharp: {
+  SHARP: {
     bounces: 3,
     damping: 85,
   },
-  subtle: {
+  SUBTLE: {
     bounces: 1,
     damping: 55,
   },
-  playful: {
+  PLAYFUL: {
     bounces: 6,
     damping: 35,
   },
-  springy: {
+  SPRINGY: {
     bounces: 8,
     damping: 10,
   },
 };
 
-export const wiggleFunctions: Record<WiggleCurve, { wiggles: number; damping: number }> = {
-  subtle: {
+export const wiggleFunctions: Record<WiggleCurveKey, { wiggles: number; damping: number }> = {
+  SUBTLE: {
     wiggles: 2,
     damping: 75,
   },
-  energetic: {
+  ENERGETIC: {
     wiggles: 6,
     damping: 25,
   },
-  playful: {
+  PLAYFUL: {
     wiggles: 4,
     damping: 50,
   },
-  sharp: {
+  SHARP: {
     wiggles: 3,
     damping: 90,
   },
-  smooth: {
+  SMOOTH: {
     wiggles: 1,
     damping: 100,
   },
-  intense: {
+  INTENSE: {
     wiggles: 8,
     damping: 10,
   },
-  dynamic: {
+  DYNAMIC: {
     wiggles: 10,
     damping: 0,
   },
 };
 
-const overshootCurveFunctions: Record<OvershootCurve, { damping: number; mass: number }> = {
-  soft: {
+const overshootCurveFunctions: Record<OvershootCurveKey, { damping: number; mass: number }> = {
+  SOFT: {
     mass: 2,
     damping: 60,
   },
-  firm: {
+  FIRM: {
     mass: 3,
     damping: 80,
   },
-  smooth: {
+  SMOOTH: {
     mass: 3.5,
     damping: 70,
   },
-  dynamic: {
+  DYNAMIC: {
     mass: 4,
     damping: 20,
   },
-  dramatic: {
+  DRAMATIC: {
     mass: 5,
     damping: 0,
   },
 };
-export const overshootFunctions: Record<OvershootStyle, Record<OvershootCurve, { damping: number; mass: number }>> = {
-  in: overshootCurveFunctions,
-  out: overshootCurveFunctions,
-  inOut: overshootCurveFunctions,
+export const overshootFunctions: Record<
+  OvershootStyleKey,
+  Record<OvershootCurveKey, { damping: number; mass: number }>
+> = {
+  IN: overshootCurveFunctions,
+  OUT: overshootCurveFunctions,
+  IN_OUT: overshootCurveFunctions,
 };

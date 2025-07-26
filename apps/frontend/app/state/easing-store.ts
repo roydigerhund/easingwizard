@@ -1,15 +1,15 @@
-import { defaultEasingState, EasingType, type EasingState } from 'easing-wizard-core';
+import { defaultEasingState, EasingType, type EasingState, type EasingTypeKey } from 'easing-wizard-core';
 import { create } from 'zustand';
 
 type EasingAction = {
-  setEasingType: (easingType: EasingType) => void;
+  setEasingType: (easingType: EasingTypeKey) => void;
   setState: (state: Partial<EasingState>) => void;
   getCurrentState: () => EasingState;
 };
 
 export const useEasingStore = create<EasingState & EasingAction>((set, get) => ({
   ...defaultEasingState,
-  setEasingType: (easingType: EasingType) => {
+  setEasingType: (easingType: EasingTypeKey) => {
     switch (easingType) {
       case EasingType.BEZIER:
         set(({ bezierY1, bezierY2 }) => ({
