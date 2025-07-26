@@ -4,14 +4,27 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["build/**"]
-    },
-    "typecheck": {
-      "dependsOn": ["^typecheck"]
+      "outputs": ["dist/**", "build/**"],
+      "inputs": ["src/**", "app/**", "*.ts", "*.tsx", "*.js", "*.jsx", "package.json"]
     },
     "dev": {
       "persistent": true,
-      "cache": false
+      "cache": false,
+      "dependsOn": ["^build"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "outputs": [],
+      "inputs": ["src/**", "app/**", "*.ts", "*.tsx", "tsconfig.json", "package.json"]
+    },
+    "clean": {
+      "cache": false,
+      "outputs": []
+    },
+    "generate": {
+      "dependsOn": ["^build"],
+      "outputs": ["src/generated/**"],
+      "inputs": ["scripts/**", "src/**", "package.json"]
     }
   }
 }

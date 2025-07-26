@@ -19,3 +19,11 @@ export const toScreamingSnakeCase = (value?: string) =>
         .replace(/([a-z])([A-Z])/g, "$1_$2")
         .replace(/[- ]/g, "_")
         .toUpperCase();
+
+export const toCamelCase = (value?: string) =>
+  isNil(value)
+    ? ""
+    : value
+        .replace(/[-_ ](.)/g, (_, group) => group.toUpperCase())
+        .replace(/[-_ ]/g, "")
+        .replace(/^[A-Z]/, (match) => match.toLowerCase());

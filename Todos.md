@@ -1,4 +1,5 @@
-CHECK LEGACY SHARING CODE BECAUSE OF NEW ENUMS
+Check out this:
+Prompts and resources support enables MCP servers to provide reusable templates and content accessible through slash commands and context attachments.
 
 - damped outIn for bezier
 

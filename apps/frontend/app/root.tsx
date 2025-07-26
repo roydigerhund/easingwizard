@@ -64,47 +64,38 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <title>Oops!</title>
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <div
+    <>
+      <div
+        style={{
+          minHeight: '100svh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '1rem',
+          padding: '1rem',
+          textAlign: 'center',
+          fontFamily: 'sans-serif',
+        }}
+      >
+        <h1>
+          {isRouteErrorResponse(error)
+            ? `${error.status} ${error.statusText}`
+            : error instanceof Error
+              ? error.message
+              : 'Unknown Error'}
+        </h1>
+        <a
+          href="/"
           style={{
-            minHeight: '100svh',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '1rem',
-            padding: '1rem',
-            textAlign: 'center',
-            fontFamily: 'sans-serif',
+            color: '#f4f4f5',
+            textDecoration: 'underline',
           }}
         >
-          <h1>
-            {isRouteErrorResponse(error)
-              ? `${error.status} ${error.statusText}`
-              : error instanceof Error
-                ? error.message
-                : 'Unknown Error'}
-          </h1>
-          <a
-            href="/"
-            style={{
-              color: '#f4f4f5',
-              textDecoration: 'underline',
-            }}
-          >
-            Go back home
-          </a>
-        </div>
-        <Scripts />
-      </body>
-    </html>
+          Go back home
+        </a>
+      </div>
+    </>
   );
 }
 

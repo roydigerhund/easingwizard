@@ -4,6 +4,7 @@ import type { EasingState } from '~/types/types';
 import { BounceInputSchema, OvershootInputSchema, SpringInputSchema, WiggleInputSchema } from '~/validations/input';
 import { generateLinearEasing } from '../easing';
 import { mapRange } from '../numbers';
+import { toScreamingSnakeCase } from '../string';
 
 // fromOld, toOld, fromNew, toNew
 export const LEGACY_NUMBER_RANGE_MAPPINGS: Partial<Record<keyof EasingState, [number, number, number, number]>> = {
@@ -20,13 +21,10 @@ export function rehydrateShareStateLegacy(searchParams: URLSearchParams) {
   // adjust old damping values to new format
   const getValue = (key: keyof EasingState, value: string) => {
     const parsedValue = JSON.parse(value);
-    if (key === 'editorAccuracy' && typeof parsedValue === 'string') {
-      return parsedValue.toLowerCase();
+    if (typeof parsedValue === 'string') {
+      return toScreamingSnakeCase(parsedValue);
     }
-    if (typeof parsedValue !== 'number') {
-      return parsedValue;
-    }
-    if (key in LEGACY_NUMBER_RANGE_MAPPINGS && LEGACY_NUMBER_RANGE_MAPPINGS[key]) {
+    if (typeof parsedValue === 'number' && key in LEGACY_NUMBER_RANGE_MAPPINGS && LEGACY_NUMBER_RANGE_MAPPINGS[key]) {
       const [fromOld, toOld, fromNew, toNew] = LEGACY_NUMBER_RANGE_MAPPINGS[key];
       // all are integers, so we can round the result
       return Math.round(mapRange(parsedValue, fromOld, toOld, fromNew, toNew));
