@@ -31,14 +31,13 @@ app.get(
   '/docs',
   Scalar({
     url: '/openapi',
-    layout: 'classic',
+    layout: 'modern',
     theme: 'deepSpace',
     darkMode: true,
     metaData: {
       ogImage: 'https://api.easing-wizard.com/share-image.png',
     },
     favicon: '/favicon.svg',
-    withDefaultFonts: false,
     defaultOpenAllTags: true,
     hideClientButton: true,
   }),
