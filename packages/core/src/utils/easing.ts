@@ -33,7 +33,7 @@ type LinearEasingFunctionInput =
 const getEasingFunction = (config: LinearEasingFunctionInput) => {
   switch (config.type) {
     case EasingType.BEZIER:
-      throw new Error('Bezier easing function requires a mathFunction to be provided.');
+      throw new Error('Bézier easing function requires a mathFunction to be provided.');
     case EasingType.SPRING:
       return createSpringFunction(config);
     case EasingType.BOUNCE:

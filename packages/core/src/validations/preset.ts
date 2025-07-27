@@ -9,6 +9,7 @@ import {
   SpringCurve,
   WiggleCurve,
 } from '~/types/enums';
+import { presetsLinksResponseSchema } from './hateoas';
 import {
   BezierInputSchema,
   BounceInputSchema,
@@ -17,35 +18,7 @@ import {
   SpringInputSchema,
   WiggleInputSchema,
 } from './input';
-
-const BaseOutputSchema = z
-  .object({
-    css: z.string().meta({
-      description: 'CSS easing function string',
-      example: 'cubic-bezier(0.66, 0, 0.34, 1)',
-    }),
-    tailwind_css: z.string().meta({
-      description: 'Tailwind CSS compatible easing string',
-      example: 'ease-[cubic-bezier(0.66,0,0.34,1)]',
-    }),
-  })
-  .meta({
-    description: 'Generated easing function output',
-  });
-
-const BezierOutputSchema = BaseOutputSchema.extend({
-  svg_path: z.string().optional().meta({
-    description: 'SVG path for bezier curves',
-    example: 'M0,100 C66,100 34,0 100,0',
-  }),
-});
-
-const LinearOutputSchema = BaseOutputSchema.extend({
-  svg_polyline: z.string().optional().meta({
-    description: 'SVG polyline for linear easing curves',
-    example: '0,75 15.2,39.6 32.8,21.75 50,18.45 100,25',
-  }),
-});
+import { BezierEasingOutputSchema, LinearEasingOutputSchema } from './output';
 
 // Base preset schema with common fields
 const BasePresetSchema = z.object({
@@ -56,24 +29,25 @@ const BasePresetSchema = z.object({
   type: EasingTypeSchema,
 });
 
-// Bezier preset schema
+// Bézier preset schema
 export const BezierPresetSchema = BasePresetSchema.extend({
   type: z.literal(EasingType.BEZIER).meta({
-    description: 'Bezier easing type',
+    description: 'Bézier easing type',
   }),
   style: z.enum(BezierStyle).meta({
-    description: 'Bezier easing style',
+    description: 'Bézier easing style',
     example: 'inOut',
   }),
   curve: z.enum(BezierCurve).meta({
-    description: 'Bezier curve variant',
+    description: 'Bézier curve variant',
     example: 'cubic',
   }),
   params: BezierInputSchema,
-  output: BezierOutputSchema,
+  output: BezierEasingOutputSchema,
 }).meta({
   id: 'BezierPreset',
-  description: 'Bezier easing preset configuration',
+  title: 'Bézier Type Preset',
+  description: 'Bézier easing preset configuration',
 });
 
 // Spring preset schema
@@ -86,9 +60,10 @@ export const SpringPresetSchema = BasePresetSchema.extend({
     example: 'heavy',
   }),
   params: SpringInputSchema,
-  output: LinearOutputSchema,
+  output: LinearEasingOutputSchema,
 }).meta({
   id: 'SpringPreset',
+  title: 'Spring Type Preset',
   description: 'Spring easing preset configuration',
 });
 
@@ -102,9 +77,10 @@ export const BouncePresetSchema = BasePresetSchema.extend({
     example: 'firm',
   }),
   params: BounceInputSchema,
-  output: LinearOutputSchema,
+  output: LinearEasingOutputSchema,
 }).meta({
   id: 'BouncePreset',
+  title: 'Bounce Type Preset',
   description: 'Bounce easing preset configuration',
 });
 
@@ -118,9 +94,10 @@ export const WigglePresetSchema = BasePresetSchema.extend({
     example: 'subtle',
   }),
   params: WiggleInputSchema,
-  output: LinearOutputSchema,
+  output: LinearEasingOutputSchema,
 }).meta({
   id: 'WigglePreset',
+  title: 'Wiggle Type Preset',
   description: 'Wiggle easing preset configuration',
 });
 
@@ -138,9 +115,10 @@ export const OvershootPresetSchema = BasePresetSchema.extend({
     example: 'soft',
   }),
   params: OvershootInputSchema,
-  output: LinearOutputSchema,
+  output: LinearEasingOutputSchema,
 }).meta({
   id: 'OvershootPreset',
+  title: 'Overshoot Type Preset',
   description: 'Overshoot easing preset configuration',
 });
 
@@ -154,7 +132,7 @@ export const PresetSchema = z
 
 // Preset category unions
 export const BezierPresetArraySchema = z.array(BezierPresetSchema).meta({
-  description: 'Array of bezier easing presets',
+  description: 'Array of Bézier easing presets',
 });
 
 export const SpringPresetArraySchema = z.array(SpringPresetSchema).meta({
@@ -173,25 +151,30 @@ export const OvershootPresetArraySchema = z.array(OvershootPresetSchema).meta({
   description: 'Array of overshoot easing presets',
 });
 
-// Complete preset data schema
-export const PresetDataSchema = z
+export const AllPresetArraySchema = z.array(PresetSchema).meta({
+  description: 'Array of all easing presets',
+});
+
+export const PresetsResponseSchema = z
   .object({
-    bezier: BezierPresetArraySchema,
-    spring: SpringPresetArraySchema,
-    bounce: BouncePresetArraySchema,
-    wiggle: WigglePresetArraySchema,
-    overshoot: OvershootPresetArraySchema,
+    version: z.string().meta({
+      description: 'Version hash of the presets data',
+      example: 'a1b2c3d4',
+    }),
+    presets: AllPresetArraySchema,
+    links: presetsLinksResponseSchema,
   })
   .meta({
-    id: 'PresetData',
-    description: 'Complete preset data object containing all easing categories',
+    id: 'PresetsResponse',
+    description: 'Collection of preset easing curves',
   });
 
-// Type exports
-export type BezierPreset = z.infer<typeof BezierPresetSchema>;
-export type SpringPreset = z.infer<typeof SpringPresetSchema>;
-export type BouncePreset = z.infer<typeof BouncePresetSchema>;
-export type WigglePreset = z.infer<typeof WigglePresetSchema>;
-export type OvershootPreset = z.infer<typeof OvershootPresetSchema>;
-export type Preset = z.infer<typeof PresetSchema>;
-export type PresetData = z.infer<typeof PresetDataSchema>;
+  
+  // Type exports
+  export type BezierPreset = z.infer<typeof BezierPresetSchema>;
+  export type SpringPreset = z.infer<typeof SpringPresetSchema>;
+  export type BouncePreset = z.infer<typeof BouncePresetSchema>;
+  export type WigglePreset = z.infer<typeof WigglePresetSchema>;
+  export type OvershootPreset = z.infer<typeof OvershootPresetSchema>;
+  export type Preset = z.infer<typeof PresetSchema>;
+  export type PresetsResponse = z.infer<typeof PresetsResponseSchema>;

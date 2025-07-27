@@ -8,19 +8,20 @@ import {
   getOvershootPresets,
   getSpringPresets,
   getWigglePresets,
-  PresetSchema,
+  toScreamingSnakeCase,
   type EasingTypeKey,
+  type ErrorResponse,
+  type Preset,
   type PresetsResponse,
 } from 'easing-wizard-core';
 import { Hono } from 'hono';
 import { z } from 'zod/v4';
 import { getEnv } from '~/utils/env';
+import { transformOtherError, transformZodError } from '~/utils/errors';
 
 const app = new Hono();
 
 const frontendUrl = getEnv().FRONTEND_URL;
-
-type Preset = z.infer<typeof PresetSchema>;
 
 // Enhanced preset data with API links
 const enhancePresetWithApiData = (preset: Preset) => ({
@@ -64,7 +65,7 @@ const getPresetsByType = (type?: EasingTypeKey) => {
 };
 
 app.get('/', async (c) => {
-  const typeSearchParam = c.req.query('type');
+  const typeSearchParam = toScreamingSnakeCase(c.req.query('type'));
 
   try {
     const type = EasingTypeSchema.optional().parse(typeSearchParam);
@@ -84,17 +85,9 @@ app.get('/', async (c) => {
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return c.json({ errors: error.issues }, 400);
+      return c.json<ErrorResponse>({ errors: transformZodError(error) }, 400);
     }
-    return c.json(
-      {
-        error:
-          typeof error === 'object' && error && 'message' in error && typeof error.message === 'string'
-            ? error.message
-            : 'Invalid parameters',
-      },
-      400,
-    );
+    return c.json<ErrorResponse>({ errors: transformOtherError(error) }, 400);
   }
 });
 

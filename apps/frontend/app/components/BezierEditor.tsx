@@ -30,7 +30,7 @@ export default function BezierEditor() {
   return (
     <div className="relative col-span-2">
       <EditorBase>
-        {/* Bezier Curve */}
+        {/* Bézier Curve */}
         <EditorBaseLine>
           <path d={generateBezierSVGPath({ x1: bezierX1, y1: bezierY1, x2: bezierX2, y2: bezierY2 })} strokeWidth="2" />
           <path

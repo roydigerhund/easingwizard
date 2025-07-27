@@ -29,14 +29,14 @@ export function encodeState(stateObj: EasingStateShare) {
 }
 
 export function decodeState(shareString: string) {
-  if (shareString.length < 3) throw Error('Input too short');
+  if (shareString.length < 3) throw Error('ID input is too short');
 
   const version = BASE62_DICTIONARY.indexOf(shareString[0]); // 0–61
-  if (version < 0) throw Error('Invalid version');
+  if (version < 0) throw Error('Invalid version in ID');
 
   const state = verifyAndStrip(shareString.slice(1));
 
-  if (!state) throw Error('Invalid CRC');
+  if (!state) throw Error('Invalid checksum in ID');
 
   const fullState: Partial<Record<EasingStateShareKey, EasingStateValue>> = {};
   // Split the state string into pairs of key-value characters

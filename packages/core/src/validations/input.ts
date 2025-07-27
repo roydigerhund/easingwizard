@@ -5,7 +5,7 @@ import { roundTo } from '~/utils/numbers';
 export const EasingTypeSchema = z.enum(EasingType).meta({
   id: 'EasingTypeInput',
   description: 'Type of easing function',
-  example: 'bezier',
+  example: 'BEZIER',
 });
 
 export const LinearAccuracySchema = z.enum(LinearEasingAccuracy).meta({
@@ -18,6 +18,7 @@ const dampingFactorSchema = z
   .number()
   .min(0)
   .max(100)
+  .multipleOf(1)
   .transform((val) => roundTo(val, 0))
   .meta({
     description: 'Damping (0-100)',
@@ -28,6 +29,7 @@ const stiffnessFactorSchema = z
   .number()
   .min(0)
   .max(100)
+  .multipleOf(1)
   .transform((val) => roundTo(val, 0))
   .meta({
     description: 'Stiffness (0-100)',
@@ -38,6 +40,7 @@ const massFactorSchema = z
   .number()
   .min(1)
   .max(5)
+  .multipleOf(0.1)
   .transform((val) => roundTo(val, 1))
   .meta({
     description: 'Mass (1-5)',
@@ -50,6 +53,7 @@ export const BezierInputSchema = z
       .number()
       .min(0)
       .max(1)
+      .multipleOf(0.01)
       .transform((val) => roundTo(val, 2))
       .meta({
         description: 'First control point X coordinate (0-1)',
@@ -59,6 +63,7 @@ export const BezierInputSchema = z
       .number()
       .min(-1)
       .max(2)
+      .multipleOf(0.01)
       .transform((val) => roundTo(val, 2))
       .meta({
         description: 'First control point Y coordinate (-1 to 2)',
@@ -68,6 +73,7 @@ export const BezierInputSchema = z
       .number()
       .min(0)
       .max(1)
+      .multipleOf(0.01)
       .transform((val) => roundTo(val, 2))
       .meta({
         description: 'Second control point X coordinate (0-1)',
@@ -77,6 +83,7 @@ export const BezierInputSchema = z
       .number()
       .min(-1)
       .max(2)
+      .multipleOf(0.01)
       .transform((val) => roundTo(val, 2))
       .meta({
         description: 'Second control point Y coordinate (-1 to 2)',
@@ -85,7 +92,8 @@ export const BezierInputSchema = z
   })
   .meta({
     id: 'BezierInput',
-    description: 'Bezier curve configuration',
+    title: 'Bézier Curve Input',
+    description: 'Input parameters for a cubic Bézier curve',
   });
 
 export type BezierInput = z.infer<typeof BezierInputSchema>;
@@ -99,7 +107,8 @@ export const SpringInputSchema = z
   })
   .meta({
     id: 'SpringInput',
-    description: 'Spring animation configuration',
+    title: 'Spring Animation Input',
+    description: 'Input parameters for spring-based easing animations',
   });
 
 export type SpringInput = z.infer<typeof SpringInputSchema>;
@@ -110,6 +119,7 @@ export const BounceInputSchema = z
       .number()
       .min(1)
       .max(10)
+      .multipleOf(1)
       .transform((val) => roundTo(val, 0))
       .meta({
         description: 'Number of bounces (1-10)',
@@ -120,7 +130,8 @@ export const BounceInputSchema = z
   })
   .meta({
     id: 'BounceInput',
-    description: 'Bounce animation configuration',
+    title: 'Bounce Animation Input',
+    description: 'Input parameters for bounce-based easing animations',
   });
 
 export type BounceInput = z.infer<typeof BounceInputSchema>;
@@ -131,6 +142,7 @@ export const WiggleInputSchema = z
       .number()
       .min(1)
       .max(10)
+      .multipleOf(1)
       .transform((val) => roundTo(val, 0))
       .meta({
         description: 'Number of wiggle oscillations (1-10)',
@@ -141,17 +153,11 @@ export const WiggleInputSchema = z
   })
   .meta({
     id: 'WiggleInput',
-    description: 'Wiggle animation configuration',
+    title: 'Wiggle Animation Input',
+    description: 'Input parameters for wiggle-based easing animations',
   });
 
 export type WiggleInput = z.infer<typeof WiggleInputSchema>;
-
-export const OvershootStyleK = {
-  IN: 'in',
-  OUT: 'out',
-  IN_OUT: 'inOut',
-} as const;
-
 
 export const OvershootInputSchema = z
   .object({
@@ -165,7 +171,16 @@ export const OvershootInputSchema = z
   })
   .meta({
     id: 'OvershootInput',
-    description: 'Overshoot animation configuration',
+    title: 'Overshoot Animation Input',
+    description: 'Input parameters for overshoot-based easing animations',
   });
 
 export type OvershootInput = z.infer<typeof OvershootInputSchema>;
+
+export const InputUnionSchema = z
+  .union([BezierInputSchema, SpringInputSchema, BounceInputSchema, WiggleInputSchema, OvershootInputSchema])
+  .meta({
+    description: 'Input parameters for easing function configurations',
+  });
+
+export type InputUnion = z.infer<typeof InputUnionSchema>;

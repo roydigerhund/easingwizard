@@ -1,59 +1,7 @@
 import { z } from 'zod/v4';
-import { API_VERSION } from '~/data/globals';
-import {
-  BezierInputSchema,
-  BounceInputSchema,
-  EasingTypeSchema,
-  OvershootInputSchema,
-  SpringInputSchema,
-  WiggleInputSchema,
-} from './input';
-
-// Response schemas
-export const ResponseOutputSchema = z
-  .object({
-    css: z.string().meta({
-      description: 'CSS easing function string',
-      example: 'cubic-bezier(0.66, 0, 0.34, 1)',
-    }),
-    tailwind_css: z.string().meta({
-      description: 'Tailwind CSS compatible easing string',
-      example: 'ease-[cubic-bezier(0.66,0,0.34,1)]',
-    }),
-    svg_path: z.string().optional().meta({
-      description: 'SVG path for bezier curves',
-      example: 'M0,100 C66,100 34,0 100,0',
-    }),
-    svg_polyline: z.string().optional().meta({
-      description: 'SVG polyline for linear easing curves',
-      example: '0,75 15.2,39.6 32.8,21.75 50,18.45 100,25',
-    }),
-  })
-  .meta({
-    id: 'ResponseOutput',
-    description: 'Generated easing function output',
-  });
-
-// TODO: move origins to a separate file
-export const ResponseLinksSchema = z
-  .object({
-    self: z.url().meta({
-      description: 'Link to this curve resource',
-      example: `https://api.easingwizard.com/${API_VERSION}/curves/abc123def`,
-    }),
-    share_url: z.url().meta({
-      description: 'Shareable URL for this curve',
-      example: 'https://easingwizard.com/#abc123def',
-    }),
-    create: z.url().meta({
-      description: 'Endpoint to create curves of this type',
-      example: `https://api.easingwizard.com/${API_VERSION}/curves/bezier`,
-    }),
-  })
-  .meta({
-    id: 'ResponseLinks',
-    description: 'HATEOAS navigation links for the easing curve',
-  });
+import { curveLinksResponseSchema } from './hateoas';
+import { EasingTypeSchema, InputUnionSchema } from './input';
+import { OutputUnionSchema } from './output';
 
 export const EasingCurveResponseSchema = z
   .object({
@@ -68,117 +16,34 @@ export const EasingCurveResponseSchema = z
       description: 'ISO 8601 timestamp when the curve was generated',
       example: '2025-07-03T12:00:00Z',
     }),
-    input: z
-      .union([BezierInputSchema, SpringInputSchema, BounceInputSchema, WiggleInputSchema, OvershootInputSchema])
-      .meta({
-        description: 'Input parameters used to generate the curve',
-      }),
-    output: ResponseOutputSchema,
-    links: z
-      .object({
-        self: z.url().meta({
-          description: 'Link to this curve resource',
-          example: 'https://api.easingwizard.com/v1/curves/abc123def',
-        }),
-        share_url: z.url().meta({
-          description: 'Shareable URL for this curve',
-          example: 'https://easingwizard.com/#abc123def',
-        }),
-        create: z.url().meta({
-          description: 'Endpoint to create curves of this type',
-          example: 'https://api.easingwizard.com/v1/curves/bezier',
-        }),
-      })
-      .meta({
-        description: 'HATEOAS navigation links',
-      }),
+    input: InputUnionSchema,
+    output: OutputUnionSchema,
+    links: curveLinksResponseSchema,
   })
   .meta({
     id: 'EasingCurveResponse',
     description: 'Complete easing curve response with metadata and links',
   });
 
-export const PresetSchemaZ = z
-  .object({
-    id: z.string().meta({
-      description: 'Unique preset identifier',
-      example: 'abc123def',
-    }),
-    type: EasingTypeSchema,
-    style: z.string().optional().meta({
-      description: 'Style variant (for bezier and overshoot)',
-      example: 'inOut',
-    }),
-    curve: z.string().optional().meta({
-      description: 'Curve variant name',
-      example: 'cubic',
-    }),
-    params: z
-      .union([BezierInputSchema, SpringInputSchema, BounceInputSchema, WiggleInputSchema, OvershootInputSchema])
-      .meta({
-        description: 'Parameters for this preset',
-      }),
-    output: ResponseOutputSchema,
-    links: z
-      .object({
-        self: z.url().meta({
-          description: 'Link to this curve resource',
-          example: `https://api.easingwizard.com/${API_VERSION}/curves/abc123def`,
-        }),
-        share_url: z.url().meta({
-          description: 'Shareable URL for this curve',
-          example: 'https://easingwizard.com/#abc123def',
-        }),
-        create: z.url().meta({
-          description: 'Endpoint to create curves of this type',
-          example: `https://api.easingwizard.com/${API_VERSION}/curves/bezier`,
-        }),
-      })
-      .meta({
-        description: 'HATEOAS navigation links',
-      }),
-  })
-  .meta({
-    id: 'PresetZ',
-    description: 'Preset easing curve configuration',
-  });
-
-export const PresetsResponseSchema = z
-  .object({
-    version: z.string().meta({
-      description: 'Version hash of the presets data',
-      example: 'a1b2c3d4',
-    }),
-    presets: z.array(PresetSchemaZ).meta({
-      description: 'Array of available presets',
-    }),
-    links: z
-      .object({
-        self: z.url().meta({
-          description: 'Link to this presets collection',
-          example: `https://api.easingwizard.com/${API_VERSION}/presets`,
-        }),
-        filter: z.string().meta({
-          description: 'Template for filtering presets by type',
-          example: '/api/v1/presets{?type}',
-        }),
-      })
-      .meta({
-        description: 'HATEOAS navigation links',
-      }),
-  })
-  .meta({
-    id: 'PresetsResponse',
-    description: 'Collection of preset easing curves',
-  });
-
-export type PresetsResponse = z.infer<typeof PresetsResponseSchema>;
-
 export const ErrorResponseSchema = z
   .object({
     errors: z
       .array(
         z.object({
+          expected: z
+            .string()
+            .meta({
+              description: 'Expected type or value',
+              example: 'number',
+            })
+            .optional(),
+          values: z
+            .array(z.string())
+            .meta({
+              description: 'List of valid values or types',
+              example: ['BEZIER', 'SPRING', 'BOUNCE', 'WIGGLE', 'OVERSHOOT'],
+            })
+            .optional(),
           code: z.string().meta({
             description: 'Error code',
             example: 'invalid_type',
@@ -202,40 +67,8 @@ export const ErrorResponseSchema = z
     description: 'Error response with validation details',
   });
 
-// Generate OpenAPI document using hybrid approach with zod-openapi v5
-// export function generateOpenAPIDocument() {
-//   // Generate a minimal document first to get schema generation working
-//   const minimalDoc = {
-//     openapi: '3.1.0' as const,
-//     info: {
-//       title: 'Easing Wizard API',
-//       version: '1.0.0',
-//       description: 'A comprehensive API for generating and managing easing curves',
-//     },
-//     paths: {
-//       '/test': {
-//         post: {
-//           requestBody: {
-//             content: {
-//               'application/json': {
-//                 schema: BezierInputSchema,
-//               },
-//             },
-//           },
-//           responses: {
-//             '200': {
-//               description: 'Success',
-//               content: {
-//                 'application/json': {
-//                   schema: EasingCurveResponseSchema,
-//                 },
-//               },
-//             },
-//           },
-//         },
-//       },
-//     },
-//   };
+export type EasingCurveResponse = z.infer<typeof EasingCurveResponseSchema>;
+export type ErrorResponse = z.infer<typeof ErrorResponseSchema>;
 
 //   // Generate with zod-openapi to get the schema components
 //   const generated = createDocument(minimalDoc);

@@ -6,7 +6,9 @@ import {
   OvershootInputSchema,
   SpringInputSchema,
   WiggleInputSchema,
+  type InputUnion,
 } from '~/validations/input';
+import type { OutputUnion } from '~/validations/output';
 import { createCubicBezierString, cssStringToTailwind, generateLinearEasing } from './easing';
 import {
   generateBezierSVGPath,
@@ -17,11 +19,8 @@ import {
 } from './svg';
 
 type ApiResponse = {
-  input: Record<string, unknown>;
-  output: {
-    css: string;
-    tailwind_css: string;
-  } & ({ svg_path: string; svg_polyline?: never } | { svg_polyline: string; svg_path?: never });
+  input: InputUnion;
+  output: OutputUnion;
 };
 
 export function getApiResponseFromState(state: EasingState): ApiResponse {
@@ -215,7 +214,5 @@ export function getApiResponseFromInput(
         shareState,
       };
     }
-    default:
-      throw new Error('Invalid easing type');
   }
 }
