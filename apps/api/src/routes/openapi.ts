@@ -1,4 +1,3 @@
-import { createMarkdownFromOpenApi } from '@scalar/openapi-to-markdown';
 import {
   API_VERSION,
   EasingCurveResponseSchema,
