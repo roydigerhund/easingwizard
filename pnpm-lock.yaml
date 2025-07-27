@@ -26,6 +26,9 @@ importers:
 
   apps/api:
     dependencies:
+      '@floating-ui/dom':
+        specifier: ^1.7.2
+        version: 1.7.2
       '@hono/node-server':
         specifier: ^1.17.1
         version: 1.17.1(hono@4.8.5)
