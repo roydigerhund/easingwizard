@@ -12,7 +12,7 @@ import presets from './routes/presets';
 const app = new Hono();
 
 app.get('/', (c) => {
-  return c.json({ message: 'Welcome to the Easing Wizard API!' });
+  return c.redirect(`/docs`, 301);
 });
 
 app.route('/healthz', healthz);
