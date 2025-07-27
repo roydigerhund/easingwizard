@@ -6,11 +6,14 @@ import {
   getApiResponseFromInput,
   getApiResponseFromState,
   rehydrateShareState,
-  type EasingState,
+  toScreamingSnakeCase,
+  type EasingCurveResponse,
+  type ErrorResponse,
 } from 'easing-wizard-core';
 import { Hono } from 'hono';
 import { z } from 'zod/v4';
 import { getEnv } from '~/utils/env.js';
+import { transformOtherError, transformZodError } from '~/utils/errors';
 
 const app = new Hono();
 
@@ -21,13 +24,13 @@ app.get('/:id', async (c) => {
     const id = c.req.param('id');
 
     const decodedState = decodeState(id);
-    const rehydratedState: EasingState = rehydrateShareState(decodedState);
+    const rehydratedState = rehydrateShareState(decodedState);
 
     const { input, output } = getApiResponseFromState(rehydratedState);
 
     const type = rehydratedState.easingType;
 
-    return c.json({
+    return c.json<EasingCurveResponse>({
       // metadata
       id,
       type,
@@ -43,17 +46,9 @@ app.get('/:id', async (c) => {
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return c.json({ errors: error.issues }, 400);
+      return c.json<ErrorResponse>({ errors: transformZodError(error) }, 400);
     }
-    return c.json(
-      {
-        error:
-          typeof error === 'object' && error && 'message' in error && typeof error.message === 'string'
-            ? error.message
-            : 'Invalid parameters',
-      },
-      400,
-    );
+    return c.json<ErrorResponse>({ errors: transformOtherError(error) }, 400);
   }
 });
 
@@ -61,13 +56,13 @@ app.post('/:type', async (c) => {
   const config = await c.req.json();
 
   try {
-    const type = EasingTypeSchema.parse(c.req.param('type'));
+    const type = EasingTypeSchema.parse(toScreamingSnakeCase(c.req.param('type')));
 
     const { input, output, shareState } = getApiResponseFromInput(type, config);
 
     const id = encodeState(shareState);
 
-    return c.json({
+    return c.json<EasingCurveResponse>({
       // metadata
       id,
       type,
@@ -83,17 +78,9 @@ app.post('/:type', async (c) => {
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return c.json({ errors: error.issues }, 400);
+      return c.json<ErrorResponse>({ errors: transformZodError(error) }, 400);
     }
-    return c.json(
-      {
-        error:
-          typeof error === 'object' && error && 'message' in error && typeof error.message === 'string'
-            ? error.message
-            : 'Invalid parameters',
-      },
-      400,
-    );
+    return c.json<ErrorResponse>({ errors: transformOtherError(error) }, 400);
   }
 });
 

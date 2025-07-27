@@ -23,11 +23,11 @@ const accuracy = LinearEasingAccuracy.HIGH;
 const accuracyString = '##LinearEasingAccuracy.HIGH##';
 
 function main() {
-  // Generate Bezier presets
+  // Generate Bézier presets
   const bezierPresets = Object.entries(bezierFunctions).flatMap(([style, curves]) => {
     return Object.entries(curves).map(([curve, params]) => {
       if (!params) {
-        throw new Error(`Missing parameters for Bezier curve: ${style} - ${curve}`);
+        throw new Error(`Missing parameters for Bézier curve: ${style} - ${curve}`);
       }
       const shareState: EasingStateShare = {
         easingType: EasingType.BEZIER,
@@ -212,7 +212,7 @@ export const getPresetById = (id: string) => {
   fs.writeFileSync('./src/generated/preset-data.ts', content);
 
   console.log('✅ Generated preset data successfully!');
-  console.log(`📊 Generated ${allPresets.BEZIER.length} bezier presets`);
+  console.log(`📊 Generated ${allPresets.BEZIER.length} Bézier presets`);
   console.log(`📊 Generated ${allPresets.SPRING.length} spring presets`);
   console.log(`📊 Generated ${allPresets.BOUNCE.length} bounce presets`);
   console.log(`📊 Generated ${allPresets.WIGGLE.length} wiggle presets`);

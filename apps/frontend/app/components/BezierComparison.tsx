@@ -40,7 +40,7 @@ export default function BezierComparison() {
     <div className="flex items-start gap-8">
       <div className="w-[400px] shrink-0">
         <EditorBase>
-          {/* Bezier Curve */}
+          {/* Bézier Curve */}
           <EditorBaseLine>
             <path
               d={`M0,100 C${bezierValue.x1 * 100},${100 - bezierValue.y1 * 100} ${bezierValue.x2 * 100},${100 - bezierValue.y2 * 100} 100,0`}
