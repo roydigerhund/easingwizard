@@ -34,6 +34,7 @@ export * from './utils/values';
 
 // VALIDATIONS
 export * from './validations/curve';
+export * from './validations/error';
 export * from './validations/hateoas';
 export * from './validations/healthz';
 export * from './validations/input';

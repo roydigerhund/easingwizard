@@ -1,3 +1,4 @@
+import { createMarkdownFromOpenApi } from '@scalar/openapi-to-markdown';
 import {
   API_VERSION,
   EasingCurveResponseSchema,
@@ -111,9 +112,7 @@ const document = createDocument({
             description: '200 OK',
             content: {
               'application/json': {
-                schema: z.object({
-                  /* Define your response schema here */
-                }),
+                schema: EasingCurveResponseSchema,
               },
             },
           },
@@ -123,7 +122,13 @@ const document = createDocument({
       },
     },
   },
+  tags: [
+    { name: 'Curves', description: 'Endpoints for managing easing curves' },
+    { name: 'Health', description: 'Health check endpoint' },
+  ],
 });
+
+export const llmMarkdown = await createMarkdownFromOpenApi(JSON.stringify(document));
 
 const app = new Hono();
 

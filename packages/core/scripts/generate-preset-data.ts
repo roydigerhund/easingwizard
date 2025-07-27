@@ -6,7 +6,6 @@ import {
   springFunctions,
   wiggleFunctions,
 } from '~/data/easing-functions';
-import { toScreamingSnakeCase } from '~/index';
 import { EasingType, LinearEasingAccuracy, OvershootStyleKey } from '~/types/enums';
 import { EasingStateShare } from '~/types/types';
 import { createCubicBezierString, cssStringToTailwind, generateLinearEasing } from '~/utils/easing';
