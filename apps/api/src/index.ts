@@ -3,9 +3,10 @@ import { Scalar } from '@scalar/hono-api-reference';
 import 'dotenv/config';
 import { API_VERSION } from 'easing-wizard-core';
 import { Hono } from 'hono';
+
 import curves from './routes/curves';
 import healthz from './routes/healthz';
-import openapi from './routes/openapi';
+import openapi, { llmMarkdown } from './routes/openapi';
 import presets from './routes/presets';
 
 const app = new Hono();
@@ -22,7 +23,26 @@ app.route(`${API_VERSION}/presets`, presets);
 
 app.route('/openapi', openapi);
 
-app.get('/docs', Scalar({ url: '/openapi' }));
+app.get('/llms.txt', async (c) => {
+  return c.text(llmMarkdown);
+});
+
+app.get(
+  '/docs',
+  Scalar({
+    url: '/openapi',
+    layout: 'classic',
+    theme: 'deepSpace',
+    darkMode: true,
+    metaData: {
+      ogImage: 'https://api.easing-wizard.com/share-image.png',
+    },
+    favicon: '/favicon.svg',
+    withDefaultFonts: false,
+    defaultOpenAllTags: true,
+    hideClientButton: true,
+  }),
+);
 
 // Export the app for Vercel
 export default app;
