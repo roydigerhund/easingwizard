@@ -6,7 +6,7 @@ import { Hono } from 'hono';
 
 import curves from './routes/curves';
 import healthz from './routes/healthz';
-import openapi, { llmMarkdown } from './routes/openapi';
+import openapi from './routes/openapi';
 import presets from './routes/presets';
 
 const app = new Hono();
@@ -22,10 +22,6 @@ app.route(`${API_VERSION}/curves`, curves);
 app.route(`${API_VERSION}/presets`, presets);
 
 app.route('/openapi', openapi);
-
-app.get('/llms.txt', async (c) => {
-  return c.text(llmMarkdown);
-});
 
 app.get(
   '/docs',
