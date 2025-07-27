@@ -31,7 +31,7 @@ app.get(
   '/docs',
   Scalar({
     url: '/openapi',
-    layout: 'modern',
+    layout: 'classic',
     theme: 'deepSpace',
     darkMode: true,
     metaData: {

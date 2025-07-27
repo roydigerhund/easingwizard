@@ -9,7 +9,6 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.7.2",
     "@hono/node-server": "^1.17.1",
     "@scalar/hono-api-reference": "^0.9.12",
     "@scalar/openapi-to-markdown": "^0.2.23",
