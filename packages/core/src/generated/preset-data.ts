@@ -131,7 +131,7 @@ export const presetData = {
       output: {
         css: 'cubic-bezier(0.55, 0, 1, 0.45)',
         tailwind_css: 'ease-[cubic-bezier(0.55,0,1,0.45)]',
-        svg_path: 'M0,100 C55.00000000000001,100 100,55 100,0',
+        svg_path: 'M0,100 C55,100 100,55 100,0',
       },
     },
     {
@@ -267,7 +267,7 @@ export const presetData = {
       output: {
         css: 'cubic-bezier(0, 0.55, 0.45, 1)',
         tailwind_css: 'ease-[cubic-bezier(0,0.55,0.45,1)]',
-        svg_path: 'M0,100 C0,44.99999999999999 45,0 100,0',
+        svg_path: 'M0,100 C0,45 45,0 100,0',
       },
     },
     {
@@ -318,7 +318,7 @@ export const presetData = {
       output: {
         css: 'cubic-bezier(0.44, 0, 0.56, 1)',
         tailwind_css: 'ease-[cubic-bezier(0.44,0,0.56,1)]',
-        svg_path: 'M0,100 C44,100 56.00000000000001,0 100,0',
+        svg_path: 'M0,100 C44,100 56,0 100,0',
       },
     },
     {
@@ -369,7 +369,7 @@ export const presetData = {
       output: {
         css: 'cubic-bezier(0.86, 0, 0.14, 1)',
         tailwind_css: 'ease-[cubic-bezier(0.86,0,0.14,1)]',
-        svg_path: 'M0,100 C86,100 14.000000000000002,0 100,0',
+        svg_path: 'M0,100 C86,100 14,0 100,0',
       },
     },
     {
@@ -471,7 +471,7 @@ export const presetData = {
       output: {
         css: 'cubic-bezier(0.56, 1, 0.44, 0)',
         tailwind_css: 'ease-[cubic-bezier(0.56,1,0.44,0)]',
-        svg_path: 'M0,100 C56.00000000000001,0 44,100 100,0',
+        svg_path: 'M0,100 C56,0 44,100 100,0',
       },
     },
     {
@@ -522,7 +522,7 @@ export const presetData = {
       output: {
         css: 'cubic-bezier(0.14, 1, 0.86, 0)',
         tailwind_css: 'ease-[cubic-bezier(0.14,1,0.86,0)]',
-        svg_path: 'M0,100 C14.000000000000002,0 86,100 100,0',
+        svg_path: 'M0,100 C14,0 86,100 100,0',
       },
     },
     {

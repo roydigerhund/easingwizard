@@ -56,7 +56,7 @@ export function generateLinearEasing(config: LinearEasingFunctionInput) {
     type === EasingType.OVERSHOOT
       ? 1
       : undefined;
-  const endValue = type === EasingType.WIGGLE ? 0 : undefined;
+  const endValue = type === EasingType.WIGGLE ? 0 : 1;
 
   const totalTime = fixedTotalTime || getTotalTime(easingFunction, endValue);
   // Use the getKeyTimes function to get key times
@@ -291,7 +291,7 @@ function getTotalTime(springFunc: (t: number) => number, endValue?: number): num
   }
 
   // if value is not 1, we need to continue until it reaches 1 (rounded to 2 decimal places)
-  while (roundTo(value, 2) !== (endValue ?? 1)) {
+  while (roundTo(value, 2) !== (endValue)) {
     time += dt;
     value = roundTo(springFunc(time), 2);
   }
