@@ -8,9 +8,6 @@ Prompts and resources support enables MCP servers to provide reusable templates 
 
 - present nice error message when easing state is invalid
 - add FAQ section for SEO and also mention API and MCP
-- create openAPI specification file
-
-- force type imports
 
 - switch to vite + react-router
   - check if cache headers for files are set correctly by vercel
