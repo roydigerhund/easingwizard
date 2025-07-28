@@ -4,12 +4,14 @@ import { roundTo } from '~/utils/numbers';
 
 export const EasingTypeSchema = z.enum(EasingType).meta({
   id: 'EasingTypeInput',
+  title: 'Easing Type',
   description: 'Type of easing function',
   example: 'BEZIER',
 });
 
 export const EasingTypeLowerCaseSchema = z.enum(EasingTypeLowerCase).meta({
   id: 'EasingTypeLowerCaseInput',
+  title: 'Easing Type Lowercase',
   description: 'Type of easing function',
   example: 'bezier',
 });
