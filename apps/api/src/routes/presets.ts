@@ -68,7 +68,7 @@ app.get('/', async (c) => {
   const typeSearchParam = toScreamingSnakeCase(c.req.query('type'));
 
   try {
-    const type = EasingTypeSchema.optional().parse(typeSearchParam);
+    const type = typeSearchParam ? EasingTypeSchema.parse(typeSearchParam) : undefined;
     const presets = getPresetsByType(type);
 
     // Create version asynchronously
