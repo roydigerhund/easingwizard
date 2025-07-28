@@ -28,7 +28,7 @@ const document = createDocument({
     version: '1.0.0',
   },
   paths: {
-    healthz: {
+    '/healthz': {
       get: {
         operationId: 'healthCheck',
         summary: 'Health Check',
@@ -129,8 +129,13 @@ const document = createDocument({
 
 const app = new Hono();
 
-app.get('/', (c) => {
-  return c.json(document);
+app.get('/', () => {
+  return new Response(JSON.stringify(document, null, 2), {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+    },
+  });
 });
 
 export default app;
