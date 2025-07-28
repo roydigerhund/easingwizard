@@ -1,4 +1,4 @@
-import { AnimationType, EasingType, PreviewPlayMode } from 'easing-wizard-core';
+import { AnimationType, EasingType, PreviewPlayMode, screamingSnakeToCamelCase } from 'easing-wizard-core';
 import { useEffect, useState } from 'react';
 import { classNames } from '~/css/class-names';
 import { useEasingStore } from '~/state/easing-store';
@@ -54,8 +54,8 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
     animationTimingFunction: easing,
     animationName:
       easingType === EasingType.WIGGLE
-        ? `${previewAnimationType}AnimationWiggle${previewPlayMode === PreviewPlayMode.INFINITE ? 'Infinite' : 'Once'}${previewPlayMode === PreviewPlayMode.ONCE && counter % 2 === 1 ? 'Reverse' : ''}`
-        : `${previewAnimationType}Animation${previewPlayMode === PreviewPlayMode.INFINITE ? 'Infinite' : 'Once'}${previewPlayMode === PreviewPlayMode.ONCE && counter % 2 === 1 ? 'Reverse' : ''}`,
+        ? `${screamingSnakeToCamelCase(previewAnimationType)}AnimationWiggle${previewPlayMode === PreviewPlayMode.INFINITE ? 'Infinite' : 'Once'}${previewPlayMode === PreviewPlayMode.ONCE && counter % 2 === 1 ? 'Reverse' : ''}`
+        : `${screamingSnakeToCamelCase(previewAnimationType)}Animation${previewPlayMode === PreviewPlayMode.INFINITE ? 'Infinite' : 'Once'}${previewPlayMode === PreviewPlayMode.ONCE && counter % 2 === 1 ? 'Reverse' : ''}`,
     animationFillMode: 'both',
     animationPlayState: clicked ? 'paused' : 'running',
   });
