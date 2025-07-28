@@ -1,6 +1,7 @@
 import {
   API_VERSION,
   EasingCurveResponseSchema,
+  EasingTypeLowerCaseSchema,
   EasingTypeSchema,
   ErrorResponseSchema,
   healthCheckSchema,
@@ -95,7 +96,7 @@ const document = createDocument({
         description: 'Generate a new easing curve based on input parameters',
         requestParams: {
           path: z.object({
-            type: EasingTypeSchema,
+            type: EasingTypeLowerCaseSchema,
           }),
         },
         requestBody: {

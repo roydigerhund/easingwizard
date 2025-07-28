@@ -1,11 +1,17 @@
 import { z } from 'zod/v4';
-import { EasingType, LinearEasingAccuracy, OvershootStyle } from '~/types/enums';
+import { EasingType, EasingTypeLowerCase, LinearEasingAccuracy, OvershootStyle } from '~/types/enums';
 import { roundTo } from '~/utils/numbers';
 
 export const EasingTypeSchema = z.enum(EasingType).meta({
   id: 'EasingTypeInput',
   description: 'Type of easing function',
   example: 'BEZIER',
+});
+
+export const EasingTypeLowerCaseSchema = z.enum(EasingTypeLowerCase).meta({
+  id: 'EasingTypeLowerCaseInput',
+  description: 'Type of easing function',
+  example: 'bezier',
 });
 
 export const LinearAccuracySchema = z.enum(LinearEasingAccuracy).meta({

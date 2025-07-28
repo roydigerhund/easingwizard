@@ -7,6 +7,15 @@ export const EasingType = {
 } as const;
 export type EasingTypeKey = keyof typeof EasingType;
 
+export const EasingTypeLowerCase = {
+  BEZIER: 'bezier',
+  SPRING: 'spring',
+  BOUNCE: 'bounce',
+  WIGGLE: 'wiggle',
+  OVERSHOOT: 'overshoot',
+} as const;
+export type EasingTypeLowerCaseKey = keyof typeof EasingTypeLowerCase;
+
 export const BezierStyle = {
   IN: 'IN',
   OUT: 'OUT',

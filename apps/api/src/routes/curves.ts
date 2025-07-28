@@ -54,7 +54,7 @@ app.get('/:id', async (c) => {
 
 app.post('/:type', async (c) => {
   const config = await c.req.json();
-
+  
   try {
     const type = EasingTypeSchema.parse(toScreamingSnakeCase(c.req.param('type')));
 

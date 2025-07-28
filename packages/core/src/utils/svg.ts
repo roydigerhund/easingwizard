@@ -1,8 +1,9 @@
 import type { Point } from '~/types/types';
 import type { BezierInput } from '~/validations/input';
+import { roundTo } from './numbers';
 
 export const generateBezierSVGPath = ({ x1, y1, x2, y2 }: BezierInput) => {
-  return `M0,100 C${x1 * 100},${100 - y1 * 100} ${x2 * 100},${100 - y2 * 100} 100,0`;
+  return `M0,100 C${roundTo(x1 * 100, 3)},${roundTo(100 - y1 * 100, 3)} ${roundTo(x2 * 100, 3)},${roundTo(100 - y2 * 100, 3)} 100,0`;
 };
 
 export const generateSpringSVGPolyline = (points: Point[]) => {
