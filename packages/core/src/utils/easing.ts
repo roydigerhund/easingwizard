@@ -6,10 +6,10 @@ import {
   type OvershootStyleKey,
 } from '~/types/enums';
 import type { Point } from '~/types/types';
-import type { BezierInput, BounceInput, OvershootInput, SpringInput, WiggleInput } from '~/validations/input';
+import type { BezierParams, BounceParams, OvershootParams, SpringParams, WiggleParams } from '~/validations/input';
 import { mapRange, roundTo } from './numbers';
 
-export function createCubicBezierString({ x1, y1, x2, y2 }: BezierInput): string {
+export function createCubicBezierString({ x1, y1, x2, y2 }: BezierParams): string {
   return `cubic-bezier(${x1}, ${y1}, ${x2}, ${y2})`;
 }
 
@@ -18,10 +18,10 @@ type LinearEasingFunctionInputBezier = {
   accuracy: LinearEasingAccuracyKey;
   mathFunction: (t: number) => number;
 }; // only used in BezierComparison component
-type LinearEasingFunctionInputSpring = SpringInput & { type: typeof EasingType.SPRING; mathFunction?: never };
-type LinearEasingFunctionInputBounce = BounceInput & { type: typeof EasingType.BOUNCE; mathFunction?: never };
-type LinearEasingFunctionInputWiggle = WiggleInput & { type: typeof EasingType.WIGGLE; mathFunction?: never };
-type LinearEasingFunctionInputOvershoot = OvershootInput & { type: typeof EasingType.OVERSHOOT; mathFunction?: never };
+type LinearEasingFunctionInputSpring = SpringParams & { type: typeof EasingType.SPRING; mathFunction?: never };
+type LinearEasingFunctionInputBounce = BounceParams & { type: typeof EasingType.BOUNCE; mathFunction?: never };
+type LinearEasingFunctionInputWiggle = WiggleParams & { type: typeof EasingType.WIGGLE; mathFunction?: never };
+type LinearEasingFunctionInputOvershoot = OvershootParams & { type: typeof EasingType.OVERSHOOT; mathFunction?: never };
 
 type LinearEasingFunctionInput =
   | LinearEasingFunctionInputBezier
@@ -47,7 +47,7 @@ const getEasingFunction = (config: LinearEasingFunctionInput) => {
 
 export function generateLinearEasing(config: LinearEasingFunctionInput) {
   const { type, accuracy } = config;
-  const easingFunction: (t: number) => number = config.mathFunction ?? getEasingFunction(config);
+  const easingFunction: (t: number) => number = config.mathFunction || getEasingFunction(config);
 
   const fixedTotalTime =
     type === EasingType.BEZIER ||
@@ -263,7 +263,7 @@ export function createOvershootFunction({
 }
 
 // Function to estimate the total time for the animation to settle
-function getTotalTime(springFunc: (t: number) => number, endValue?: number): number {
+function getTotalTime(springFunc: (t: number) => number, endValue: number): number {
   let time = 0;
   const dt = 0.016; // Start with 60 FPS time step
   let value = springFunc(time);
@@ -291,7 +291,7 @@ function getTotalTime(springFunc: (t: number) => number, endValue?: number): num
   }
 
   // if value is not 1, we need to continue until it reaches 1 (rounded to 2 decimal places)
-  while (roundTo(value, 2) !== (endValue)) {
+  while (roundTo(value, 2) !== endValue) {
     time += dt;
     value = roundTo(springFunc(time), 2);
   }

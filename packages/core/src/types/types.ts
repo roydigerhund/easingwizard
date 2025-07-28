@@ -1,4 +1,4 @@
-import type { BezierInput, BounceInput, OvershootInput, SpringInput, WiggleInput } from '~/validations/input';
+import type { BezierParams, BounceParams, OvershootParams, SpringParams, WiggleParams } from '~/validations/input';
 import type {
   AnimationTypeKey,
   BezierCurveKey,
@@ -64,39 +64,39 @@ export type EasingState = {
   // Bezier
   bezierStyle: BezierStyleKey;
   bezierCurve: BezierCurveKey;
-  bezierX1: BezierInput['x1'];
-  bezierY1: BezierInput['y1'];
-  bezierX2: BezierInput['x2'];
-  bezierY2: BezierInput['y2'];
+  bezierX1: BezierParams['x1'];
+  bezierY1: BezierParams['y1'];
+  bezierX2: BezierParams['x2'];
+  bezierY2: BezierParams['y2'];
   bezierValue: string;
   bezierIsCustom: boolean;
   // Spring
   springCurve: SpringCurveKey;
-  springMass: SpringInput['mass'];
-  springStiffness: SpringInput['stiffness'];
-  springDamping: SpringInput['damping'];
+  springMass: SpringParams['mass'];
+  springStiffness: SpringParams['stiffness'];
+  springDamping: SpringParams['damping'];
   springValue: string;
   springPoints: Point[];
   springIsCustom: boolean;
   // Bounce
   bounceCurve: BounceCurveKey;
-  bounceBounces: BounceInput['bounces'];
-  bounceDamping: BounceInput['damping'];
+  bounceBounces: BounceParams['bounces'];
+  bounceDamping: BounceParams['damping'];
   bounceValue: string;
   bouncePoints: Point[];
   bounceIsCustom: boolean;
   // Wiggle
   wiggleCurve: WiggleCurveKey;
-  wiggleWiggles: WiggleInput['wiggles'];
-  wiggleDamping: WiggleInput['damping'];
+  wiggleWiggles: WiggleParams['wiggles'];
+  wiggleDamping: WiggleParams['damping'];
   wiggleValue: string;
   wigglePoints: Point[];
   wiggleIsCustom: boolean;
   // Overeshoot
-  overshootStyle: OvershootInput['style'];
+  overshootStyle: OvershootParams['style'];
   overshootCurve: OvershootCurveKey;
-  overshootMass: OvershootInput['mass'];
-  overshootDamping: OvershootInput['damping'];
+  overshootMass: OvershootParams['mass'];
+  overshootDamping: OvershootParams['damping'];
   overshootValue: string;
   overshootPoints: Point[];
   overshootIsCustom: boolean;

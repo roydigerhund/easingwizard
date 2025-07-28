@@ -1,4 +1,5 @@
 import { z } from 'zod/v4';
+import { EasingType } from '~/types/enums';
 
 export const ErrorResponseSchema = z
   .object({
@@ -16,7 +17,13 @@ export const ErrorResponseSchema = z
             .array(z.string())
             .meta({
               description: 'List of valid values or types',
-              example: ['BEZIER', 'SPRING', 'BOUNCE', 'WIGGLE', 'OVERSHOOT'],
+              example: [
+                EasingType.BEZIER,
+                EasingType.SPRING,
+                EasingType.BOUNCE,
+                EasingType.WIGGLE,
+                EasingType.OVERSHOOT,
+              ],
             })
             .optional(),
           code: z.string().meta({

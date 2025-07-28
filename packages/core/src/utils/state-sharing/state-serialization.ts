@@ -8,7 +8,7 @@ import {
 import { restStateKeys } from '~/state';
 import { EasingType, type EasingTypeKey } from '~/types/enums';
 import type { EasingState, EasingStateShare, EasingStateShareKey } from '~/types/types';
-import type { BezierInput } from '~/validations/input';
+import type { BezierParams } from '~/validations/input';
 import { createCubicBezierString, generateLinearEasing } from '../easing';
 import { isAnyDefined } from '../values';
 import { DEFAULTS_V0 } from './v0';
@@ -96,7 +96,7 @@ export function rehydrateShareState(state: EasingStateShare, version: number = 0
     case EasingType.BEZIER: {
       fullState.bezierIsCustom = isAnyDefined(state.bezierX1, state.bezierX2, state.bezierY1, state.bezierY2);
       if (!fullState.bezierIsCustom) {
-        const bezierFunction = bezierFunctions[fullState.bezierStyle][fullState.bezierCurve] as BezierInput;
+        const bezierFunction = bezierFunctions[fullState.bezierStyle][fullState.bezierCurve] as BezierParams;
         fullState.bezierX1 = bezierFunction.x1;
         fullState.bezierY1 = bezierFunction.y1;
         fullState.bezierX2 = bezierFunction.x2;

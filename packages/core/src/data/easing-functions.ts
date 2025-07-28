@@ -7,11 +7,11 @@ import {
   type SpringCurveKey,
   type WiggleCurveKey,
 } from '~/types/enums';
-import type { BezierInput } from '~/validations/input';
+import type { BezierParams } from '~/validations/input';
 
 export const bezierEasings: Record<
   BezierStyleKey,
-  Partial<Record<BezierCurveKey, BezierInput & { mathFunction: (t: number) => number }>>
+  Partial<Record<BezierCurveKey, BezierParams & { mathFunction: (t: number) => number }>>
 > = {
   IN: {
     // In Sine
@@ -399,13 +399,13 @@ export const bezierEasings: Record<
   // },
 };
 
-export const bezierStyleFunctions: Record<BezierStyleKey, BezierInput> = {
+export const bezierStyleFunctions: Record<BezierStyleKey, BezierParams> = {
   IN: { x1: 0.75, y1: 0, x2: 1, y2: 1 },
   OUT: { x1: 0, y1: 0, x2: 0.25, y2: 1 },
   IN_OUT: { x1: 0.6, y1: 0, x2: 0.4, y2: 1 },
   OUT_IN: { x1: 0.4, y1: 1, x2: 0.6, y2: 0 },
 };
-export const bezierFunctions: Record<BezierStyleKey, Partial<Record<BezierCurveKey, BezierInput>>> = {
+export const bezierFunctions: Record<BezierStyleKey, Partial<Record<BezierCurveKey, BezierParams>>> = {
   IN: Object.fromEntries(
     Object.entries(bezierEasings.IN).map(([curve, { x1, y1, x2, y2 }]) => [curve, { x1, y1, x2, y2 }]),
   ),

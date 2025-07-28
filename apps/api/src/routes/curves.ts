@@ -1,5 +1,4 @@
 import {
-  API_VERSION,
   decodeState,
   EasingTypeSchema,
   encodeState,
@@ -8,6 +7,7 @@ import {
   rehydrateShareState,
   toScreamingSnakeCase,
   type EasingCurveResponse,
+  type EasingTypeKey,
   type ErrorResponse,
 } from 'easing-wizard-core';
 import { Hono } from 'hono';
@@ -18,6 +18,12 @@ import { transformOtherError, transformZodError } from '~/utils/errors';
 const app = new Hono();
 
 const frontendUrl = getEnv().FRONTEND_URL;
+
+const createCurveLinks = (id: string, type: EasingTypeKey) => ({
+  self: `/curves/${id}`,
+  share_url: `${frontendUrl}/#${id}`,
+  create: `/curves/${type.toLowerCase()}`,
+});
 
 app.get('/:id', async (c) => {
   try {
@@ -38,11 +44,7 @@ app.get('/:id', async (c) => {
       input,
       output,
       // HATEOAS
-      links: {
-        self: `${API_VERSION}/curves/${id}`,
-        share_url: `${frontendUrl}/#${id}`,
-        create: `${API_VERSION}/curves/${type}`,
-      },
+      links: createCurveLinks(id, type),
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -54,7 +56,7 @@ app.get('/:id', async (c) => {
 
 app.post('/:type', async (c) => {
   const config = await c.req.json();
-  
+
   try {
     const type = EasingTypeSchema.parse(toScreamingSnakeCase(c.req.param('type')));
 
@@ -70,11 +72,7 @@ app.post('/:type', async (c) => {
       input,
       output,
       // HATEOAS
-      links: {
-        self: `${API_VERSION}/curves/${id}`,
-        share_url: `${frontendUrl}/#${id}`,
-        create: `${API_VERSION}/curves/${type}`,
-      },
+      links: createCurveLinks(id, type),
     });
   } catch (error) {
     if (error instanceof z.ZodError) {

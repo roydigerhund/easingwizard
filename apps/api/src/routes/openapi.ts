@@ -5,12 +5,13 @@ import {
   EasingTypeSchema,
   ErrorResponseSchema,
   healthCheckSchema,
-  InputUnionSchema,
+  ParamsUnionSchema,
   PresetsResponseSchema,
 } from 'easing-wizard-core';
 import { Hono } from 'hono';
 import { createDocument } from 'zod-openapi';
 import z from 'zod/v4';
+import { getEnv } from '~/utils/env';
 
 const badRequest = {
   description: '400 Bad Request',
@@ -27,7 +28,20 @@ const document = createDocument({
     title: 'Easing Wizard API',
     description: 'API for generating CSS easing curves of types like Bézier, Spring, Bounce, Wiggle, and Overshoot.',
     version: '1.0.0',
+    contact: {
+      name: 'Matthias Martin',
+      url: 'https://x.com/RoyDigerhund',
+    },
   },
+  servers: [
+    {
+      url: `${getEnv().API_URL}/${API_VERSION}`,
+    },
+  ],
+  tags: [
+    { name: 'Curves', description: 'Endpoints for managing easing curves' },
+    { name: 'Health', description: 'Health check endpoint' },
+  ],
   paths: {
     '/healthz': {
       get: {
@@ -47,7 +61,7 @@ const document = createDocument({
         tags: ['Health'],
       },
     },
-    [`/${API_VERSION}/presets`]: {
+    '/presets': {
       get: {
         operationId: 'getPresets',
         summary: 'Get Preset Curves',
@@ -65,7 +79,7 @@ const document = createDocument({
         tags: ['Curves'],
       },
     },
-    [`/${API_VERSION}/curves/{id}`]: {
+    '/curves/{id}': {
       get: {
         operationId: 'getCurveById',
         summary: 'Get Curve by ID',
@@ -89,7 +103,7 @@ const document = createDocument({
         tags: ['Curves'],
       },
     },
-    [`/${API_VERSION}/curves/{type}`]: {
+    '/curves/{type}': {
       post: {
         operationId: 'createCurve',
         summary: 'Create a New Curve',
@@ -103,7 +117,7 @@ const document = createDocument({
           required: true,
           content: {
             'application/json': {
-              schema: InputUnionSchema.describe('Input parameters for the easing curve'),
+              schema: ParamsUnionSchema.describe('Input parameters for the easing curve'),
             },
           },
         },
@@ -122,10 +136,6 @@ const document = createDocument({
       },
     },
   },
-  tags: [
-    { name: 'Curves', description: 'Endpoints for managing easing curves' },
-    { name: 'Health', description: 'Health check endpoint' },
-  ],
 });
 
 const app = new Hono();

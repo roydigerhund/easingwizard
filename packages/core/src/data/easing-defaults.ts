@@ -13,7 +13,7 @@ import {
   SpringCurve,
   WiggleCurve,
 } from '~/types/enums';
-import type { BezierInput } from '~/validations/input';
+import type { BezierParams } from '~/validations/input';
 import {
   bezierFunctions,
   bounceFunctions,
@@ -24,7 +24,7 @@ import {
 
 export const defaultBezierStyle = BezierStyle.IN_OUT;
 export const defaultBezierCurve = BezierCurve.CUBIC;
-export const defaultBezierFunction = bezierFunctions[defaultBezierStyle][defaultBezierCurve] as BezierInput;
+export const defaultBezierFunction = bezierFunctions[defaultBezierStyle][defaultBezierCurve] as BezierParams;
 
 export const defaultSpringCurve = SpringCurve.HEAVY;
 export const defaultSpringFunction = springFunctions[defaultSpringCurve];

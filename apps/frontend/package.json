@@ -4,7 +4,7 @@
   "scripts": {
     "build": "react-router build",
     "dev": "react-router dev",
-    "start": "react-router-serve ./build/server/index.js",
+    "start": "react-router-serve ./build/server/nodejs_eyJydW50aW1lIjoibm9kZWpzIn0/index.js",
     "typecheck": "react-router typegen && tsc",
     "clean": "rm -rf build dist"
   },
@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@react-router/dev": "^7.6.3",
+    "@react-router/serve": "^7.7.1",
     "@tailwindcss/vite": "^4.1.11",
     "@types/node": "^20",
     "@types/react": "^19.1.8",

@@ -1,8 +1,8 @@
 import type { Point } from '~/types/types';
-import type { BezierInput } from '~/validations/input';
+import type { BezierParams } from '~/validations/input';
 import { roundTo } from './numbers';
 
-export const generateBezierSVGPath = ({ x1, y1, x2, y2 }: BezierInput) => {
+export const generateBezierSVGPath = ({ x1, y1, x2, y2 }: BezierParams) => {
   return `M0,100 C${roundTo(x1 * 100, 3)},${roundTo(100 - y1 * 100, 3)} ${roundTo(x2 * 100, 3)},${roundTo(100 - y2 * 100, 3)} 100,0`;
 };
 

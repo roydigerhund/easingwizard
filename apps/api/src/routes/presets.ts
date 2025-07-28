@@ -1,5 +1,4 @@
 import {
-  API_VERSION,
   EasingType,
   EasingTypeSchema,
   getAllPresets,
@@ -27,9 +26,9 @@ const frontendUrl = getEnv().FRONTEND_URL;
 const enhancePresetWithApiData = (preset: Preset) => ({
   ...preset,
   links: {
-    self: `${API_VERSION}/curves/${preset.id}`,
+    self: `/curves/${preset.id}`,
     share_url: `${frontendUrl}/#${preset.id}`,
-    create: `${API_VERSION}/curves/${preset.type}`,
+    create: `/curves/${preset.type.toLowerCase()}`,
   },
 });
 
@@ -79,8 +78,8 @@ app.get('/', async (c) => {
       presets,
       // HATEOAS
       links: {
-        self: `${API_VERSION}/presets${type ? `?type=${type}` : ''}`,
-        filter: `/${API_VERSION}/presets{?type}`, // RFC 6570 URI-Template
+        self: `/presets${type ? `?type=${type}` : ''}`,
+        filter: '/presets{?type}', // RFC 6570 URI-Template
       },
     });
   } catch (error) {

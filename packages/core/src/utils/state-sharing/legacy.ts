@@ -1,7 +1,7 @@
 import { defaultEasingState } from '~/state';
 import { EasingType } from '~/types/enums';
 import type { EasingState } from '~/types/types';
-import { BounceInputSchema, OvershootInputSchema, SpringInputSchema, WiggleInputSchema } from '~/validations/input';
+import { BounceParamsSchema, OvershootParamsSchema, SpringParamsSchema, WiggleParamsSchema } from '~/validations/input';
 import { generateLinearEasing } from '../easing';
 import { mapRange } from '../numbers';
 import { toScreamingSnakeCase } from '../string';
@@ -50,7 +50,7 @@ export function rehydrateShareStateLegacy(searchParams: URLSearchParams) {
     }
   });
   if (newState.easingType === EasingType.SPRING) {
-    const values = SpringInputSchema.parse({
+    const values = SpringParamsSchema.parse({
       mass: newState.springMass,
       stiffness: newState.springStiffness,
       damping: newState.springDamping,
@@ -67,7 +67,7 @@ export function rehydrateShareStateLegacy(searchParams: URLSearchParams) {
     newState.springPoints = sampledPoints;
   }
   if (newState.easingType === EasingType.BOUNCE) {
-    const values = BounceInputSchema.parse({
+    const values = BounceParamsSchema.parse({
       bounces: newState.bounceBounces,
       damping: newState.bounceDamping,
       accuracy: newState.editorAccuracy,
@@ -82,7 +82,7 @@ export function rehydrateShareStateLegacy(searchParams: URLSearchParams) {
     newState.bouncePoints = sampledPoints;
   }
   if (newState.easingType === EasingType.WIGGLE) {
-    const values = WiggleInputSchema.parse({
+    const values = WiggleParamsSchema.parse({
       wiggles: newState.wiggleWiggles,
       damping: newState.wiggleDamping,
       accuracy: newState.editorAccuracy,
@@ -97,7 +97,7 @@ export function rehydrateShareStateLegacy(searchParams: URLSearchParams) {
     newState.wigglePoints = sampledPoints;
   }
   if (newState.easingType === EasingType.OVERSHOOT) {
-    const values = OvershootInputSchema.parse({
+    const values = OvershootParamsSchema.parse({
       style: newState.overshootStyle,
       mass: newState.overshootMass,
       damping: newState.overshootDamping,

@@ -1,12 +1,12 @@
 import { EasingType, type EasingTypeKey } from '~/types/enums';
 import type { EasingState, EasingStateShare } from '~/types/types';
 import {
-  BezierInputSchema,
-  BounceInputSchema,
-  OvershootInputSchema,
-  SpringInputSchema,
-  WiggleInputSchema,
-  type InputUnion,
+  BezierParamsSchema,
+  BounceParamsSchema,
+  OvershootParamsSchema,
+  SpringParamsSchema,
+  WiggleParamsSchema,
+  type ParamsUnion,
 } from '~/validations/input';
 import type { OutputUnion } from '~/validations/output';
 import { createCubicBezierString, cssStringToTailwind, generateLinearEasing } from './easing';
@@ -19,7 +19,7 @@ import {
 } from './svg';
 
 type ApiResponse = {
-  input: InputUnion;
+  input: ParamsUnion;
   output: OutputUnion;
 };
 
@@ -112,7 +112,7 @@ export function getApiResponseFromInput(
 ): ApiResponse & { shareState: EasingStateShare } {
   switch (type) {
     case EasingType.BEZIER: {
-      const bezierConfig = BezierInputSchema.parse(config);
+      const bezierConfig = BezierParamsSchema.parse(config);
       const bezierString = createCubicBezierString(bezierConfig);
       const shareState: EasingStateShare = {
         easingType: EasingType.BEZIER,
@@ -133,7 +133,7 @@ export function getApiResponseFromInput(
       };
     }
     case EasingType.SPRING: {
-      const springConfig = SpringInputSchema.parse(config);
+      const springConfig = SpringParamsSchema.parse(config);
       const { easingValue, sampledPoints } = generateLinearEasing({ type, ...springConfig });
       const shareState: EasingStateShare = {
         easingType: EasingType.SPRING,
@@ -154,7 +154,7 @@ export function getApiResponseFromInput(
       };
     }
     case EasingType.BOUNCE: {
-      const bounceConfig = BounceInputSchema.parse(config);
+      const bounceConfig = BounceParamsSchema.parse(config);
       const { easingValue, sampledPoints } = generateLinearEasing({ type, ...bounceConfig });
       const shareState: EasingStateShare = {
         easingType: EasingType.BOUNCE,
@@ -174,7 +174,7 @@ export function getApiResponseFromInput(
       };
     }
     case EasingType.WIGGLE: {
-      const wiggleConfig = WiggleInputSchema.parse(config);
+      const wiggleConfig = WiggleParamsSchema.parse(config);
       const { easingValue, sampledPoints } = generateLinearEasing({ type, ...wiggleConfig });
       const shareState: EasingStateShare = {
         easingType: EasingType.WIGGLE,
@@ -194,7 +194,7 @@ export function getApiResponseFromInput(
       };
     }
     case EasingType.OVERSHOOT: {
-      const overshootConfig = OvershootInputSchema.parse(config);
+      const overshootConfig = OvershootParamsSchema.parse(config);
       const { easingValue, sampledPoints } = generateLinearEasing({ type, ...overshootConfig });
       const shareState: EasingStateShare = {
         easingType: EasingType.OVERSHOOT,

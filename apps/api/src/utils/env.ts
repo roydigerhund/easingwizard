@@ -1,6 +1,7 @@
 import { z } from "zod/v4";
 
 const envSchema = z.object({
+  API_URL: z.url(),
   FRONTEND_URL: z.url(),
 });
 
