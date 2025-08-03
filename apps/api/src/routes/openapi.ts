@@ -91,6 +91,7 @@ const document = createDocument({
   paths: {
     '/healthz': {
       get: {
+        servers: [{ url: getEnv().API_URL }],
         operationId: 'healthCheck',
         summary: 'Health Check',
         description: 'Check if the API is running',

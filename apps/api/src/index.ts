@@ -16,6 +16,7 @@ app.get('/', (c) => {
 });
 
 app.route('/healthz', healthz);
+app.route(`${API_VERSION}/healthz`, healthz);
 
 app.route(`${API_VERSION}/curves`, curves);
 
