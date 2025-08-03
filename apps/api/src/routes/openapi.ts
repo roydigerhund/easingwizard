@@ -33,30 +33,35 @@ const badRequest = {
 const createCurveEndpoints = [
   {
     path: '/curves/bezier',
+    operationId: 'createBezierCurve',
     name: 'Bézier',
     requestBodySchema: BezierParamsSchema,
     responseSchema: BezierEasingCurveResponseSchema,
   },
   {
     path: '/curves/spring',
+    operationId: 'createSpringCurve',
     name: 'Spring',
     requestBodySchema: SpringParamsSchema,
     responseSchema: SpringEasingCurveResponseSchema,
   },
   {
     path: '/curves/bounce',
+    operationId: 'createBounceCurve',
     name: 'Bounce',
     requestBodySchema: BounceParamsSchema,
     responseSchema: BounceEasingCurveResponseSchema,
   },
   {
     path: '/curves/wiggle',
+    operationId: 'createWiggleCurve',
     name: 'Wiggle',
     requestBodySchema: WiggleParamsSchema,
     responseSchema: WiggleEasingCurveResponseSchema,
   },
   {
     path: '/curves/overshoot',
+    operationId: 'createOvershootCurve',
     name: 'Overshoot',
     requestBodySchema: OvershootParamsSchema,
     responseSchema: OvershootEasingCurveResponseSchema,
@@ -149,7 +154,7 @@ const document = createDocument({
         cfg.path,
         {
           post: {
-            operationId: `create${cfg.name}Curve`,
+            operationId: cfg.operationId,
             summary: `Create ${cfg.name} Curve`,
             description: `Generate a ${cfg.name} easing curve based on input parameters`,
             requestBody: {
