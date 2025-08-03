@@ -27,7 +27,8 @@ app.get(
   '/docs',
   Scalar({
     url: '/openapi',
-    layout: 'classic',
+    // layout: 'classic',
+    hideModels: true,
     theme: 'deepSpace',
     darkMode: true,
     metaData: {

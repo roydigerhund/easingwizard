@@ -1,12 +1,20 @@
 import {
   API_VERSION,
+  BezierEasingCurveResponseSchema,
+  BezierParamsSchema,
+  BounceEasingCurveResponseSchema,
+  BounceParamsSchema,
   EasingCurveResponseSchema,
-  EasingTypeLowerCaseSchema,
   EasingTypeSchema,
   ErrorResponseSchema,
   healthCheckSchema,
-  ParamsUnionSchema,
+  OvershootEasingCurveResponseSchema,
+  OvershootParamsSchema,
   PresetsResponseSchema,
+  SpringEasingCurveResponseSchema,
+  SpringParamsSchema,
+  WiggleEasingCurveResponseSchema,
+  WiggleParamsSchema,
 } from 'easing-wizard-core';
 import { Hono } from 'hono';
 import { createDocument } from 'zod-openapi';
@@ -21,6 +29,39 @@ const badRequest = {
     },
   },
 };
+
+const createCurveEndpoints = [
+  {
+    path: '/curves/bezier',
+    name: 'Bézier',
+    requestBodySchema: BezierParamsSchema,
+    responseSchema: BezierEasingCurveResponseSchema,
+  },
+  {
+    path: '/curves/spring',
+    name: 'Spring',
+    requestBodySchema: SpringParamsSchema,
+    responseSchema: SpringEasingCurveResponseSchema,
+  },
+  {
+    path: '/curves/bounce',
+    name: 'Bounce',
+    requestBodySchema: BounceParamsSchema,
+    responseSchema: BounceEasingCurveResponseSchema,
+  },
+  {
+    path: '/curves/wiggle',
+    name: 'Wiggle',
+    requestBodySchema: WiggleParamsSchema,
+    responseSchema: WiggleEasingCurveResponseSchema,
+  },
+  {
+    path: '/curves/overshoot',
+    name: 'Overshoot',
+    requestBodySchema: OvershootParamsSchema,
+    responseSchema: OvershootEasingCurveResponseSchema,
+  },
+];
 
 const document = createDocument({
   openapi: '3.1.0' as const,
@@ -86,7 +127,7 @@ const document = createDocument({
         description: 'Retrieve a specific easing curve by its ID',
         requestParams: {
           path: z.object({
-            id: z.string().describe('The ID of the easing curve'),
+            id: z.string().meta({ description: 'The ID of the easing curve', example: '0a0d.25e.1f.75g.914' }),
           }),
         },
         responses: {
@@ -103,38 +144,38 @@ const document = createDocument({
         tags: ['Curves'],
       },
     },
-    '/curves/{type}': {
-      post: {
-        operationId: 'createCurve',
-        summary: 'Create a New Curve',
-        description: 'Generate a new easing curve based on input parameters',
-        requestParams: {
-          path: z.object({
-            type: EasingTypeLowerCaseSchema,
-          }),
-        },
-        requestBody: {
-          required: true,
-          content: {
-            'application/json': {
-              schema: ParamsUnionSchema.describe('Input parameters for the easing curve'),
-            },
-          },
-        },
-        responses: {
-          '200': {
-            description: '200 OK',
-            content: {
-              'application/json': {
-                schema: EasingCurveResponseSchema,
+    ...Object.fromEntries(
+      createCurveEndpoints.map((cfg) => [
+        cfg.path,
+        {
+          post: {
+            operationId: `create${cfg.name}Curve`,
+            summary: `Create ${cfg.name} Curve`,
+            description: `Generate a ${cfg.name} easing curve based on input parameters`,
+            requestBody: {
+              required: true,
+              content: {
+                'application/json': {
+                  schema: cfg.requestBodySchema,
+                },
               },
             },
+            responses: {
+              '200': {
+                description: '200 OK',
+                content: {
+                  'application/json': {
+                    schema: cfg.responseSchema,
+                  },
+                },
+              },
+              '400': badRequest,
+            },
+            tags: ['Curves'],
           },
-          '400': badRequest,
         },
-        tags: ['Curves'],
-      },
-    },
+      ]),
+    ),
   },
 });
 

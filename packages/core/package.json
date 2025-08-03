@@ -1,8 +1,8 @@
 {
   "name": "easing-wizard-core",
   "version": "1.0.0",
-  "type": "module",
   "description": "Core easing curve calculation and generation utilities",
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
