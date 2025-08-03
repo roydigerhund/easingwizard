@@ -89,25 +89,6 @@ const document = createDocument({
     { name: 'Health', description: 'Health check endpoint' },
   ],
   paths: {
-    '/healthz': {
-      get: {
-        servers: [{ url: getEnv().API_URL }],
-        operationId: 'healthCheck',
-        summary: 'Health Check',
-        description: 'Check if the API is running',
-        responses: {
-          '200': {
-            description: 'API is healthy',
-            content: {
-              'application/json': {
-                schema: healthCheckSchema,
-              },
-            },
-          },
-        },
-        tags: ['Health'],
-      },
-    },
     '/presets': {
       get: {
         operationId: 'getPresets',
@@ -182,6 +163,25 @@ const document = createDocument({
         },
       ]),
     ),
+    '/healthz': {
+      get: {
+        servers: [{ url: getEnv().API_URL }],
+        operationId: 'healthCheck',
+        summary: 'Health Check',
+        description: 'Check if the API is running',
+        responses: {
+          '200': {
+            description: 'API is healthy',
+            content: {
+              'application/json': {
+                schema: healthCheckSchema,
+              },
+            },
+          },
+        },
+        tags: ['Health'],
+      },
+    },
   },
 });
 
