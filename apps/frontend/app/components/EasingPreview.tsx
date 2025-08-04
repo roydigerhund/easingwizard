@@ -1,5 +1,6 @@
 import { AnimationType, EasingType, humanize, PreviewPlayMode, type AnimationTypeKey } from 'easing-wizard-core';
 import { useEffect, useState } from 'react';
+import { classNames } from '~/css/class-names';
 import { useEasingStore } from '~/state/easing-store';
 import CardHeadline from './CardHeadline';
 import EasingPreviewElement from './EasingPreviewElement';
@@ -72,18 +73,17 @@ export default function EasingPreview() {
             <CloneIcon className="size-7" />
           </IconButton>
           <div className="flex gap-2">
-            {previewPlayMode === PreviewPlayMode.ONCE && (
-              <IconButton
-                label="Play Again"
-                isActive={previewHasRestarted}
-                onClick={() => {
-                  setCounter((prev) => prev + 1);
-                  setPreviewHasRestarted(true);
-                }}
-              >
-                <PlayIcon className="size-7" />
-              </IconButton>
-            )}
+            <IconButton
+              className={classNames(previewPlayMode !== PreviewPlayMode.ONCE && 'pointer-events-none opacity-0')}
+              label="Play Again"
+              isActive={previewHasRestarted}
+              onClick={() => {
+                setCounter((prev) => prev + 1);
+                setPreviewHasRestarted(true);
+              }}
+            >
+              <PlayIcon className="size-7" />
+            </IconButton>
             <IconButton
               label="Play Preview Infinite"
               isActive={previewPlayMode === PreviewPlayMode.INFINITE}
