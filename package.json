@@ -1,7 +1,7 @@
 {
   "name": "easingwizard",
   "version": "1.0.0",
-  "private": true,
+  "private": false,
   "scripts": {
     "build": "turbo run build",
     "build:api": "turbo run build --filter=easingwizard-api",
