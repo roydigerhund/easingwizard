@@ -11,12 +11,16 @@ export * from './generated/preset-data';
 export * from './state';
 
 // TEXT
-export * from './text';
+export * from './text/endpoints';
 
 // TYPES
 export * from './types/enums';
 export * from './types/guards';
 export * from './types/types';
+
+// UTILS ENDPOINTS
+export * from './utils/endpoints/curves';
+export * from './utils/endpoints/presets';
 
 // UTILS STATE SHARING
 export * from './utils/state-sharing/crc';

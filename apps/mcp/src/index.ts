@@ -8,10 +8,12 @@ import {
   BezierParamsSchema,
   BounceEasingCurveResponseSchema,
   BounceParamsSchema,
+  createCurveResponseFromId,
+  createCurveResponseFromInput,
+  createPresetsResponse,
   CurveIdSchema,
   EasingTypeSchema,
   endpointTexts,
-  healthCheckSchema,
   NonUnionEasingCurveResponseSchema,
   OvershootEasingCurveResponseSchema,
   OvershootParamsSchema,
@@ -22,31 +24,6 @@ import {
   WiggleParamsSchema,
 } from 'easing-wizard-core';
 import z from 'zod/v4';
-
-// Base URL for the Easing Wizard API
-const BASE_URL = 'https://api.easingwizard.com/v1';
-
-// Helper function to make API requests
-async function makeApiRequest(endpoint: string, options: RequestInit = {}) {
-  const url = `${BASE_URL}${endpoint}`;
-  const response = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-    ...options,
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new McpError(
-      ErrorCode.InternalError,
-      `API request failed: ${response.status} ${response.statusText} - ${errorText}`,
-    );
-  }
-
-  return response.json();
-}
 
 // Create the server
 const server = new Server(
@@ -112,13 +89,6 @@ const toolMapping = [
     inputSchema: OvershootParamsSchema,
     outputSchema: OvershootEasingCurveResponseSchema,
   },
-  {
-    name: endpointTexts.healthCheck.id,
-    title: endpointTexts.healthCheck.title,
-    description: endpointTexts.healthCheck.description,
-    inputSchema: z.object({}),
-    outputSchema: healthCheckSchema,
-  },
 ];
 
 // List available tools
@@ -145,136 +115,30 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
   try {
     switch (name) {
-      case 'get_presets': {
-        const queryParams = new URLSearchParams();
-        if (args?.type && typeof args.type === 'string') {
-          queryParams.append('type', args.type);
-        }
-        const endpoint = `/presets${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-        const result = await makeApiRequest(endpoint);
+      case endpointTexts.getPresets.id: {
+        const type = args?.type ? EasingTypeSchema.parse(args?.type) : undefined;
 
-        return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify(result, null, 2),
-            },
-          ],
-        };
+        const response = await createPresetsResponse(type);
+
+        return { structuredContent: response };
       }
 
-      case 'get_curve_by_id': {
-        if (!args?.id) {
-          throw new McpError(ErrorCode.InvalidParams, 'Missing required parameter: id');
-        }
-        const result = await makeApiRequest(`/curves/${args.id}`);
+      case endpointTexts.getCurveById.id: {
+        const id = CurveIdSchema.parse(args?.id);
+        const response = createCurveResponseFromId(id);
 
-        return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify(result, null, 2),
-            },
-          ],
-        };
+        return { structuredContent: response };
       }
 
-      case 'create_bezier_curve': {
-        const params = BezierParamsSchema.parse(args);
-        const result = await makeApiRequest('/curves/bezier', {
-          method: 'POST',
-          body: JSON.stringify(params),
-        });
+      case endpointTexts.createBezierCurve.id:
+      case endpointTexts.createSpringCurve.id:
+      case endpointTexts.createBounceCurve.id:
+      case endpointTexts.createWiggleCurve.id:
+      case endpointTexts.createOvershootCurve.id: {
+        const type = EasingTypeSchema.parse(name.replace('create', '').replace('Curve', '').toUpperCase());
+        const response = createCurveResponseFromInput({ type, config: args });
 
-        return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify(result, null, 2),
-            },
-          ],
-        };
-      }
-
-      case 'create_spring_curve': {
-        const params = SpringParamsSchema.parse(args);
-        const result = await makeApiRequest('/curves/spring', {
-          method: 'POST',
-          body: JSON.stringify(params),
-        });
-
-        return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify(result, null, 2),
-            },
-          ],
-        };
-      }
-
-      case 'create_bounce_curve': {
-        const params = BounceParamsSchema.parse(args);
-        const result = await makeApiRequest('/curves/bounce', {
-          method: 'POST',
-          body: JSON.stringify(params),
-        });
-
-        return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify(result, null, 2),
-            },
-          ],
-        };
-      }
-
-      case 'create_wiggle_curve': {
-        const params = WiggleParamsSchema.parse(args);
-        const result = await makeApiRequest('/curves/wiggle', {
-          method: 'POST',
-          body: JSON.stringify(params),
-        });
-
-        return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify(result, null, 2),
-            },
-          ],
-        };
-      }
-
-      case 'create_overshoot_curve': {
-        const params = OvershootParamsSchema.parse(args);
-        const result = await makeApiRequest('/curves/overshoot', {
-          method: 'POST',
-          body: JSON.stringify(params),
-        });
-
-        return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify(result, null, 2),
-            },
-          ],
-        };
-      }
-
-      case 'health_check': {
-        const result = await makeApiRequestWithCustomUrl('/healthz', {}, 'https://api.easingwizard.com');
-
-        return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify(result, null, 2),
-            },
-          ],
-        };
+        return { structuredContent: response };
       }
 
       default:
@@ -290,28 +154,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     );
   }
 });
-
-// Fix the health check URL
-async function makeApiRequestWithCustomUrl(endpoint: string, options: RequestInit = {}, baseUrl?: string) {
-  const url = `${baseUrl || BASE_URL}${endpoint}`;
-  const response = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-    ...options,
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new McpError(
-      ErrorCode.InternalError,
-      `API request failed: ${response.status} ${response.statusText} - ${errorText}`,
-    );
-  }
-
-  return response.json();
-}
 
 // Start the server
 async function main() {

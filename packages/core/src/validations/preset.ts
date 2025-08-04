@@ -10,7 +10,7 @@ import {
   WiggleCurve,
 } from '~/types/enums';
 import { CurveIdSchema } from './curve';
-import { presetsLinksResponseSchema } from './hateoas';
+import { curveLinksResponseSchema, presetsLinksResponseSchema } from './hateoas';
 import {
   BezierParamsSchema,
   BounceParamsSchema,
@@ -44,6 +44,10 @@ export const BezierPresetSchema = z
     description: 'Bézier easing preset configuration',
   });
 
+export const BezierPresetWithLinksSchema = BezierPresetSchema.extend({
+  links: curveLinksResponseSchema,
+}).meta({ id: 'BezierPresetWithLinks' });
+
 // Spring preset schema
 export const SpringPresetSchema = z
   .object({
@@ -63,6 +67,10 @@ export const SpringPresetSchema = z
     title: 'Spring Type Preset',
     description: 'Spring easing preset configuration',
   });
+
+export const SpringPresetWithLinksSchema = SpringPresetSchema.extend({
+  links: curveLinksResponseSchema,
+}).meta({ id: 'SpringPresetWithLinks' });
 
 // Bounce preset schema
 export const BouncePresetSchema = z
@@ -84,6 +92,10 @@ export const BouncePresetSchema = z
     description: 'Bounce easing preset configuration',
   });
 
+export const BouncePresetWithLinksSchema = BouncePresetSchema.extend({
+  links: curveLinksResponseSchema,
+}).meta({ id: 'BouncePresetWithLinks' });
+
 // Wiggle preset schema
 export const WigglePresetSchema = z
   .object({
@@ -103,6 +115,10 @@ export const WigglePresetSchema = z
     title: 'Wiggle Type Preset',
     description: 'Wiggle easing preset configuration',
   });
+
+export const WigglePresetWithLinksSchema = WigglePresetSchema.extend({
+  links: curveLinksResponseSchema,
+}).meta({ id: 'WigglePresetWithLinks' });
 
 // Overshoot preset schema
 export const OvershootPresetSchema = z
@@ -128,11 +144,28 @@ export const OvershootPresetSchema = z
     description: 'Overshoot easing preset configuration',
   });
 
+export const OvershootPresetWithLinksSchema = OvershootPresetSchema.extend({
+  links: curveLinksResponseSchema,
+}).meta({ id: 'OvershootPresetWithLinks' });
+
 // Union of all preset types
 export const PresetSchema = z
   .union([BezierPresetSchema, SpringPresetSchema, BouncePresetSchema, WigglePresetSchema, OvershootPresetSchema])
   .meta({
     id: 'Preset',
+    description: 'Easing preset configuration',
+  });
+
+export const PresetWithLinksSchema = z
+  .union([
+    BezierPresetWithLinksSchema,
+    SpringPresetWithLinksSchema,
+    BouncePresetWithLinksSchema,
+    WigglePresetWithLinksSchema,
+    OvershootPresetWithLinksSchema,
+  ])
+  .meta({
+    id: 'PresetWithLinks',
     description: 'Easing preset configuration',
   });
 
@@ -157,7 +190,7 @@ export const OvershootPresetArraySchema = z.array(OvershootPresetSchema).meta({
   description: 'Array of overshoot easing presets',
 });
 
-export const AllPresetArraySchema = z.array(PresetSchema).meta({
+export const AllPresetArraySchema = z.array(PresetWithLinksSchema).meta({
   description: 'Array of all easing presets',
 });
 

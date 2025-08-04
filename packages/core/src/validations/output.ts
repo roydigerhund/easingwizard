@@ -37,4 +37,6 @@ export const OutputUnionSchema = z.union([BezierEasingOutputSchema, LinearEasing
   description: 'CSS and SVG output for easing functions',
 });
 
+export type BezierEasingOutput = z.infer<typeof BezierEasingOutputSchema>;
+export type LinearEasingOutput = z.infer<typeof LinearEasingOutputSchema>;
 export type OutputUnion = z.infer<typeof OutputUnionSchema>;

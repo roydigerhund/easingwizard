@@ -442,9 +442,9 @@ export const springFunctions: Record<SpringCurveKey, { stiffness: number; dampin
     damping: 75,
   },
   SNAP: {
-    mass: 0.5,
-    stiffness: 60,
-    damping: 50,
+    mass: 1,
+    stiffness: 90,
+    damping: 95,
   },
   LAZY: {
     mass: 2.5,
@@ -452,9 +452,9 @@ export const springFunctions: Record<SpringCurveKey, { stiffness: number; dampin
     damping: 15,
   },
   ELASTIC: {
-    mass: 0.6,
+    mass: 1,
     stiffness: 30,
-    damping: 35,
+    damping: 50,
   },
 };
 

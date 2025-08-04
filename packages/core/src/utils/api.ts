@@ -6,9 +6,13 @@ import {
   OvershootParamsSchema,
   SpringParamsSchema,
   WiggleParamsSchema,
-  type ParamsUnion,
+  type BezierParams,
+  type BounceParams,
+  type OvershootParams,
+  type SpringParams,
+  type WiggleParams,
 } from '~/validations/input';
-import type { OutputUnion } from '~/validations/output';
+import type { BezierEasingOutput, LinearEasingOutput } from '~/validations/output';
 import { createCubicBezierString, cssStringToTailwind, generateLinearEasing } from './easing';
 import {
   generateBezierSVGPath,
@@ -18,15 +22,38 @@ import {
   generateWiggleSVGPolyline,
 } from './svg';
 
-type ApiResponse = {
-  input: ParamsUnion;
-  output: OutputUnion;
-};
+type ApiRespone =
+  | {
+      type: typeof EasingType.BEZIER;
+      input: BezierParams;
+      output: BezierEasingOutput;
+    }
+  | {
+      type: typeof EasingType.SPRING;
+      input: SpringParams;
+      output: LinearEasingOutput;
+    }
+  | {
+      type: typeof EasingType.BOUNCE;
+      input: BounceParams;
+      output: LinearEasingOutput;
+    }
+  | {
+      type: typeof EasingType.WIGGLE;
+      input: WiggleParams;
+      output: LinearEasingOutput;
+    }
+  | {
+      type: typeof EasingType.OVERSHOOT;
+      input: OvershootParams;
+      output: LinearEasingOutput;
+    };
 
-export function getApiResponseFromState(state: EasingState): ApiResponse {
+export function getApiResponseFromState(state: EasingState): ApiRespone {
   switch (state.easingType) {
     case EasingType.BEZIER: {
       return {
+        type: EasingType.BEZIER,
         input: {
           x1: state.bezierX1,
           y1: state.bezierY1,
@@ -47,6 +74,7 @@ export function getApiResponseFromState(state: EasingState): ApiResponse {
     }
     case EasingType.SPRING: {
       return {
+        type: EasingType.SPRING,
         input: {
           mass: state.springMass,
           stiffness: state.springStiffness,
@@ -62,6 +90,7 @@ export function getApiResponseFromState(state: EasingState): ApiResponse {
     }
     case EasingType.BOUNCE: {
       return {
+        type: EasingType.BOUNCE,
         input: {
           bounces: state.bounceBounces,
           damping: state.bounceDamping,
@@ -76,6 +105,7 @@ export function getApiResponseFromState(state: EasingState): ApiResponse {
     }
     case EasingType.WIGGLE: {
       return {
+        type: EasingType.WIGGLE,
         input: {
           wiggles: state.wiggleWiggles,
           damping: state.wiggleDamping,
@@ -90,6 +120,7 @@ export function getApiResponseFromState(state: EasingState): ApiResponse {
     }
     case EasingType.OVERSHOOT: {
       return {
+        type: EasingType.OVERSHOOT,
         input: {
           style: state.overshootStyle,
           mass: state.overshootMass,
@@ -109,7 +140,7 @@ export function getApiResponseFromState(state: EasingState): ApiResponse {
 export function getApiResponseFromInput(
   type: EasingTypeKey,
   config: unknown,
-): ApiResponse & { shareState: EasingStateShare } {
+): ApiRespone & { shareState: EasingStateShare } {
   switch (type) {
     case EasingType.BEZIER: {
       const bezierConfig = BezierParamsSchema.parse(config);
@@ -123,6 +154,7 @@ export function getApiResponseFromInput(
       };
 
       return {
+        type: EasingType.BEZIER,
         input: bezierConfig,
         output: {
           css: bezierString,
@@ -144,6 +176,7 @@ export function getApiResponseFromInput(
       };
 
       return {
+        type: EasingType.SPRING,
         input: springConfig,
         output: {
           css: easingValue,
@@ -164,6 +197,7 @@ export function getApiResponseFromInput(
       };
 
       return {
+        type: EasingType.BOUNCE,
         input: bounceConfig,
         output: {
           css: easingValue,
@@ -184,6 +218,7 @@ export function getApiResponseFromInput(
       };
 
       return {
+        type: EasingType.WIGGLE,
         input: wiggleConfig,
         output: {
           css: easingValue,
@@ -205,6 +240,7 @@ export function getApiResponseFromInput(
       };
 
       return {
+        type: EasingType.OVERSHOOT,
         input: overshootConfig,
         output: {
           css: easingValue,

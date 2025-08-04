@@ -26,10 +26,10 @@ export const BezierEasingCurveResponseSchema = z
   .object({
     id: CurveIdSchema,
     type: z.literal(EasingType.BEZIER),
-    generated_at: generatedAtSchema,
     input: BezierParamsSchema,
     output: BezierEasingOutputSchema,
     links: curveLinksResponseSchema,
+    generated_at: generatedAtSchema,
   })
   .meta({
     id: 'BezierEasingCurveResponse',
@@ -41,10 +41,10 @@ export const SpringEasingCurveResponseSchema = z
   .object({
     id: CurveIdSchema,
     type: z.literal(EasingType.SPRING),
-    generated_at: generatedAtSchema,
     input: SpringParamsSchema,
     output: LinearEasingOutputSchema,
     links: curveLinksResponseSchema,
+    generated_at: generatedAtSchema,
   })
   .meta({
     id: 'SpringEasingCurveResponse',
@@ -56,10 +56,10 @@ export const BounceEasingCurveResponseSchema = z
   .object({
     id: CurveIdSchema,
     type: z.literal(EasingType.BOUNCE),
-    generated_at: generatedAtSchema,
     input: BounceParamsSchema,
     output: LinearEasingOutputSchema,
     links: curveLinksResponseSchema,
+    generated_at: generatedAtSchema,
   })
   .meta({
     id: 'BounceEasingCurveResponse',
@@ -71,10 +71,10 @@ export const WiggleEasingCurveResponseSchema = z
   .object({
     id: CurveIdSchema,
     type: z.literal(EasingType.WIGGLE),
-    generated_at: generatedAtSchema,
     input: WiggleParamsSchema,
     output: LinearEasingOutputSchema,
     links: curveLinksResponseSchema,
+    generated_at: generatedAtSchema,
   })
   .meta({
     id: 'WiggleEasingCurveResponse',
@@ -86,10 +86,10 @@ export const OvershootEasingCurveResponseSchema = z
   .object({
     id: CurveIdSchema,
     type: z.literal(EasingType.OVERSHOOT),
-    generated_at: generatedAtSchema,
     input: OvershootParamsSchema,
     output: LinearEasingOutputSchema,
     links: curveLinksResponseSchema,
+    generated_at: generatedAtSchema,
   })
   .meta({
     id: 'OvershootEasingCurveResponse',
@@ -115,10 +115,10 @@ export const NonUnionEasingCurveResponseSchema = z
   .object({
     id: CurveIdSchema,
     type: z.enum(EasingType),
-    generated_at: generatedAtSchema,
     input: ParamsUnionSchema,
     output: OutputUnionSchema,
     links: curveLinksResponseSchema,
+    generated_at: generatedAtSchema,
   })
 
 export type BezierEasingCurveResponse = z.infer<typeof BezierEasingCurveResponseSchema>;
