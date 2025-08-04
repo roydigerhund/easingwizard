@@ -1,28 +1,61 @@
 {
   "name": "@easingwizard/mcp-server",
   "version": "1.0.0",
-  "description": "MCP for Easing Wizard",
+  "description": "Model Context Protocol (MCP) server for the Easing Wizard API - enables generation of various CSS easing curves: Bézier, Spring, Bounce, Wiggle, and Overshoot",
   "type": "module",
   "main": "./dist/index.js",
   "bin": {
     "easingwizard-mcp": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc && tsc-alias",
-    "watch": "tsc --watch",
+    "build": "esbuild src/index.ts --bundle --platform=node --target=node18 --format=esm --outfile=dist/index.js --external:@modelcontextprotocol/sdk",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:full": "pnpm run build && pnpm run build:types",
+    "watch": "esbuild src/index.ts --bundle --platform=node --target=node18 --format=esm --outfile=dist/index.js --external:@modelcontextprotocol/sdk --banner:js=\"#!/usr/bin/env node\" --watch",
     "start": "node ./dist/index.js",
-    "inspect": "npx @modelcontextprotocol/inspector node dist/index.js"
+    "inspect": "npx @modelcontextprotocol/inspector node dist/index.js",
+    "prepublishOnly": "pnpm run build:full"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "easing",
+    "css",
+    "animation",
+    "bezier",
+    "spring",
+    "bounce",
+    "wiggle",
+    "overshoot",
+    "curves"
+  ],
+  "author": "Matthias Martin",
+  "homepage": "https://easingwizard.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/roydigerhund/easingwizard.git",
+    "directory": "apps/mcp"
+  },
+  "bugs": {
+    "url": "https://github.com/roydigerhund/easingwizard/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.0",
-    "easingwizard-core": "workspace:*",
-    "zod": "^3.23.8"
+    "zod": "^4.0.14"
   },
   "devDependencies": {
     "@types/node": "^24.1.0",
-    "tsc-alias": "^1.8.16"
+    "easingwizard-core": "workspace:*",
+    "esbuild": "^0.24.0",
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.8.0"
   }
 }

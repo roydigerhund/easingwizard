@@ -1,7 +1,73 @@
-PLACEHOLDER
+# Easing Wizard
 
+A comprehensive toolkit for creating and using CSS easing curves. Generate Bézier, Spring, Bounce, Wiggle, and Overshoot animations with ease.
 
-Example Spring Curve CSS: 
+🌐 **Website**: [easingwizard.com](https://easingwizard.com)  
+🛠️ **API**: [api.easingwizard.com](https://api.easingwizard.com)
+📦 **MCP Server**: [@easingwizard/mcp-server](https://www.npmjs.com/package/@easingwizard/mcp-server)
+
+## What is Easing Wizard?
+
+Easing Wizard helps developers create smooth, professional animations by providing:
+
+- **Interactive curve editor** with real-time preview
+- **Physics-based animations** (spring, bounce, overshoot)
+- **CSS & Tailwind CSS output** ready to use
+- **Shareable links** for collaboration
+- **AI integration** via Model Context Protocol (MCP)
+
+## Repository Structure
+
+This is a monorepo containing multiple packages and applications:
+
+### 🌍 Applications
+
+- **[`apps/frontend/`](apps/frontend/)** - React Router web application ([easingwizard.com](https://easingwizard.com))
+- **[`apps/api/`](apps/api/)** - Hono backend API for curve generation
+- **[`apps/mcp/`](apps/mcp/)** - Model Context Protocol server for AI assistants
+
+### 📦 Packages
+
+- **[`packages/core/`](packages/core/)** - Shared utilities, types, and curve generation logic
+
+## 🚀 Quick Start
+
+### For Developers
+
+```bash
+# Clone the repository
+git clone https://github.com/roydigerhund/easing-wizard.git
+cd easing-wizard
+
+# Install dependencies
+pnpm install
+
+# Start all apps in development
+pnpm dev
+
+# Or start individual apps
+pnpm dev:frontend  # React app on http://localhost:5173
+pnpm dev:api       # API server on http://localhost:3000
+```
+
+### For AI Assistants (Claude, VS Code, etc.)
+
+Add to your MCP client configuration:
+
+```json
+{
+  "mcpServers": {
+    "easingwizard": {
+      "command": "npx",
+      "args": ["@easingwizard/mcp-server"]
+    }
+  }
+}
+```
+
+## 🎨 Examples
+
+### Spring Animation 
 
 ```css
 .spring-curve {
@@ -34,12 +100,22 @@ Example Bézier Curve CSS:
 ease-[cubic-bezier(0.42,0,0.58,1)]
 ```
 
-**Shareable Link:**  
-https://easingwizard.com/#0a0d.42e0f.58g13h
+### Bézier Curve
 
----
+```css
+.bezier-curve {
+  transition-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+}
+```
 
-Example Bounce Curve CSS:
+**Tailwind CSS:**
+```css
+ease-[cubic-bezier(0.42,0,0.58,1)]
+```
+
+**Shareable Link:** [easingwizard.com/#0a0d.42e0f.58g13h](https://easingwizard.com/#0a0d.42e0f.58g13h)
+
+### Bounce Animation
 
 ```css
 .bounce-curve {
@@ -47,18 +123,9 @@ Example Bounce Curve CSS:
 }
 ```
 
-**Tailwind CSS:**
+**Shareable Link:** [easingwizard.com/#0a2m3n30y21E](https://easingwizard.com/#0a2m3n30y21E)
 
-```css
-ease-[linear(0,0.059_7.7%,0.113_12.8%,0.181_17.2%,0.27_21.2%,0.537_28.8%,1_37.8%,0.617_45.7%,0.531_48.8%,0.503_51.7%,0.529_54.5%,0.606_57.3%,0.998_65.5%,0.823_69.9%,0.781_71.9%,0.768_73.8%,0.779_75.6%,0.812_77.5%,1_84.5%,0.956_87.1%,0.943_89.6%,0.951_91.7%,0.993_96.9%,1)]
-```
-
-**Shareable Link:**  
-https://easingwizard.com/#0a2m3n30y21E
-
----
-
-Example Wiggle Curve CSS:
+### Wiggle Effect
 
 ```css
 .wiggle-curve {
@@ -66,30 +133,35 @@ Example Wiggle Curve CSS:
 }
 ```
 
-**Tailwind CSS:**
+**Shareable Link:** [easingwizard.com/#0a3p3q20y23U](https://easingwizard.com/#0a3p3q20y23U)
 
-```css
-ease-[linear(0,0.72_8.4%,0.884_11.9%,0.925_13.6%,0.94_15.4%,0.929_16.9%,0.9_18.4%,0.785_21.5%,-0.196_36.6%,-0.371_40.6%,-0.457_44.5%,-0.468_46.1%,-0.465_47.7%,-0.422_51.1%,-0.046_64.6%,0.025_68.1%,0.066_71.5%,0.081_74.3%,0.081_77.4%,0.012_90.8%,0)]
-```
+## 🛠️ Tech Stack
 
-**Shareable Link:**  
-https://easingwizard.com/#0a3p3q20y23U
+- **Frontend**: React 19, React Router v7, Tailwind CSS v4, Zustand
+- **Backend**: Hono v4, Node.js, OpenAPI with Zod
+- **Core**: TypeScript, Zod v4 for validation
+- **MCP**: Model Context Protocol SDK
+- **Tools**: pnpm, Turbo, Prettier, ESBuild
 
----
+## 🤝 Contributing
 
-Example Overshoot Curve CSS:
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature`
+3. Make your changes and add tests
+4. Run `pnpm typecheck` and `pnpm format`
+5. Commit your changes: `git commit -m 'Add some feature'`
+6. Push to the branch: `git push origin feature/your-feature`
+7. Open a Pull Request
 
-```css
-.overshoot-curve {
-  transition-timing-function: linear(0, 0.365 6.4%, 0.642 13.3%, 0.838 20.9%, 0.909 25%, 0.964 29.5%, 1.016 37.1%, 1.037 46.2%, 1.005 79%, 1);
-}
-```
+## 📄 License
 
-**Tailwind CSS:**
+This project is licensed under a custom license that allows use in larger projects but prevents direct commercialization. See the [LICENSE](LICENSE) file for details.
 
-```css
-ease-[linear(0,0.365_6.4%,0.642_13.3%,0.838_20.9%,0.909_25%,0.964_29.5%,1.016_37.1%,1.037_46.2%,1.005_79%,1)]
-```
+## 🔗 Links
 
-**Shareable Link:**  
-https://easingwizard.com/#0a4r1t1u20y219
+- **Website**: [easingwizard.com](https://easingwizard.com)
+- **API Documentation**: [api.easingwizard.com](https://api.easingwizard.com)
+- **OpenAPI Docs**: [OpenAPI Documentation](https://api.easingwizard.com/openapi)
+- **NPM Package**: [@easingwizard/mcp-server](https://www.npmjs.com/package/@easingwizard/mcp-server)
+- **Issues**: [GitHub Issues](https://github.com/roydigerhund/easing-wizard/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/roydigerhund/easing-wizard/discussions)

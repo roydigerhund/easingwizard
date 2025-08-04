@@ -1,68 +1,58 @@
 # Easing Wizard MCP Server
 
-A Model Context Protocol (MCP) server for the [Easing Wizard API](https://easingwizard.com). This server enables the generation of various CSS easing curves: Bézier, Spring, Bounce, Wiggle, and Overshoot.
+A Model Context Protocol (MCP) server for the [Easing Wizard](https://easingwizard.com). This server enables AI assistants to generate various CSS easing curves: Bézier, Spring, Bounce, Wiggle, and Overshoot.
 
 ## Features
 
-- **Fetch preset curves**: Filter predefined easing curves by type
-- **Bézier curves**: Create cubic Bézier curves with custom control points
-- **Spring curves**: Physics-based spring curves with mass, stiffness, and damping
-- **Bounce curves**: Animations with customizable bounce effects
-- **Wiggle curves**: Oscillating motions with configurable intensity
-- **Overshoot curves**: Curves that overshoot the target
-- **Health Check**: Check API status
-
-## Installation
-
-```bash
-# Clone the repository or create files
-mkdir easingwizard-mcp
-cd easingwizard-mcp
-
-# Install dependencies
-npm install
-
-# Compile TypeScript
-npm run build
-```
+- **Preset curves**: Access predefined easing curves filtered by type
+- **Bézier curves**: Create custom cubic Bézier curves with control points
+- **Spring curves**: Physics-based spring animations with mass, stiffness, and damping
+- **Bounce curves**: Bouncing animations with configurable bounces and damping
+- **Wiggle curves**: Oscillating animations with configurable wiggles and damping
+- **Overshoot curves**: Curves that overshoot the target before settling
 
 ## Setup
 
-### 1. Project Structure
+### Claude Desktop
 
-```
-easingwizard-mcp/
-├── src/
-│   └── index.ts          # Main server code
-├── dist/                 # Compiled JavaScript files
-├── package.json
-├── tsconfig.json
-└── README.md
-```
-
-### 2. Compile and Start
-
-```bash
-# Compile TypeScript
-npm run build
-
-# Start server
-npm start
-
-# Or use tsx directly for development
-npm run dev
-```
-
-### 3. MCP Client Configuration
-
-Add the server to your MCP client configuration:
+Add to your `claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
     "easingwizard": {
-      "command": "node",
-      "args": ["/path/to/easingwizard-mcp/dist/index.js"]
+      "command": "npx",
+      "args": ["@easingwizard/mcp-server"]
+    }
+  }
+}
+```
+
+### VS Code
+
+Add to your MCP configuration `.vscode/mcp.json`:
+
+```json
+{
+  "servers": {
+    "easingwizard": {
+      "command": "npx",
+      "args": ["@easingwizard/mcp-server"]
+    }
+  }
+}
+```
+
+### Other MCP Clients
+
+For other MCP-compatible applications, use the standard configuration format:
+
+```json
+{
+  "mcpServers": {
+    "easingwizard": {
+      "command": "npx",
+      "args": ["@easingwizard/mcp-server"]
     }
   }
 }
@@ -70,8 +60,10 @@ Add the server to your MCP client configuration:
 
 ## Available Tools
 
-### `get_presets`
-Fetches available preset easing curves.
+The MCP server provides the following tools for AI assistants:
+
+### `getPresets`
+Retrieves available preset easing curves, optionally filtered by type.
 
 **Parameters:**
 - `type` (optional): Filter by easing type (`BEZIER`, `SPRING`, `BOUNCE`, `WIGGLE`, `OVERSHOOT`)
@@ -79,31 +71,31 @@ Fetches available preset easing curves.
 **Example:**
 ```json
 {
-  "name": "get_presets",
+  "name": "getPresets",
   "arguments": {
     "type": "BEZIER"
   }
 }
 ```
 
-### `get_curve_by_id`
-Fetches a specific easing curve by its ID.
+### `getCurveById`
+Retrieves a specific easing curve by its unique ID.
 
 **Parameters:**
-- `id` (required): The ID of the easing curve
+- `id` (required): The unique ID of the easing curve
 
 **Example:**
 ```json
 {
-  "name": "get_curve_by_id",
+  "name": "getCurveById",
   "arguments": {
     "id": "0a0d.25e.1f.75g.914"
   }
 }
 ```
 
-### `create_bezier_curve`
-Creates a custom Bézier curve.
+### `createBezierCurve`
+Creates a custom cubic Bézier easing curve.
 
 **Parameters:**
 - `x1` (0-1): First control point X coordinate
@@ -114,7 +106,7 @@ Creates a custom Bézier curve.
 **Example:**
 ```json
 {
-  "name": "create_bezier_curve",
+  "name": "createBezierCurve",
   "arguments": {
     "x1": 0.25,
     "y1": 0.1,
@@ -124,19 +116,19 @@ Creates a custom Bézier curve.
 }
 ```
 
-### `create_spring_curve`
-Creates a spring curve with physical parameters.
+### `createSpringCurve`
+Creates a spring-based easing curve with physics parameters.
 
 **Parameters:**
-- `mass` (1-5): Mass
-- `stiffness` (0-100): Stiffness
-- `damping` (0-100): Damping
-- `accuracy`: Accuracy (`LOW`, `MEDIUM`, `HIGH`, `ULTRA`)
+- `mass` (1-5): Mass of the spring system
+- `stiffness` (0-100): Spring stiffness
+- `damping` (0-100): Damping force
+- `accuracy` (`LOW`, `MEDIUM`, `HIGH`, `ULTRA`): Calculation precision
 
 **Example:**
 ```json
 {
-  "name": "create_spring_curve",
+  "name": "createSpringCurve",
   "arguments": {
     "mass": 2.5,
     "stiffness": 50,
@@ -146,72 +138,78 @@ Creates a spring curve with physical parameters.
 }
 ```
 
-### `create_bounce_curve`
-Creates a bounce curve.
+### `createBounceCurve`
+Creates a bouncing easing curve.
 
 **Parameters:**
 - `bounces` (1-10): Number of bounces
-- `damping` (0-100): Damping
-- `accuracy`: Accuracy (`LOW`, `MEDIUM`, `HIGH`, `ULTRA`)
+- `damping` (0-100): Bounce damping
+- `accuracy` (`LOW`, `MEDIUM`, `HIGH`, `ULTRA`): Calculation precision
 
-### `create_wiggle_curve`
-Creates a wiggle curve.
+### `createWiggleCurve`
+Creates an oscillating wiggle curve.
 
 **Parameters:**
 - `wiggles` (1-10): Number of oscillations
-- `damping` (0-100): Damping
-- `accuracy`: Accuracy (`LOW`, `MEDIUM`, `HIGH`, `ULTRA`)
+- `damping` (0-100): Oscillation damping
+- `accuracy` (`LOW`, `MEDIUM`, `HIGH`, `ULTRA`): Calculation precision
 
-### `create_overshoot_curve`
-Creates an overshoot curve.
+### `createOvershootCurve`
+Creates an overshoot easing curve.
 
 **Parameters:**
-- `style`: Animation style (`IN`, `OUT`, `IN_OUT`)
-- `mass` (1-5): Mass
-- `damping` (0-100): Damping
-- `accuracy`: Accuracy (`LOW`, `MEDIUM`, `HIGH`, `ULTRA`)
-
-### `health_check`
-Checks the status of the Easing Wizard API.
+- `style` (`IN`, `OUT`, `IN_OUT`): Animation style
+- `mass` (1-5): Mass parameter
+- `damping` (0-100): Damping force
+- `accuracy` (`LOW`, `MEDIUM`, `HIGH`, `ULTRA`): Calculation precision
 
 ## Output Formats
 
-All curve generation tools return structured data, including CSS and SVG outputs:
+All easing curve tools return comprehensive data including:
 
-- **CSS**: `cubic-bezier()` or `linear()` functions
-- **Tailwind CSS**: Compatible easing functions
-- **SVG**: Paths or polylines for visualization
-- **Metadata**: IDs, timestamps, links
-
-## Error Handling
-
-The server validates all input parameters and returns meaningful error messages:
-
-- Parameter validation for ranges and types
-- API errors with HTTP status codes
-- MCP-compliant error responses
+- **CSS Functions**: Ready-to-use `cubic-bezier()` or `linear()` functions
+- **Tailwind CSS**: Compatible easing class names
+- **SVG Paths**: Vector graphics for curve visualization
+- **Metadata**: Unique IDs, timestamps, and reference links
 
 ## Development
 
+If you want to contribute or modify the server:
+
 ```bash
+# Clone the repository
+git clone https://github.com/roydigerhund/easingwizard.git
+cd easingwizard/apps/mcp
+
 # Install dependencies
-npm install
+pnpm install
 
-# Start development server (with auto-reload)
-npm run dev
+# Build the server
+pnpm build
 
-# Compile TypeScript
-npm run build
+# Test the server
+pnpm watch
 
-# Start production server
-npm start
+# Inspect the MCP tool
+pnpm inspect
 ```
+
+## Error Handling
+
+The server provides detailed error messages for:
+
+- Invalid parameter ranges or types
+- Malformed curve configurations  
+- MCP protocol errors
+- Internal processing failures
 
 ## License
 
-MIT
+MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Links
 
-- [Easing Wizard Website](https://easingwizard.com)
-- [Easing Wizard API](https://api.easingwizard.com/openapi)
+- **Website**: [Easing Wizard](https://easingwizard.com)
+- **Repository**: [GitHub](https://github.com/roydigerhund/easingwizard)
+- **Issues**: [Report bugs](https://github.com/roydigerhund/easingwizard/issues)
+- **MCP Protocol**: [Model Context Protocol](https://modelcontextprotocol.io)
