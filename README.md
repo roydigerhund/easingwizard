@@ -3,7 +3,7 @@
 A comprehensive toolkit for creating and using CSS easing curves. Generate Bézier, Spring, Bounce, Wiggle, and Overshoot animations with ease.
 
 🌐 **Website**: [easingwizard.com](https://easingwizard.com)  
-🛠️ **API**: [api.easingwizard.com](https://api.easingwizard.com)
+🛠️ **API**: [api.easingwizard.com](https://api.easingwizard.com)  
 📦 **MCP Server**: [@easingwizard/mcp-server](https://www.npmjs.com/package/@easingwizard/mcp-server)
 
 ## What is Easing Wizard?
