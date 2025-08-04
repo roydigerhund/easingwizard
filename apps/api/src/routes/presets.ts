@@ -4,7 +4,7 @@ import {
   toScreamingSnakeCase,
   type ErrorResponse,
   type PresetsResponse,
-} from 'easing-wizard-core';
+} from 'easingwizard-core';
 import { Hono } from 'hono';
 import { z } from 'zod/v4';
 import { transformOtherError, transformZodError } from '~/utils/errors';

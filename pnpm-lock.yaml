@@ -35,7 +35,7 @@ importers:
       dotenv:
         specifier: ^17.2.0
         version: 17.2.0
-      easing-wizard-core:
+      easingwizard-core:
         specifier: workspace:*
         version: link:../../packages/core
       hono:
@@ -72,7 +72,7 @@ importers:
       debounce:
         specifier: ^2.2.0
         version: 2.2.0
-      easing-wizard-core:
+      easingwizard-core:
         specifier: workspace:*
         version: link:../../packages/core
       isbot:
@@ -136,7 +136,7 @@ importers:
       '@modelcontextprotocol/sdk':
         specifier: ^1.17.0
         version: 1.17.0
-      easing-wizard-core:
+      easingwizard-core:
         specifier: workspace:*
         version: link:../../packages/core
       zod:

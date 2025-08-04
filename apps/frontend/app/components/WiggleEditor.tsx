@@ -4,7 +4,7 @@ import {
   generateLinearEasing,
   generateWiggleSVGPolyline,
   LinearEasingAccuracy,
-} from 'easing-wizard-core';
+} from 'easingwizard-core';
 import { useEasingStore } from '~/state/easing-store';
 import EditorBase from './EditorBase';
 import EditorBaseLine from './EditorBaseLine';

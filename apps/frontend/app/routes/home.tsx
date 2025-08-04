@@ -1,4 +1,4 @@
-import { decodeState, EasingType, rehydrateShareState, rehydrateShareStateLegacy } from 'easing-wizard-core';
+import { decodeState, EasingType, rehydrateShareState, rehydrateShareStateLegacy } from 'easingwizard-core';
 import { useEffect, useState } from 'react';
 import { useLocation, useSearchParams } from 'react-router';
 import BezierEditor from '~/components/BezierEditor';

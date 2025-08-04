@@ -1,4 +1,4 @@
-import type { HealthCheckResponse } from 'easing-wizard-core';
+import type { HealthCheckResponse } from 'easingwizard-core';
 import { Hono } from 'hono';
 
 const app = new Hono();

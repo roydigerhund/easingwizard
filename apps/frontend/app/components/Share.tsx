@@ -1,4 +1,4 @@
-import { encodeState, reduceStateForShare } from 'easing-wizard-core';
+import { encodeState, reduceStateForShare } from 'easingwizard-core';
 import { paragraph } from '~/css/common-classes';
 import { description, frontendUrl } from '~/data/globals';
 import { useEasingStore } from '~/state/easing-store';

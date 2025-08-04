@@ -1,4 +1,4 @@
-import { defaultEasingState, EasingType, type EasingState, type EasingTypeKey } from 'easing-wizard-core';
+import { defaultEasingState, EasingType, type EasingState, type EasingTypeKey } from 'easingwizard-core';
 import { create } from 'zustand';
 
 type EasingAction = {

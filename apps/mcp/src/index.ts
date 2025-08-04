@@ -22,13 +22,13 @@ import {
   SpringParamsSchema,
   WiggleEasingCurveResponseSchema,
   WiggleParamsSchema,
-} from 'easing-wizard-core';
+} from 'easingwizard-core';
 import z from 'zod/v4';
 
 // Create the server
 const server = new Server(
   {
-    name: 'easing-wizard-server',
+    name: 'easingwizard-server',
     version: '0.1.0',
   },
   {

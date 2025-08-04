@@ -1,6 +1,6 @@
 {
   "servers": {
-    "easing-wizard": {
+    "easingwizard": {
       "type": "stdio",
       "command": "node",
       "args": ["./apps/mcp/dist/index.js"],

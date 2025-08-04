@@ -1,10 +1,11 @@
 {
-  "name": "easing-wizard-mcp",
+  "name": "@easingwizard/mcp-server",
   "version": "1.0.0",
   "description": "MCP for Easing Wizard",
   "type": "module",
+  "main": "./dist/index.js",
   "bin": {
-    "mcp": "./build/index.js"
+    "easingwizard-mcp": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc && tsc-alias",
@@ -13,11 +14,11 @@
     "inspect": "npx @modelcontextprotocol/inspector node dist/index.js"
   },
   "files": [
-    "build"
+    "dist"
   ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.0",
-    "easing-wizard-core": "workspace:*",
+    "easingwizard-core": "workspace:*",
     "zod": "^3.23.8"
   },
   "devDependencies": {

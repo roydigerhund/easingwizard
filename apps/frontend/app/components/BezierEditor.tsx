@@ -1,4 +1,4 @@
-import { type BezierInput, createCubicBezierString, generateBezierSVGPath, roundTo } from 'easing-wizard-core';
+import { type BezierInput, createCubicBezierString, generateBezierSVGPath, roundTo } from 'easingwizard-core';
 import { useEasingStore } from '~/state/easing-store';
 import Drag from './Drag';
 import EditorBase from './EditorBase';

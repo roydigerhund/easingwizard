@@ -6,7 +6,7 @@ import {
   generateLinearEasing,
   humanize,
   type BezierInput,
-} from 'easing-wizard-core';
+} from 'easingwizard-core';
 import { useMemo, useState } from 'react';
 import { classNames } from '~/css/class-names';
 import EditorBase from './EditorBase';

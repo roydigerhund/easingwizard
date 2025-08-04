@@ -1,5 +1,5 @@
 {
-  "name": "easing-wizard-core",
+  "name": "easingwizard-core",
   "version": "1.0.0",
   "description": "Core easing curve calculation and generation utilities",
   "type": "module",

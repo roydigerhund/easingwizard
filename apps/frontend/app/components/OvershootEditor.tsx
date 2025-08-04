@@ -4,7 +4,7 @@ import {
   generateOvershootSVGPolyline,
   LinearEasingAccuracy,
   type EasingState,
-} from 'easing-wizard-core';
+} from 'easingwizard-core';
 import { useEasingStore } from '~/state/easing-store';
 import EditorBase from './EditorBase';
 import EditorBaseLine from './EditorBaseLine';

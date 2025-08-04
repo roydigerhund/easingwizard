@@ -17,7 +17,7 @@ import {
   SpringParamsSchema,
   WiggleEasingCurveResponseSchema,
   WiggleParamsSchema,
-} from 'easing-wizard-core';
+} from 'easingwizard-core';
 import { Hono } from 'hono';
 import { createDocument } from 'zod-openapi';
 import z from 'zod/v4';

@@ -1,5 +1,5 @@
 import * as RSlider from '@radix-ui/react-slider';
-import { checkCommaRegex, floatSafeModulo, isNil, trailingZeroRegex } from 'easing-wizard-core';
+import { checkCommaRegex, floatSafeModulo, isNil, trailingZeroRegex } from 'easingwizard-core';
 import { useRef, useState } from 'react';
 import { classNames } from '~/css/class-names';
 import { shortTransition } from '~/css/common-classes';

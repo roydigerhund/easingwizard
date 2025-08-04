@@ -16,8 +16,8 @@ A Model Context Protocol (MCP) server for the [Easing Wizard API](https://easing
 
 ```bash
 # Clone the repository or create files
-mkdir easing-wizard-mcp
-cd easing-wizard-mcp
+mkdir easingwizard-mcp
+cd easingwizard-mcp
 
 # Install dependencies
 npm install
@@ -31,7 +31,7 @@ npm run build
 ### 1. Project Structure
 
 ```
-easing-wizard-mcp/
+easingwizard-mcp/
 ├── src/
 │   └── index.ts          # Main server code
 ├── dist/                 # Compiled JavaScript files
@@ -60,9 +60,9 @@ Add the server to your MCP client configuration:
 ```json
 {
   "mcpServers": {
-    "easing-wizard": {
+    "easingwizard": {
       "command": "node",
-      "args": ["/path/to/easing-wizard-mcp/dist/index.js"]
+      "args": ["/path/to/easingwizard-mcp/dist/index.js"]
     }
   }
 }

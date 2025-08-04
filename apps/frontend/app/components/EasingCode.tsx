@@ -1,4 +1,4 @@
-import { EasingType, cssStringToTailwind } from 'easing-wizard-core';
+import { EasingType, cssStringToTailwind } from 'easingwizard-core';
 import { useEffect, useState } from 'react';
 import { paragraph } from '~/css/common-classes';
 import { useEasingStore } from '~/state/easing-store';

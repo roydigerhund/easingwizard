@@ -34,9 +34,9 @@ Run from root directory:
 
 Per-app commands (use exact package names):
 
-- Frontend: `pnpm --filter easing-wizard-frontend dev|build|typecheck`
-- API: `pnpm --filter easing-wizard-api dev|build|typecheck`
-- Core: `pnpm --filter easing-wizard-core build|typecheck|generate`
+- Frontend: `pnpm --filter easingwizard-frontend dev|build|typecheck`
+- API: `pnpm --filter easingwizard-api dev|build|typecheck`
+- Core: `pnpm --filter easingwizard-core build|typecheck|generate`
 
 Alternative shorthand commands:
 

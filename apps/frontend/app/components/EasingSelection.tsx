@@ -24,7 +24,7 @@ import {
   type OvershootStyleKey,
   type SpringCurveKey,
   type WiggleCurveKey,
-} from 'easing-wizard-core';
+} from 'easingwizard-core';
 import { useEasingStore } from '~/state/easing-store';
 import CardHeadline from './CardHeadline';
 import CurveIconTextButton from './CurveIconTextButton';

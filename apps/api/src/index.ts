@@ -1,7 +1,7 @@
 import { serve } from '@hono/node-server';
 import { Scalar } from '@scalar/hono-api-reference';
 import 'dotenv/config';
-import { API_VERSION } from 'easing-wizard-core';
+import { API_VERSION } from 'easingwizard-core';
 import { Hono } from 'hono';
 
 import curves from './routes/curves';
@@ -35,7 +35,7 @@ app.get(
     theme: 'deepSpace',
     darkMode: true,
     metaData: {
-      ogImage: 'https://api.easing-wizard.com/share-image.png',
+      ogImage: 'https://api.easingwizard.com/share-image.png',
     },
     favicon: '/favicon.svg',
     defaultOpenAllTags: true,

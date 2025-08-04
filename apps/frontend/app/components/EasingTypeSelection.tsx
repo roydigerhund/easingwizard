@@ -1,4 +1,4 @@
-import { EasingType, humanize } from 'easing-wizard-core';
+import { EasingType, humanize } from 'easingwizard-core';
 import { classNames } from '~/css/class-names';
 import { useEasingStore } from '~/state/easing-store';
 

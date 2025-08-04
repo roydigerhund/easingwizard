@@ -1,4 +1,4 @@
-import { AnimationType, EasingType, humanize, PreviewPlayMode, type AnimationTypeKey } from 'easing-wizard-core';
+import { AnimationType, EasingType, humanize, PreviewPlayMode, type AnimationTypeKey } from 'easingwizard-core';
 import { useEffect, useState } from 'react';
 import { classNames } from '~/css/class-names';
 import { useEasingStore } from '~/state/easing-store';
