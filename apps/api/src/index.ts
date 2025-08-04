@@ -28,6 +28,8 @@ app.get(
   '/docs',
   Scalar({
     url: '/openapi',
+    customCss: '.section:focus { outline: none; } .section-flare { display: none; }',
+    pageTitle: 'Easing Wizard API Documentation',
     // layout: 'classic',
     hideModels: true,
     theme: 'deepSpace',

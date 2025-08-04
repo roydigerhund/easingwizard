@@ -5,14 +5,15 @@ import {
   BezierParamsSchema,
   BounceParamsSchema,
   OvershootParamsSchema,
+  ParamsUnionSchema,
   SpringParamsSchema,
   WiggleParamsSchema,
 } from './input';
-import { BezierEasingOutputSchema, LinearEasingOutputSchema } from './output';
+import { BezierEasingOutputSchema, LinearEasingOutputSchema, OutputUnionSchema } from './output';
 
 export const CurveIdSchema = z.string().meta({
-  description: 'Unique identifier for the curve',
-  example: 'abc123def',
+  description: 'The ID of the easing curve',
+  example: '0a1b2c3xy',
 });
 
 export const generatedAtSchema = z.string().meta({
@@ -34,7 +35,7 @@ export const BezierEasingCurveResponseSchema = z
     id: 'BezierEasingCurveResponse',
     title: 'Bézier Easing Curve Response',
     description: 'Bézier easing curve response with specific input and output types',
-  })
+  });
 
 export const SpringEasingCurveResponseSchema = z
   .object({
@@ -96,7 +97,6 @@ export const OvershootEasingCurveResponseSchema = z
     description: 'Overshoot easing curve response with specific input and output types',
   });
 
-// Union type for backwards compatibility
 export const EasingCurveResponseSchema = z
   .union([
     BezierEasingCurveResponseSchema,
@@ -110,6 +110,16 @@ export const EasingCurveResponseSchema = z
     title: 'Easing Curve Response',
     description: 'Complete easing curve response with metadata and links',
   });
+
+export const NonUnionEasingCurveResponseSchema = z
+  .object({
+    id: CurveIdSchema,
+    type: z.enum(EasingType),
+    generated_at: generatedAtSchema,
+    input: ParamsUnionSchema,
+    output: OutputUnionSchema,
+    links: curveLinksResponseSchema,
+  })
 
 export type BezierEasingCurveResponse = z.infer<typeof BezierEasingCurveResponseSchema>;
 export type SpringEasingCurveResponse = z.infer<typeof SpringEasingCurveResponseSchema>;

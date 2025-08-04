@@ -4,8 +4,10 @@ import {
   BezierParamsSchema,
   BounceEasingCurveResponseSchema,
   BounceParamsSchema,
+  CurveIdSchema,
   EasingCurveResponseSchema,
   EasingTypeSchema,
+  endpointTexts,
   ErrorResponseSchema,
   healthCheckSchema,
   OvershootEasingCurveResponseSchema,
@@ -33,36 +35,41 @@ const badRequest = {
 const createCurveEndpoints = [
   {
     path: '/curves/bezier',
-    operationId: 'createBezierCurve',
-    name: 'Bézier',
+    operationId: endpointTexts.createBezierCurve.id,
+    title: endpointTexts.createBezierCurve.title,
+    description: endpointTexts.createBezierCurve.description,
     requestBodySchema: BezierParamsSchema,
     responseSchema: BezierEasingCurveResponseSchema,
   },
   {
     path: '/curves/spring',
-    operationId: 'createSpringCurve',
-    name: 'Spring',
+    operationId: endpointTexts.createSpringCurve.id,
+    title: endpointTexts.createSpringCurve.title,
+    description: endpointTexts.createSpringCurve.description,
     requestBodySchema: SpringParamsSchema,
     responseSchema: SpringEasingCurveResponseSchema,
   },
   {
     path: '/curves/bounce',
-    operationId: 'createBounceCurve',
-    name: 'Bounce',
+    operationId: endpointTexts.createBounceCurve.id,
+    title: endpointTexts.createBounceCurve.title,
+    description: endpointTexts.createBounceCurve.description,
     requestBodySchema: BounceParamsSchema,
     responseSchema: BounceEasingCurveResponseSchema,
   },
   {
     path: '/curves/wiggle',
-    operationId: 'createWiggleCurve',
-    name: 'Wiggle',
+    operationId: endpointTexts.createWiggleCurve.id,
+    title: endpointTexts.createWiggleCurve.title,
+    description: endpointTexts.createWiggleCurve.description,
     requestBodySchema: WiggleParamsSchema,
     responseSchema: WiggleEasingCurveResponseSchema,
   },
   {
     path: '/curves/overshoot',
-    operationId: 'createOvershootCurve',
-    name: 'Overshoot',
+    operationId: endpointTexts.createOvershootCurve.id,
+    title: endpointTexts.createOvershootCurve.title,
+    description: endpointTexts.createOvershootCurve.description,
     requestBodySchema: OvershootParamsSchema,
     responseSchema: OvershootEasingCurveResponseSchema,
   },
@@ -91,9 +98,9 @@ const document = createDocument({
   paths: {
     '/presets': {
       get: {
-        operationId: 'getPresets',
-        summary: 'Get Preset Curves',
-        description: 'Retrieve a list of available preset easing curves',
+        operationId: endpointTexts.getPresets.id,
+        summary: endpointTexts.getPresets.title,
+        description: endpointTexts.getPresets.description,
         requestParams: { query: z.object({ type: EasingTypeSchema.optional() }) },
         responses: {
           '200': {
@@ -109,14 +116,10 @@ const document = createDocument({
     },
     '/curves/{id}': {
       get: {
-        operationId: 'getCurveById',
-        summary: 'Get Curve by ID',
-        description: 'Retrieve a specific easing curve by its ID',
-        requestParams: {
-          path: z.object({
-            id: z.string().meta({ description: 'The ID of the easing curve', example: '0a0d.25e.1f.75g.914' }),
-          }),
-        },
+        operationId: endpointTexts.getCurveById.id,
+        summary: endpointTexts.getCurveById.title,
+        description: endpointTexts.getCurveById.description,
+        requestParams: { path: z.object({ id: CurveIdSchema }) },
         responses: {
           '200': {
             description: '200 OK',
@@ -137,8 +140,8 @@ const document = createDocument({
         {
           post: {
             operationId: cfg.operationId,
-            summary: `Create ${cfg.name} Curve`,
-            description: `Generate a ${cfg.name} easing curve based on input parameters`,
+            summary: cfg.title,
+            description: cfg.description,
             requestBody: {
               required: true,
               content: {
@@ -166,12 +169,12 @@ const document = createDocument({
     '/healthz': {
       get: {
         servers: [{ url: getEnv().API_URL }],
-        operationId: 'healthCheck',
-        summary: 'Health Check',
-        description: 'Check if the API is running',
+        operationId: endpointTexts.healthCheck.id,
+        summary: endpointTexts.healthCheck.title,
+        description: endpointTexts.healthCheck.description,
         responses: {
           '200': {
-            description: 'API is healthy',
+            description: '200 OK',
             content: {
               'application/json': {
                 schema: healthCheckSchema,

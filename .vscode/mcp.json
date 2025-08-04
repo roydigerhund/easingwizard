@@ -1,0 +1,14 @@
+{
+  "servers": {
+    "easing-wizard": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["./apps/mcp/dist/index.js"],
+      "dev": {
+        "watch": "apps/mcp/dist/*.js",
+        "debug": { "type": "node" }
+      }
+    }
+  },
+  "inputs": []
+}

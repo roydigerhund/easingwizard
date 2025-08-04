@@ -10,6 +10,9 @@ export * from './generated/preset-data';
 // STATE
 export * from './state';
 
+// TEXT
+export * from './text';
+
 // TYPES
 export * from './types/enums';
 export * from './types/guards';
