@@ -40,14 +40,14 @@ const server = new Server(
 
 const toolMapping = [
   {
-    name: endpointTexts.getPresets.id,
+    name: endpointTexts.getPresets.toolId,
     title: endpointTexts.getPresets.title,
     description: endpointTexts.getPresets.description,
     inputSchema: z.object({ type: EasingTypeSchema.optional() }),
     outputSchema: PresetsResponseSchema,
   },
   {
-    name: endpointTexts.getCurveById.id,
+    name: endpointTexts.getCurveById.toolId,
     title: endpointTexts.getCurveById.title,
     description: endpointTexts.getCurveById.description,
     inputSchema: z.object({ id: CurveIdSchema }),
@@ -55,35 +55,35 @@ const toolMapping = [
     outputSchema: NonUnionEasingCurveResponseSchema,
   },
   {
-    name: endpointTexts.createBezierCurve.id,
+    name: endpointTexts.createBezierCurve.toolId,
     title: endpointTexts.createBezierCurve.title,
     description: endpointTexts.createBezierCurve.description,
     inputSchema: BezierParamsSchema,
     outputSchema: BezierEasingCurveResponseSchema,
   },
   {
-    name: endpointTexts.createSpringCurve.id,
+    name: endpointTexts.createSpringCurve.toolId,
     description: endpointTexts.createSpringCurve.description,
     title: endpointTexts.createSpringCurve.title,
     inputSchema: SpringParamsSchema,
     outputSchema: SpringEasingCurveResponseSchema,
   },
   {
-    name: endpointTexts.createBounceCurve.id,
+    name: endpointTexts.createBounceCurve.toolId,
     description: endpointTexts.createBounceCurve.description,
     title: endpointTexts.createBounceCurve.title,
     inputSchema: BounceParamsSchema,
     outputSchema: BounceEasingCurveResponseSchema,
   },
   {
-    name: endpointTexts.createWiggleCurve.id,
+    name: endpointTexts.createWiggleCurve.toolId,
     description: endpointTexts.createWiggleCurve.description,
     title: endpointTexts.createWiggleCurve.title,
     inputSchema: WiggleParamsSchema,
     outputSchema: WiggleEasingCurveResponseSchema,
   },
   {
-    name: endpointTexts.createOvershootCurve.id,
+    name: endpointTexts.createOvershootCurve.toolId,
     description: endpointTexts.createOvershootCurve.description,
     title: endpointTexts.createOvershootCurve.title,
     inputSchema: OvershootParamsSchema,
@@ -115,25 +115,25 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
   try {
     switch (name) {
-      case endpointTexts.getPresets.id: {
+      case endpointTexts.getPresets.toolId: {
         const type = args?.type ? EasingTypeSchema.parse(args?.type) : undefined;
         const response = await createPresetsResponse(type);
 
         return { structuredContent: response };
       }
 
-      case endpointTexts.getCurveById.id: {
-        const id = CurveIdSchema.parse(args?.id);
+      case endpointTexts.getCurveById.toolId: {
+        const id = CurveIdSchema.parse(args?.toolId);
         const response = createCurveResponseFromId(id);
 
         return { structuredContent: response };
       }
 
-      case endpointTexts.createBezierCurve.id:
-      case endpointTexts.createSpringCurve.id:
-      case endpointTexts.createBounceCurve.id:
-      case endpointTexts.createWiggleCurve.id:
-      case endpointTexts.createOvershootCurve.id: {
+      case endpointTexts.createBezierCurve.toolId:
+      case endpointTexts.createSpringCurve.toolId:
+      case endpointTexts.createBounceCurve.toolId:
+      case endpointTexts.createWiggleCurve.toolId:
+      case endpointTexts.createOvershootCurve.toolId: {
         const type = EasingTypeSchema.parse(name.replace('create', '').replace('Curve', '').toUpperCase());
         const response = createCurveResponseFromInput({ type, config: args });
 
