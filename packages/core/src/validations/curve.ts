@@ -32,7 +32,6 @@ export const BezierEasingCurveResponseSchema = z
     generated_at: generatedAtSchema,
   })
   .meta({
-    id: 'BezierEasingCurveResponse',
     title: 'Bézier Easing Curve Response',
     description: 'Bézier easing curve response with specific input and output types',
   });
@@ -47,7 +46,6 @@ export const SpringEasingCurveResponseSchema = z
     generated_at: generatedAtSchema,
   })
   .meta({
-    id: 'SpringEasingCurveResponse',
     title: 'Spring Easing Curve Response',
     description: 'Spring easing curve response with specific input and output types',
   });
@@ -62,7 +60,6 @@ export const BounceEasingCurveResponseSchema = z
     generated_at: generatedAtSchema,
   })
   .meta({
-    id: 'BounceEasingCurveResponse',
     title: 'Bounce Easing Curve Response',
     description: 'Bounce easing curve response with specific input and output types',
   });
@@ -77,7 +74,6 @@ export const WiggleEasingCurveResponseSchema = z
     generated_at: generatedAtSchema,
   })
   .meta({
-    id: 'WiggleEasingCurveResponse',
     title: 'Wiggle Easing Curve Response',
     description: 'Wiggle easing curve response with specific input and output types',
   });
@@ -92,7 +88,6 @@ export const OvershootEasingCurveResponseSchema = z
     generated_at: generatedAtSchema,
   })
   .meta({
-    id: 'OvershootEasingCurveResponse',
     title: 'Overshoot Easing Curve Response',
     description: 'Overshoot easing curve response with specific input and output types',
   });
@@ -106,7 +101,6 @@ export const EasingCurveResponseSchema = z
     OvershootEasingCurveResponseSchema,
   ])
   .meta({
-    id: 'EasingCurveResponse',
     title: 'Easing Curve Response',
     description: 'Complete easing curve response with metadata and links',
   });

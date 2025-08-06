@@ -17,7 +17,7 @@ export const curveLinksResponseSchema = z
     }),
   })
   .meta({
-    id: 'ResponseLinks',
+    title: 'Easing Curve Links Response',
     description: 'HATEOAS navigation links for the easing curve',
   });
 
@@ -35,6 +35,7 @@ export const presetsLinksResponseSchema = z
     }),
   })
   .meta({
+    title: 'Presets Links Response',
     description: 'HATEOAS navigation links',
   });
 

@@ -2,21 +2,18 @@ import { z } from 'zod/v4';
 import { EasingType, EasingTypeLowerCase, LinearEasingAccuracy, OvershootStyle } from '~/types/enums';
 
 export const EasingTypeSchema = z.enum(EasingType).meta({
-  id: 'EasingType',
   title: 'Easing Type',
   description: 'Type of easing function',
   example: EasingType.BEZIER,
 });
 
 export const EasingTypeLowerCaseSchema = z.enum(EasingTypeLowerCase).meta({
-  id: 'EasingTypeLowerCase',
   title: 'Easing Type Lowercase',
   description: 'Type of easing function',
   example: EasingTypeLowerCase.BEZIER,
 });
 
 export const LinearAccuracySchema = z.enum(LinearEasingAccuracy).meta({
-  id: 'LinearAccuracyInput',
   description: 'Accuracy level for the linear easing approximation',
   example: LinearEasingAccuracy.HIGH,
 });
@@ -56,7 +53,6 @@ export const BezierParamsSchema = z
     }),
   })
   .meta({
-    id: 'BezierParams',
     title: 'Bézier Curve Parameters',
     description: 'Parameters for a cubic Bézier curve',
   });
@@ -71,7 +67,6 @@ export const SpringParamsSchema = z
     accuracy: LinearAccuracySchema,
   })
   .meta({
-    id: 'SpringParams',
     title: 'Spring Animation Parameters',
     description: 'Parameters for spring-based easing animations',
   });
@@ -88,7 +83,6 @@ export const BounceParamsSchema = z
     accuracy: LinearAccuracySchema,
   })
   .meta({
-    id: 'BounceParams',
     title: 'Bounce Animation Parameters',
     description: 'Parameters for bounce-based easing animations',
   });
@@ -105,7 +99,6 @@ export const WiggleParamsSchema = z
     accuracy: LinearAccuracySchema,
   })
   .meta({
-    id: 'WiggleParams',
     title: 'Wiggle Animation Parameters',
     description: 'Parameters for wiggle-based easing animations',
   });
@@ -123,7 +116,6 @@ export const OvershootParamsSchema = z
     accuracy: LinearAccuracySchema,
   })
   .meta({
-    id: 'OvershootParams',
     title: 'Overshoot Animation Parameters',
     description: 'Parameters for overshoot-based easing animations',
   });

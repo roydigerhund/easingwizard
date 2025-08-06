@@ -95,9 +95,9 @@ const toolMapping = [
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
     tools: toolMapping.map((tool) => {
-      const rawInputSchema = z.toJSONSchema(tool.inputSchema, { io: 'input' });
+      const rawInputSchema = z.toJSONSchema(tool.inputSchema, { io: 'input', reused: 'inline' });
       const inputSchema = { ...rawInputSchema, $schema: undefined };
-      const rawOutputSchema = z.toJSONSchema(tool.outputSchema, { io: 'output' });
+      const rawOutputSchema = z.toJSONSchema(tool.outputSchema, { io: 'output', reused: 'inline' });
       const outputSchema = { ...rawOutputSchema, $schema: undefined };
 
       return {
@@ -117,7 +117,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     switch (name) {
       case endpointTexts.getPresets.id: {
         const type = args?.type ? EasingTypeSchema.parse(args?.type) : undefined;
-
         const response = await createPresetsResponse(type);
 
         return { structuredContent: response };

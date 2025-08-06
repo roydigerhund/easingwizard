@@ -8,18 +8,17 @@
     "easingwizard-mcp": "./dist/index.js"
   },
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --platform=node --target=node18 --format=esm --outfile=dist/index.js --external:@modelcontextprotocol/sdk",
+    "build": "esbuild src/index.ts --bundle --platform=node --target=node18 --format=esm --outfile=dist/index.js --minify",
     "build:types": "tsc --emitDeclarationOnly",
     "build:full": "pnpm run build && pnpm run build:types",
-    "watch": "esbuild src/index.ts --bundle --platform=node --target=node18 --format=esm --outfile=dist/index.js --external:@modelcontextprotocol/sdk --banner:js=\"#!/usr/bin/env node\" --watch",
+    "watch": "tsc --watch",
     "start": "node ./dist/index.js",
     "inspect": "npx @modelcontextprotocol/inspector node dist/index.js",
     "prepublishOnly": "pnpm run build:full"
   },
   "files": [
     "dist",
-    "README.md",
-    "LICENSE"
+    "README.md"
   ],
   "keywords": [
     "mcp",
@@ -45,7 +44,7 @@
     "url": "https://github.com/roydigerhund/easingwizard/issues"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.0.0"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.0",
@@ -55,7 +54,6 @@
     "@types/node": "^24.1.0",
     "easingwizard-core": "workspace:*",
     "esbuild": "^0.24.0",
-    "tsc-alias": "^1.8.16",
     "typescript": "^5.8.0"
   }
 }

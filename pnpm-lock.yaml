@@ -146,9 +146,6 @@ importers:
       esbuild:
         specifier: ^0.24.0
         version: 0.24.2
-      tsc-alias:
-        specifier: ^1.8.16
-        version: 1.8.16
       typescript:
         specifier: ^5.8.0
         version: 5.8.3

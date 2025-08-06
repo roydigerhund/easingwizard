@@ -45,7 +45,6 @@ export const ErrorResponseSchema = z
       }),
   })
   .meta({
-    id: 'ErrorResponse',
     description: 'Error response with validation details',
   });
 
