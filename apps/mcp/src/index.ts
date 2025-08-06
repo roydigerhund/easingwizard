@@ -123,7 +123,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       case endpointTexts.getCurveById.toolId: {
-        const id = CurveIdSchema.parse(args?.toolId);
+        const id = CurveIdSchema.parse(args?.id);
         const response = createCurveResponseFromId(id);
 
         return { structuredContent: response };
@@ -134,7 +134,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case endpointTexts.createBounceCurve.toolId:
       case endpointTexts.createWiggleCurve.toolId:
       case endpointTexts.createOvershootCurve.toolId: {
-        const type = EasingTypeSchema.parse(name.replace('create', '').replace('Curve', '').toUpperCase());
+        const type = EasingTypeSchema.parse(name.replace('create_', '').replace('_curve', '').toUpperCase());
         const response = createCurveResponseFromInput({ type, config: args });
 
         return { structuredContent: response };

@@ -152,7 +152,6 @@ function main() {
         curve: `##OvershootCurve.${curve}##`,
         params: { style: `##OvershootStyle.${style}##`, ...params, accuracy: accuracyString },
         output: {
-          style: `##OvershootStyle.${style}##`,
           css: easingValue,
           tailwind_css: cssStringToTailwind(easingValue),
           svg_polyline: generateOvershootSVGPolyline(sampledPoints),

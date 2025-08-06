@@ -12,7 +12,7 @@ export const BaseOutputSchema = z.object({
 });
 
 export const BezierEasingOutputSchema = BaseOutputSchema.extend({
-  svg_path: z.string().optional().meta({
+  svg_path: z.string().meta({
     description: 'SVG path for Bézier curves',
     example: 'M0,100 C66,100 34,0 100,0',
   }),
@@ -22,7 +22,7 @@ export const BezierEasingOutputSchema = BaseOutputSchema.extend({
 });
 
 export const LinearEasingOutputSchema = BaseOutputSchema.extend({
-  svg_polyline: z.string().optional().meta({
+  svg_polyline: z.string().meta({
     description: 'SVG polyline for linear easing curves',
     example: '0,75 15.2,39.6 32.8,21.75 50,18.45 100,25',
   }),
