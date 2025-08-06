@@ -365,7 +365,6 @@ function getKeyTimes(
 
 // Ramer–Douglas–Peucker algorithm implementation using iterative approach to save memory
 function rdp(points: { t: number; y: number }[], epsilon: number): { t: number; y: number }[] {
-  console.log('rdp function executed');
   const stack: { startIndex: number; endIndex: number }[] = [];
   const result = [];
 
