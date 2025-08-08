@@ -91,6 +91,13 @@ const toolMapping = [
   },
 ];
 
+const createUnstructuredContent = (content: any) => {
+  return [{
+    type: 'text',
+    text: JSON.stringify(content, null, 2),
+  }];
+};
+
 // List available tools
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
@@ -117,16 +124,16 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     switch (name) {
       case endpointTexts.getPresets.toolId: {
         const type = args?.type ? EasingTypeSchema.parse(args?.type) : undefined;
-        const response = await createPresetsResponse(type);
-
-        return { content: JSON.stringify(response), structuredContent: response };
+        const structuredContent = await createPresetsResponse(type);
+        const content = createUnstructuredContent(structuredContent);
+        return { content, structuredContent };
       }
 
       case endpointTexts.getCurveById.toolId: {
         const id = CurveIdSchema.parse(args?.id);
-        const response = createCurveResponseFromId(id);
-
-        return { content: JSON.stringify(response), structuredContent: response };
+        const structuredContent = createCurveResponseFromId(id);
+        const content = createUnstructuredContent(structuredContent);
+        return { content, structuredContent };
       }
 
       case endpointTexts.createBezierCurve.toolId:
@@ -135,9 +142,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case endpointTexts.createWiggleCurve.toolId:
       case endpointTexts.createOvershootCurve.toolId: {
         const type = EasingTypeSchema.parse(name.replace('create_', '').replace('_curve', '').toUpperCase());
-        const response = createCurveResponseFromInput({ type, config: args });
-
-        return { content: JSON.stringify(response), structuredContent: response };
+        const structuredContent = createCurveResponseFromInput({ type, config: args });
+        const content = createUnstructuredContent(structuredContent);
+        return { content, structuredContent };
       }
 
       default:

@@ -2,18 +2,23 @@
   "$schema": "./node_modules/turbo/schema.json",
   "ui": "tui",
   "tasks": {
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**", "build/**"],
-      "inputs": ["src/**", "app/**", "*.ts", "*.tsx", "*.js", "*.jsx", "package.json"]
+    "build:api": {
+      "dependsOn": ["^build:api"],
+      "outputs": ["dist/**"],
+      "inputs": ["api/**", "public/**", "src/**", "*.ts", "*.tsx", "*.js", "*.jsx", "package.json"],
+      "env": ["NODEJS_HELPERS", "API_URL"]
+    },
+    "build:frontend": {
+      "dependsOn": ["^build:frontend"],
+      "outputs": ["build/**"],
+      "inputs": ["public/**", "app/**", "*.ts", "*.tsx", "*.js", "*.jsx", "package.json"],
+      "env": ["NODEJS_HELPERS", "API_URL", "VITE_FRONTEND_URL"]
     },
     "dev": {
       "persistent": true,
-      "cache": false,
-      "dependsOn": ["^build"]
+      "cache": false
     },
     "typecheck": {
-      "dependsOn": ["^build"],
       "outputs": [],
       "inputs": ["src/**", "app/**", "*.ts", "*.tsx", "tsconfig.json", "package.json"]
     },
@@ -22,7 +27,6 @@
       "outputs": []
     },
     "generate": {
-      "dependsOn": ["^build"],
       "outputs": ["src/generated/**"],
       "inputs": ["scripts/**", "src/**", "package.json"]
     }

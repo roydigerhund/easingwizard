@@ -18,6 +18,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router": "^7.6.3",
+    "zod": "^4.0.14",
     "zustand": "^5.0.6"
   },
   "devDependencies": {

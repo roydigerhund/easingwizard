@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "private": false,
   "scripts": {
-    "build": "turbo run build",
-    "build:api": "turbo run build --filter=easingwizard-api",
-    "build:frontend": "turbo run build --filter=easingwizard-frontend",
-    "build:core": "turbo run build --filter=easingwizard-core",
+    "build": "turbo run build:api && turbo run build:frontend",
+    "build:api": "turbo run build:api",
+    "build:frontend": "turbo run build:frontend",
     "dev": "turbo run dev",
     "dev:api": "turbo run dev --filter=easingwizard-api",
     "dev:frontend": "turbo run dev --filter=easingwizard-frontend",
