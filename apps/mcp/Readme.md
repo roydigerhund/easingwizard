@@ -22,7 +22,7 @@ Add to your `claude_desktop_config.json`:
   "mcpServers": {
     "easingwizard": {
       "command": "npx",
-      "args": ["@easingwizard/mcp-server"]
+      "args": ["-y", "@easingwizard/mcp-server"]
     }
   }
 }
@@ -37,7 +37,7 @@ Add to your MCP configuration `.vscode/mcp.json`:
   "servers": {
     "easingwizard": {
       "command": "npx",
-      "args": ["@easingwizard/mcp-server"]
+      "args": ["-y", "@easingwizard/mcp-server"]
     }
   }
 }
@@ -52,7 +52,7 @@ For other MCP-compatible applications, use the standard configuration format:
   "mcpServers": {
     "easingwizard": {
       "command": "npx",
-      "args": ["@easingwizard/mcp-server"]
+      "args": ["-y", "@easingwizard/mcp-server"]
     }
   }
 }
@@ -63,12 +63,15 @@ For other MCP-compatible applications, use the standard configuration format:
 The MCP server provides the following tools for AI assistants:
 
 ### `getPresets`
+
 Retrieves available preset easing curves, optionally filtered by type.
 
 **Parameters:**
+
 - `type` (optional): Filter by easing type (`BEZIER`, `SPRING`, `BOUNCE`, `WIGGLE`, `OVERSHOOT`)
 
 **Example:**
+
 ```json
 {
   "name": "getPresets",
@@ -79,12 +82,15 @@ Retrieves available preset easing curves, optionally filtered by type.
 ```
 
 ### `getCurveById`
+
 Retrieves a specific easing curve by its unique ID.
 
 **Parameters:**
+
 - `id` (required): The unique ID of the easing curve
 
 **Example:**
+
 ```json
 {
   "name": "getCurveById",
@@ -95,15 +101,18 @@ Retrieves a specific easing curve by its unique ID.
 ```
 
 ### `createBezierCurve`
+
 Creates a custom cubic Bézier easing curve.
 
 **Parameters:**
+
 - `x1` (0-1): First control point X coordinate
-- `y1` (-1 to 2): First control point Y coordinate  
+- `y1` (-1 to 2): First control point Y coordinate
 - `x2` (0-1): Second control point X coordinate
 - `y2` (-1 to 2): Second control point Y coordinate
 
 **Example:**
+
 ```json
 {
   "name": "createBezierCurve",
@@ -117,15 +126,18 @@ Creates a custom cubic Bézier easing curve.
 ```
 
 ### `createSpringCurve`
+
 Creates a spring-based easing curve with physics parameters.
 
 **Parameters:**
+
 - `mass` (1-5): Mass of the spring system
 - `stiffness` (0-100): Spring stiffness
 - `damping` (0-100): Damping force
 - `accuracy` (`LOW`, `MEDIUM`, `HIGH`, `ULTRA`): Calculation precision
 
 **Example:**
+
 ```json
 {
   "name": "createSpringCurve",
@@ -139,25 +151,31 @@ Creates a spring-based easing curve with physics parameters.
 ```
 
 ### `createBounceCurve`
+
 Creates a bouncing easing curve.
 
 **Parameters:**
+
 - `bounces` (1-10): Number of bounces
 - `damping` (0-100): Bounce damping
 - `accuracy` (`LOW`, `MEDIUM`, `HIGH`, `ULTRA`): Calculation precision
 
 ### `createWiggleCurve`
+
 Creates an oscillating wiggle curve.
 
 **Parameters:**
+
 - `wiggles` (1-10): Number of oscillations
 - `damping` (0-100): Oscillation damping
 - `accuracy` (`LOW`, `MEDIUM`, `HIGH`, `ULTRA`): Calculation precision
 
 ### `createOvershootCurve`
+
 Creates an overshoot easing curve.
 
 **Parameters:**
+
 - `style` (`IN`, `OUT`, `IN_OUT`): Animation style
 - `mass` (1-5): Mass parameter
 - `damping` (0-100): Damping force
@@ -199,7 +217,7 @@ pnpm inspect
 The server provides detailed error messages for:
 
 - Invalid parameter ranges or types
-- Malformed curve configurations  
+- Malformed curve configurations
 - MCP protocol errors
 - Internal processing failures
 

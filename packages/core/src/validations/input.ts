@@ -15,7 +15,7 @@ export const EasingTypeLowerCaseSchema = z.enum(EasingTypeLowerCase).meta({
 });
 
 export const LinearAccuracySchema = z.enum(LinearEasingAccuracy).meta({
-  description: 'Accuracy level for the linear easing approximation',
+  description: 'Accuracy level for the linear easing approximation, HIGH is the best option for most cases.',
   example: LinearEasingAccuracy.HIGH,
 });
 

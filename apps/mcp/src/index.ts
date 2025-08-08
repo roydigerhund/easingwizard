@@ -119,14 +119,14 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const type = args?.type ? EasingTypeSchema.parse(args?.type) : undefined;
         const response = await createPresetsResponse(type);
 
-        return { structuredContent: response };
+        return { content: JSON.stringify(response), structuredContent: response };
       }
 
       case endpointTexts.getCurveById.toolId: {
         const id = CurveIdSchema.parse(args?.id);
         const response = createCurveResponseFromId(id);
 
-        return { structuredContent: response };
+        return { content: JSON.stringify(response), structuredContent: response };
       }
 
       case endpointTexts.createBezierCurve.toolId:
@@ -137,7 +137,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const type = EasingTypeSchema.parse(name.replace('create_', '').replace('_curve', '').toUpperCase());
         const response = createCurveResponseFromInput({ type, config: args });
 
-        return { structuredContent: response };
+        return { content: JSON.stringify(response), structuredContent: response };
       }
 
       default:
