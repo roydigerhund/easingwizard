@@ -36,8 +36,8 @@ This is a monorepo containing multiple packages and applications:
 
 ```bash
 # Clone the repository
-git clone https://github.com/roydigerhund/easing-wizard.git
-cd easing-wizard
+git clone https://github.com/roydigerhund/easingwizard.git
+cd easingwizard
 
 # Install dependencies
 pnpm install
@@ -163,5 +163,5 @@ This project is licensed under a custom license that allows use in larger projec
 - **API Documentation**: [api.easingwizard.com](https://api.easingwizard.com)
 - **OpenAPI Docs**: [OpenAPI Documentation](https://api.easingwizard.com/openapi)
 - **NPM Package**: [@easingwizard/mcp-server](https://www.npmjs.com/package/@easingwizard/mcp-server)
-- **Issues**: [GitHub Issues](https://github.com/roydigerhund/easing-wizard/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/roydigerhund/easing-wizard/discussions)
+- **Issues**: [GitHub Issues](https://github.com/roydigerhund/easingwizard/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/roydigerhund/easingwizard/discussions)

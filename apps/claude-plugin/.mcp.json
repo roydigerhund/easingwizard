@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "easingwizard": {
+      "command": "npx",
+      "args": ["@easingwizard/mcp-server@latest"]
+    }
+  }
+}

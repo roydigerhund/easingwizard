@@ -1,0 +1,11 @@
+{
+  "name": "easingwizard",
+  "version": "1.0.0",
+  "description": "Generate professional CSS easing curves, audit animations, and get expert motion design advice — powered by Easing Wizard",
+  "author": {
+    "name": "Easing Wizard"
+  },
+  "homepage": "https://easingwizard.com",
+  "repository": "https://github.com/roydigerhund/easingwizard",
+  "license": "SEE LICENSE IN LICENSE"
+}
