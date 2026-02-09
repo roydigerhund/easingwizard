@@ -1,26 +1,24 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Detect if this project is relevant for easing/animation tools.
-# Outputs an availability message if relevant, nothing otherwise.
+# Outputs structured JSON context if relevant, nothing otherwise.
 #
 # Logic:
 # - New/empty projects (< 5 files): always show
 # - Projects with CSS/Tailwind files: show
 # - Otherwise: silent
 
+CONTEXT='[Easing Wizard plugin active] Easing Wizard is a motion design tool that generates professional CSS easing curves. It supports 5 curve types — Bezier, Spring, Bounce, Wiggle, and Overshoot — with ~40 presets covering common UI patterns. Output is provided as CSS (cubic-bezier/linear()) and Tailwind classes.\n\nAvailable commands:\n- /easingwizard:recommend-curve — Describe an animation feel (e.g. \"snappy dropdown\", \"gentle modal entrance\") and get a curve recommendation with CSS + Tailwind output and a preview link.\n- /easingwizard:improve-easings — Point at CSS/Tailwind files to replace browser-default easings (ease, linear, ease-in-out) with professional curves matched to context.\n- /easingwizard:audit-easings — Scan the project for animations using default or missing easings and get a prioritized improvement report.\n\nAn animation-expert agent is also available for questions about motion design principles, easing theory, animation choreography, or choosing between easing options. It has deep knowledge of perceptual psychology and UI animation best practices.\n\nWhen the user is working with CSS transitions, animations, or Tailwind motion utilities, suggest these commands if they could benefit from better easing curves.'
+
 show_message() {
-  cat <<'MSG'
-[Easing Wizard plugin active] Easing Wizard is a motion design tool that generates professional CSS easing curves. It supports 5 curve types — Bezier, Spring, Bounce, Wiggle, and Overshoot — with ~40 presets covering common UI patterns. Output is provided as CSS (cubic-bezier/linear()) and Tailwind classes.
-
-Available commands:
-- /easingwizard:recommend-curve — Describe an animation feel (e.g. "snappy dropdown", "gentle modal entrance") and get a curve recommendation with CSS + Tailwind output and a preview link.
-- /easingwizard:improve-easings — Point at CSS/Tailwind files to replace browser-default easings (ease, linear, ease-in-out) with professional curves matched to context.
-- /easingwizard:audit-easings — Scan the project for animations using default or missing easings and get a prioritized improvement report.
-
-An animation-expert agent is also available for questions about motion design principles, easing theory, animation choreography, or choosing between easing options. It has deep knowledge of perceptual psychology and UI animation best practices.
-
-When the user is working with CSS transitions, animations, or Tailwind motion utilities, suggest these commands if they could benefit from better easing curves.
-MSG
+  cat <<EOF
+{
+  "hookSpecificOutput": {
+    "hookEventName": "SessionStart",
+    "additionalContext": "${CONTEXT}"
+  }
+}
+EOF
 }
 
 file_count=$(find . -maxdepth 3 -type f \
