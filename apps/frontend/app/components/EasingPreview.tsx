@@ -1,4 +1,11 @@
-import { AnimationType, EasingType, humanize, PreviewPlayMode, suggestDuration, type AnimationTypeKey } from 'easingwizard-core';
+import {
+  AnimationType,
+  EasingType,
+  humanize,
+  PreviewPlayMode,
+  suggestDuration,
+  type AnimationTypeKey,
+} from 'easingwizard-core';
 import { useEffect, useMemo, useState } from 'react';
 import { classNames } from '~/css/class-names';
 import { useEasingStore } from '~/state/easing-store';
@@ -45,17 +52,48 @@ export default function EasingPreview() {
   const suggestedRange = useMemo(() => {
     switch (easingType) {
       case EasingType.SPRING:
-        return suggestDuration(EasingType.SPRING, { mass: springMass, stiffness: springStiffness, damping: springDamping, accuracy: editorAccuracy }, springTotalTime);
+        return suggestDuration(
+          EasingType.SPRING,
+          { mass: springMass, stiffness: springStiffness, damping: springDamping, accuracy: editorAccuracy },
+          springTotalTime,
+        );
       case EasingType.BOUNCE:
-        return suggestDuration(EasingType.BOUNCE, { bounces: bounceBounces, damping: bounceDamping, accuracy: editorAccuracy });
+        return suggestDuration(EasingType.BOUNCE, {
+          bounces: bounceBounces,
+          damping: bounceDamping,
+          accuracy: editorAccuracy,
+        });
       case EasingType.WIGGLE:
-        return suggestDuration(EasingType.WIGGLE, { wiggles: wiggleWiggles, damping: wiggleDamping, accuracy: editorAccuracy });
+        return suggestDuration(EasingType.WIGGLE, {
+          wiggles: wiggleWiggles,
+          damping: wiggleDamping,
+          accuracy: editorAccuracy,
+        });
       case EasingType.OVERSHOOT:
-        return suggestDuration(EasingType.OVERSHOOT, { style: overshootStyle, mass: overshootMass, damping: overshootDamping, accuracy: editorAccuracy });
+        return suggestDuration(EasingType.OVERSHOOT, {
+          style: overshootStyle,
+          mass: overshootMass,
+          damping: overshootDamping,
+          accuracy: editorAccuracy,
+        });
       default:
         return undefined;
     }
-  }, [easingType, springMass, springStiffness, springDamping, springTotalTime, editorAccuracy, bounceBounces, bounceDamping, wiggleWiggles, wiggleDamping, overshootStyle, overshootMass, overshootDamping]);
+  }, [
+    easingType,
+    springMass,
+    springStiffness,
+    springDamping,
+    springTotalTime,
+    editorAccuracy,
+    bounceBounces,
+    bounceDamping,
+    wiggleWiggles,
+    wiggleDamping,
+    overshootStyle,
+    overshootMass,
+    overshootDamping,
+  ]);
 
   const [counter, setCounter] = useState(0);
   const [hidePreviewElement, setHidePreviewElement] = useState(false);

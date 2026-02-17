@@ -52,7 +52,7 @@ export function suggestDuration(
       const resolvedSettleTime = settleTime ?? getTotalTime(createSpringFunction({ mass, stiffness, damping }), 1);
       const base = resolvedSettleTime * 1000;
 
-      return buildDurationRange(clamp(Math.round(base * 0.4), 200, 4000), clamp(Math.round(base * 0.8), 300, 6000));
+      return buildDurationRange(clamp(Math.round(base * 0.4), 200, 3000), clamp(Math.round(base * 0.8), 300, 4000));
     }
     case EasingType.BOUNCE: {
       const { bounces, damping } = config as BounceParams;
