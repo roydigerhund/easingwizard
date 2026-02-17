@@ -5,7 +5,7 @@ import {
   createCubicBezierString,
   generateLinearEasing,
   humanize,
-  type BezierInput,
+  type BezierParams,
 } from 'easingwizard-core';
 import { useMemo, useState } from 'react';
 import { classNames } from '~/css/class-names';
@@ -18,7 +18,7 @@ const options = types.flatMap((type) => Object.values(bezierEasings[type]));
 const names = types.flatMap((type) => Object.keys(bezierEasings[type]).map((name) => humanize(`${type}_${name}`)));
 
 export default function BezierComparison() {
-  const [bezierValue, setBezierValue] = useState<BezierInput>(bezierEasings.in.sine);
+  const [bezierValue, setBezierValue] = useState<BezierParams>(bezierEasings.in.sine);
   const [selectedOption, setSelectedOption] = useState(0);
 
   const { mathFunction } = options[selectedOption];

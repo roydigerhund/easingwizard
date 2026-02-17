@@ -1,4 +1,4 @@
-import { type BezierInput, createCubicBezierString, generateBezierSVGPath, roundTo } from 'easingwizard-core';
+import { createCubicBezierString, generateBezierSVGPath, roundTo, type BezierParams } from 'easingwizard-core';
 import { useEasingStore } from '~/state/easing-store';
 import Drag from './Drag';
 import EditorBase from './EditorBase';
@@ -16,7 +16,7 @@ export default function BezierEditor() {
   const editorExtraSpaceBottom = useEasingStore((state) => state.editorExtraSpaceBottom);
   const setState = useEasingStore((state) => state.setState);
 
-  const handleChange = ({ x1, y1, x2, y2 }: BezierInput) => {
+  const handleChange = ({ x1, y1, x2, y2 }: BezierParams) => {
     setState({
       bezierX1: x1,
       bezierY1: y1,

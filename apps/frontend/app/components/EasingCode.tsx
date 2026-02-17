@@ -1,5 +1,5 @@
-import { EasingType, cssStringToTailwind } from 'easingwizard-core';
-import { useEffect, useState } from 'react';
+import { EasingType, cssStringToTailwind, suggestDuration } from 'easingwizard-core';
+import { useEffect, useMemo, useState } from 'react';
 import { paragraph } from '~/css/common-classes';
 import { useEasingStore } from '~/state/easing-store';
 import CodeBlock from './CodeBlock';
@@ -21,6 +21,33 @@ export default function EasingCode() {
   const springValue = useEasingStore((state) => state.springValue);
   const bounceValue = useEasingStore((state) => state.bounceValue);
   const wiggleValue = useEasingStore((state) => state.wiggleValue);
+  const springMass = useEasingStore((state) => state.springMass);
+  const springStiffness = useEasingStore((state) => state.springStiffness);
+  const springDamping = useEasingStore((state) => state.springDamping);
+  const springTotalTime = useEasingStore((state) => state.springTotalTime);
+  const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
+  const bounceBounces = useEasingStore((state) => state.bounceBounces);
+  const bounceDamping = useEasingStore((state) => state.bounceDamping);
+  const wiggleWiggles = useEasingStore((state) => state.wiggleWiggles);
+  const wiggleDamping = useEasingStore((state) => state.wiggleDamping);
+  const overshootStyle = useEasingStore((state) => state.overshootStyle);
+  const overshootMass = useEasingStore((state) => state.overshootMass);
+  const overshootDamping = useEasingStore((state) => state.overshootDamping);
+
+  const suggestedDuration = useMemo(() => {
+    switch (easingType) {
+      case EasingType.SPRING:
+        return suggestDuration(EasingType.SPRING, { mass: springMass, stiffness: springStiffness, damping: springDamping, accuracy: editorAccuracy }, springTotalTime);
+      case EasingType.BOUNCE:
+        return suggestDuration(EasingType.BOUNCE, { bounces: bounceBounces, damping: bounceDamping, accuracy: editorAccuracy });
+      case EasingType.WIGGLE:
+        return suggestDuration(EasingType.WIGGLE, { wiggles: wiggleWiggles, damping: wiggleDamping, accuracy: editorAccuracy });
+      case EasingType.OVERSHOOT:
+        return suggestDuration(EasingType.OVERSHOOT, { style: overshootStyle, mass: overshootMass, damping: overshootDamping, accuracy: editorAccuracy });
+      default:
+        return null;
+    }
+  }, [easingType, springMass, springStiffness, springDamping, springTotalTime, editorAccuracy, bounceBounces, bounceDamping, wiggleWiggles, wiggleDamping, overshootStyle, overshootMass, overshootDamping]);
 
   const [codeType, setCodeType] = useState(CodeType.CSS);
 
@@ -91,6 +118,11 @@ export default function EasingCode() {
         {codeType === CodeType.CSS && (
           <>
             <CodeBlock>{transformedValue}</CodeBlock>
+            {suggestedDuration && (
+              <p className={paragraph}>
+                Suggested duration: <code>{suggestedDuration.min}ms</code> – <code>{suggestedDuration.max}ms</code>
+              </p>
+            )}
             <p className={paragraph}>
               In CSS, <code>{easingType === EasingType.BEZIER ? 'cubic-bezier' : 'linear'}</code> is used in the{' '}
               <code>transition-timing-function</code> or <code>animation-timing-function</code> property.
@@ -110,6 +142,11 @@ export default function EasingCode() {
         {codeType === CodeType.TAILWIND_CSS && (
           <>
             <CodeBlock>{transformedValue}</CodeBlock>
+            {suggestedDuration && (
+              <p className={paragraph}>
+                Suggested duration: <code>{suggestedDuration.min}ms</code> – <code>{suggestedDuration.max}ms</code>
+              </p>
+            )}
             <p className={paragraph}>
               In Tailwind CSS, the <code>ease-</code> prefix is used to control the{' '}
               <code>transition-timing-function</code> property. For more information, check out the{' '}

@@ -13,9 +13,10 @@ type Props = {
   max: number;
   step: number;
   inputStep?: number;
+  suggestedRange?: { min: number; max: number };
 };
 
-export default function Slider({ className, label, value, onChange, min, max, step, inputStep }: Props) {
+export default function Slider({ className, label, value, onChange, min, max, step, inputStep, suggestedRange }: Props) {
   const sliderRef = useRef<HTMLSpanElement>(null);
   const [valuePrefix, setValuePrefix] = useState<string | undefined>();
   const [hasTrailingComma, setHasTrailingComma] = useState(false);
@@ -113,6 +114,20 @@ export default function Slider({ className, label, value, onChange, min, max, st
           >
             <RSlider.Track className="relative h-7 grow overflow-hidden rounded-lg">
               <RSlider.Range className="absolute h-7 bg-zinc-900" />
+              {suggestedRange && (() => {
+                const thumbWidth = 0.75; // w-3 in rem
+                const leftFrac = (Math.max(suggestedRange.min, min) - min) / (max - min);
+                const rightFrac = 1 - (Math.min(suggestedRange.max, max) - min) / (max - min);
+                return (
+                  <span
+                    className="absolute h-7 rounded-sm bg-zinc-700/40 transition-all duration-300 ease-out-sine"
+                    style={{
+                      left: `calc(${leftFrac * 100}% - ${leftFrac * thumbWidth}rem)`,
+                      right: `calc(${rightFrac * 100}% - ${rightFrac * thumbWidth}rem)`,
+                    }}
+                  />
+                );
+              })()}
             </RSlider.Track>
             <RSlider.Thumb
               ref={sliderRef}

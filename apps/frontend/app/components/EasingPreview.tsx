@@ -1,5 +1,5 @@
-import { AnimationType, EasingType, humanize, PreviewPlayMode, type AnimationTypeKey } from 'easingwizard-core';
-import { useEffect, useState } from 'react';
+import { AnimationType, EasingType, humanize, PreviewPlayMode, suggestDuration, type AnimationTypeKey } from 'easingwizard-core';
+import { useEffect, useMemo, useState } from 'react';
 import { classNames } from '~/css/class-names';
 import { useEasingStore } from '~/state/easing-store';
 import CardHeadline from './CardHeadline';
@@ -29,6 +29,34 @@ export default function EasingPreview() {
   const previewPlayMode = useEasingStore((state) => state.previewPlayMode);
   const previewShowLinear = useEasingStore((state) => state.previewShowLinear);
   const previewAnimationType = useEasingStore((state) => state.previewAnimationType);
+  const springMass = useEasingStore((state) => state.springMass);
+  const springStiffness = useEasingStore((state) => state.springStiffness);
+  const springDamping = useEasingStore((state) => state.springDamping);
+  const springTotalTime = useEasingStore((state) => state.springTotalTime);
+  const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
+  const bounceBounces = useEasingStore((state) => state.bounceBounces);
+  const bounceDamping = useEasingStore((state) => state.bounceDamping);
+  const wiggleWiggles = useEasingStore((state) => state.wiggleWiggles);
+  const wiggleDamping = useEasingStore((state) => state.wiggleDamping);
+  const overshootStyle = useEasingStore((state) => state.overshootStyle);
+  const overshootMass = useEasingStore((state) => state.overshootMass);
+  const overshootDamping = useEasingStore((state) => state.overshootDamping);
+
+  const suggestedRange = useMemo(() => {
+    switch (easingType) {
+      case EasingType.SPRING:
+        return suggestDuration(EasingType.SPRING, { mass: springMass, stiffness: springStiffness, damping: springDamping, accuracy: editorAccuracy }, springTotalTime);
+      case EasingType.BOUNCE:
+        return suggestDuration(EasingType.BOUNCE, { bounces: bounceBounces, damping: bounceDamping, accuracy: editorAccuracy });
+      case EasingType.WIGGLE:
+        return suggestDuration(EasingType.WIGGLE, { wiggles: wiggleWiggles, damping: wiggleDamping, accuracy: editorAccuracy });
+      case EasingType.OVERSHOOT:
+        return suggestDuration(EasingType.OVERSHOOT, { style: overshootStyle, mass: overshootMass, damping: overshootDamping, accuracy: editorAccuracy });
+      default:
+        return undefined;
+    }
+  }, [easingType, springMass, springStiffness, springDamping, springTotalTime, editorAccuracy, bounceBounces, bounceDamping, wiggleWiggles, wiggleDamping, overshootStyle, overshootMass, overshootDamping]);
+
   const [counter, setCounter] = useState(0);
   const [hidePreviewElement, setHidePreviewElement] = useState(false);
   const [previewHasRestarted, setPreviewHasRestarted] = useState(false);
@@ -108,8 +136,9 @@ export default function EasingPreview() {
             setState({ previewDuration: value });
           }}
           min={100}
-          max={4000}
+          max={easingType === EasingType.SPRING ? 4000 : 2000}
           step={25}
+          suggestedRange={suggestedRange}
         />
         <div className="relative grid grid-cols-5 gap-4 self-start">
           {Object.values(AnimationType).map((type) => (

@@ -15,6 +15,7 @@ import {
   overshootFunctions,
   springCalculations,
   springFunctions,
+  suggestDuration,
   wiggleCalculations,
   wiggleFunctions,
   type BezierCurveKey,
@@ -63,11 +64,12 @@ export default function EasingSelection() {
   };
 
   const onSpringValueChange = (curve: SpringCurveKey) => {
-    const { easingValue, sampledPoints } = generateLinearEasing({
+    const { easingValue, sampledPoints, totalTime } = generateLinearEasing({
       type: EasingType.SPRING,
       accuracy: editorAccuracy,
       ...springFunctions[curve],
     });
+    const duration = suggestDuration(EasingType.SPRING, { ...springFunctions[curve], accuracy: editorAccuracy }, totalTime);
     setState({
       springStiffness: springFunctions[curve].stiffness,
       springDamping: springFunctions[curve].damping,
@@ -76,6 +78,7 @@ export default function EasingSelection() {
       springValue: easingValue,
       springPoints: sampledPoints,
       springIsCustom: false,
+      previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
     });
   };
 
@@ -85,6 +88,7 @@ export default function EasingSelection() {
       accuracy: editorAccuracy,
       ...bounceFunctions[curve],
     });
+    const duration = suggestDuration(EasingType.BOUNCE, { ...bounceFunctions[curve], accuracy: editorAccuracy });
     setState({
       bounceBounces: bounceFunctions[curve].bounces,
       bounceDamping: bounceFunctions[curve].damping,
@@ -92,6 +96,7 @@ export default function EasingSelection() {
       bounceValue: easingValue,
       bouncePoints: sampledPoints,
       bounceIsCustom: false,
+      previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
     });
   };
 
@@ -101,6 +106,7 @@ export default function EasingSelection() {
       accuracy: editorAccuracy,
       ...wiggleFunctions[curve],
     });
+    const duration = suggestDuration(EasingType.WIGGLE, { ...wiggleFunctions[curve], accuracy: editorAccuracy });
     setState({
       wiggleDamping: wiggleFunctions[curve].damping,
       wiggleWiggles: wiggleFunctions[curve].wiggles,
@@ -108,16 +114,19 @@ export default function EasingSelection() {
       wiggleValue: easingValue,
       wigglePoints: sampledPoints,
       wiggleIsCustom: false,
+      previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
     });
   };
 
   const onOvershootValueChange = (style: OvershootStyleKey, curve?: OvershootCurveKey) => {
+    const resolvedCurve = curve || defaultOvershootCurve;
     const { easingValue, sampledPoints } = generateLinearEasing({
       type: EasingType.OVERSHOOT,
       accuracy: editorAccuracy,
       style,
-      ...overshootFunctions[style][curve || defaultOvershootCurve],
+      ...overshootFunctions[style][resolvedCurve],
     });
+    const duration = suggestDuration(EasingType.OVERSHOOT, { style, ...overshootFunctions[style][resolvedCurve], accuracy: editorAccuracy });
     setState(
       curve
         ? {
@@ -128,11 +137,13 @@ export default function EasingSelection() {
             overshootValue: easingValue,
             overshootPoints: sampledPoints,
             overshootIsCustom: false,
+            previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
           }
         : {
             overshootStyle: style,
             overshootValue: easingValue,
             overshootPoints: sampledPoints,
+            previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
           },
     );
   };
