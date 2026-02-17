@@ -4,24 +4,35 @@ import { EasingType, LinearEasingAccuracy, OvershootStyleKey } from '~/types/enu
 import { generateLinearEasing } from '~/utils/easing';
 
 function main() {
+  const stripTotalTime = ({ easingValue, sampledPoints }: { easingValue: string; sampledPoints: unknown }) => ({
+    easingValue,
+    sampledPoints,
+  });
+
   const springCalculations = Object.fromEntries(
     Object.entries(springFunctions).map(([curve, springFunction]) => [
       curve,
-      generateLinearEasing({ type: EasingType.SPRING, accuracy: LinearEasingAccuracy.HIGH, ...springFunction }),
+      stripTotalTime(
+        generateLinearEasing({ type: EasingType.SPRING, accuracy: LinearEasingAccuracy.HIGH, ...springFunction }),
+      ),
     ]),
   );
 
   const bounceCalculations = Object.fromEntries(
     Object.entries(bounceFunctions).map(([curve, bounceFunction]) => [
       curve,
-      generateLinearEasing({ type: EasingType.BOUNCE, accuracy: LinearEasingAccuracy.HIGH, ...bounceFunction }),
+      stripTotalTime(
+        generateLinearEasing({ type: EasingType.BOUNCE, accuracy: LinearEasingAccuracy.HIGH, ...bounceFunction }),
+      ),
     ]),
   );
 
   const wiggleCalculations = Object.fromEntries(
     Object.entries(wiggleFunctions).map(([curve, wiggleFunction]) => [
       curve,
-      generateLinearEasing({ type: EasingType.WIGGLE, accuracy: LinearEasingAccuracy.HIGH, ...wiggleFunction }),
+      stripTotalTime(
+        generateLinearEasing({ type: EasingType.WIGGLE, accuracy: LinearEasingAccuracy.HIGH, ...wiggleFunction }),
+      ),
     ]),
   );
 
@@ -31,12 +42,14 @@ function main() {
       Object.fromEntries(
         Object.entries(curves).map(([curve, overshootFunction]) => [
           curve,
-          generateLinearEasing({
-            type: EasingType.OVERSHOOT,
-            accuracy: LinearEasingAccuracy.HIGH,
-            ...overshootFunction,
-            style: style as OvershootStyleKey,
-          }),
+          stripTotalTime(
+            generateLinearEasing({
+              type: EasingType.OVERSHOOT,
+              accuracy: LinearEasingAccuracy.HIGH,
+              ...overshootFunction,
+              style: style as OvershootStyleKey,
+            }),
+          ),
         ]),
       ),
     ]),

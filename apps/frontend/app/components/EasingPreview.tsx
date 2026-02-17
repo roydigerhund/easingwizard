@@ -108,8 +108,8 @@ export default function EasingPreview() {
             setState({ previewDuration: value });
           }}
           min={100}
-          max={2000}
-          step={50}
+          max={4000}
+          step={25}
         />
         <div className="relative grid grid-cols-5 gap-4 self-start">
           {Object.values(AnimationType).map((type) => (

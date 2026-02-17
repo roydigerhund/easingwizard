@@ -120,13 +120,14 @@ export function rehydrateShareState(state: EasingStateShare, version: number = 0
         fullState.springStiffness = springFunction.stiffness;
         fullState.springDamping = springFunction.damping;
       }
-      const { easingValue, sampledPoints } = generateLinearEasing({
+      const { easingValue, sampledPoints, totalTime } = generateLinearEasing({
         type: easingType,
         accuracy: fullState.editorAccuracy,
         mass: fullState.springMass,
         stiffness: fullState.springStiffness,
         damping: fullState.springDamping,
       });
+      fullState.springTotalTime = totalTime;
       fullState.springValue = easingValue;
       fullState.springPoints = sampledPoints;
       break;

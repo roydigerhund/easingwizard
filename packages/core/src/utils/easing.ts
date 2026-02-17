@@ -2,6 +2,7 @@ import {
   EasingType,
   LinearEasingAccuracy,
   OvershootStyle,
+  type EasingTypeKey,
   type LinearEasingAccuracyKey,
   type OvershootStyleKey,
 } from '~/types/enums';
@@ -29,6 +30,61 @@ type LinearEasingFunctionInput =
   | LinearEasingFunctionInputBounce
   | LinearEasingFunctionInputWiggle
   | LinearEasingFunctionInputOvershoot;
+
+type SuggestedDurationRange = { min: number; max: number };
+
+export function suggestDuration(
+  type: typeof EasingType.SPRING,
+  config: SpringParams,
+  settleTime?: number,
+): SuggestedDurationRange;
+export function suggestDuration(type: typeof EasingType.BOUNCE, config: BounceParams): SuggestedDurationRange;
+export function suggestDuration(type: typeof EasingType.WIGGLE, config: WiggleParams): SuggestedDurationRange;
+export function suggestDuration(type: typeof EasingType.OVERSHOOT, config: OvershootParams): SuggestedDurationRange;
+export function suggestDuration(
+  type: Exclude<EasingTypeKey, 'BEZIER'>,
+  config: SpringParams | BounceParams | WiggleParams | OvershootParams,
+  settleTime?: number,
+): SuggestedDurationRange {
+  switch (type) {
+    case EasingType.SPRING: {
+      const { mass, stiffness, damping } = config as SpringParams;
+      const resolvedSettleTime = settleTime ?? getTotalTime(createSpringFunction({ mass, stiffness, damping }), 1);
+      const base = resolvedSettleTime * 1000;
+
+      return buildDurationRange(clamp(Math.round(base * 0.4), 200, 4000), clamp(Math.round(base * 0.8), 300, 6000));
+    }
+    case EasingType.BOUNCE: {
+      const { bounces, damping } = config as BounceParams;
+      const base = 250 + bounces * 100;
+      const dampingScale = mapRange(damping, 0, 100, 1.2, 0.8);
+
+      return buildDurationRange(
+        clamp(Math.round(base * dampingScale * 0.8), 200, 800),
+        clamp(Math.round(base * dampingScale * 1.3), 400, 1500),
+      );
+    }
+    case EasingType.WIGGLE: {
+      const { wiggles, damping } = config as WiggleParams;
+      const base = 200 + wiggles * 80;
+      const dampingScale = mapRange(damping, 0, 100, 1.2, 0.8);
+
+      return buildDurationRange(
+        clamp(Math.round(base * dampingScale * 0.8), 150, 1000),
+        clamp(Math.round(base * dampingScale * 1.2), 300, 1500),
+      );
+    }
+    case EasingType.OVERSHOOT: {
+      const { mass, damping, style } = config as OvershootParams;
+      const massScale = mapRange(mass, 1, 5, 0.8, 1.3);
+      const dampingScale = mapRange(damping, 0, 100, 1.1, 0.9);
+      const styleScale = style === OvershootStyle.IN_OUT ? 1.3 : 1;
+      const base = 400 * massScale * dampingScale * styleScale;
+
+      return buildDurationRange(clamp(Math.round(base * 0.8), 200, 700), clamp(Math.round(base * 1.3), 350, 1000));
+    }
+  }
+}
 
 const getEasingFunction = (config: LinearEasingFunctionInput) => {
   switch (config.type) {
@@ -81,7 +137,21 @@ export function generateLinearEasing(config: LinearEasingFunctionInput) {
   // Generate the CSS linear easing function
   const easingValue = `linear(${easingValues.join(', ')})`;
 
-  return { easingValue, sampledPoints };
+  return { easingValue, sampledPoints, totalTime };
+}
+
+function buildDurationRange(min: number, max: number): SuggestedDurationRange {
+  const minRounded = roundToStep(min, 25);
+  const maxRounded = roundToStep(max, 25);
+  return minRounded <= maxRounded ? { min: minRounded, max: maxRounded } : { min: minRounded, max: minRounded };
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+
+function roundToStep(value: number, step: number): number {
+  return Math.round(value / step) * step;
 }
 
 // SPRING
@@ -268,11 +338,11 @@ function getTotalTime(springFunc: (t: number) => number, endValue: number): numb
   const dt = 0.016; // Start with 60 FPS time step
   let value = springFunc(time);
   let velocity = 1;
-  const epsilon = 0.005; // Threshold for settling
+  const epsilon = 0.05; // Threshold for settling
 
   let endFrames = 0;
 
-  while (Math.abs(velocity) > epsilon || endFrames < 25) {
+  while (Math.abs(velocity) > epsilon || endFrames < 60) {
     time += dt;
     const newValue = springFunc(time);
     velocity = (newValue - value) / dt;

@@ -13,7 +13,7 @@ import {
   type WiggleParams,
 } from '~/validations/input';
 import type { BezierEasingOutput, LinearEasingOutput } from '~/validations/output';
-import { createCubicBezierString, cssStringToTailwind, generateLinearEasing } from './easing';
+import { createCubicBezierString, cssStringToTailwind, generateLinearEasing, suggestDuration } from './easing';
 import {
   generateBezierSVGPath,
   generateBounceSVGPolyline,
@@ -85,6 +85,16 @@ export function getApiResponseFromState(state: EasingState): ApiRespone {
           css: state.springValue,
           tailwind_css: cssStringToTailwind(state.springValue),
           svg_polyline: generateSpringSVGPolyline(state.springPoints),
+          suggested_duration_ms: suggestDuration(
+            EasingType.SPRING,
+            {
+              mass: state.springMass,
+              stiffness: state.springStiffness,
+              damping: state.springDamping,
+              accuracy: state.editorAccuracy,
+            },
+            state.springTotalTime,
+          ),
         },
       };
     }
@@ -100,6 +110,11 @@ export function getApiResponseFromState(state: EasingState): ApiRespone {
           css: state.bounceValue,
           tailwind_css: cssStringToTailwind(state.bounceValue),
           svg_polyline: generateBounceSVGPolyline(state.bouncePoints),
+          suggested_duration_ms: suggestDuration(EasingType.BOUNCE, {
+            bounces: state.bounceBounces,
+            damping: state.bounceDamping,
+            accuracy: state.editorAccuracy,
+          }),
         },
       };
     }
@@ -115,6 +130,11 @@ export function getApiResponseFromState(state: EasingState): ApiRespone {
           css: state.wiggleValue,
           tailwind_css: cssStringToTailwind(state.wiggleValue),
           svg_polyline: generateWiggleSVGPolyline(state.wigglePoints),
+          suggested_duration_ms: suggestDuration(EasingType.WIGGLE, {
+            wiggles: state.wiggleWiggles,
+            damping: state.wiggleDamping,
+            accuracy: state.editorAccuracy,
+          }),
         },
       };
     }
@@ -131,6 +151,12 @@ export function getApiResponseFromState(state: EasingState): ApiRespone {
           css: state.overshootValue,
           tailwind_css: cssStringToTailwind(state.overshootValue),
           svg_polyline: generateOvershootSVGPolyline(state.overshootPoints),
+          suggested_duration_ms: suggestDuration(EasingType.OVERSHOOT, {
+            style: state.overshootStyle,
+            mass: state.overshootMass,
+            damping: state.overshootDamping,
+            accuracy: state.editorAccuracy,
+          }),
         },
       };
     }
@@ -166,7 +192,7 @@ export function getApiResponseFromInput(
     }
     case EasingType.SPRING: {
       const springConfig = SpringParamsSchema.parse(config);
-      const { easingValue, sampledPoints } = generateLinearEasing({ type, ...springConfig });
+      const { easingValue, sampledPoints, totalTime } = generateLinearEasing({ type, ...springConfig });
       const shareState: EasingStateShare = {
         easingType: EasingType.SPRING,
         springMass: springConfig.mass,
@@ -182,6 +208,7 @@ export function getApiResponseFromInput(
           css: easingValue,
           tailwind_css: cssStringToTailwind(easingValue),
           svg_polyline: generateSpringSVGPolyline(sampledPoints),
+          suggested_duration_ms: suggestDuration(type, springConfig, totalTime),
         },
         shareState,
       };
@@ -203,6 +230,7 @@ export function getApiResponseFromInput(
           css: easingValue,
           tailwind_css: cssStringToTailwind(easingValue),
           svg_polyline: generateBounceSVGPolyline(sampledPoints),
+          suggested_duration_ms: suggestDuration(type, bounceConfig),
         },
         shareState,
       };
@@ -224,6 +252,7 @@ export function getApiResponseFromInput(
           css: easingValue,
           tailwind_css: cssStringToTailwind(easingValue),
           svg_polyline: generateWiggleSVGPolyline(sampledPoints),
+          suggested_duration_ms: suggestDuration(type, wiggleConfig),
         },
         shareState,
       };
@@ -246,6 +275,7 @@ export function getApiResponseFromInput(
           css: easingValue,
           tailwind_css: cssStringToTailwind(easingValue),
           svg_polyline: generateOvershootSVGPolyline(sampledPoints),
+          suggested_duration_ms: suggestDuration(type, overshootConfig),
         },
         shareState,
       };

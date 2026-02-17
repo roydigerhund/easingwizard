@@ -432,9 +432,9 @@ export const springFunctions: Record<SpringCurveKey, { stiffness: number; dampin
     damping: 0,
   },
   DROP: {
-    mass: 4,
-    stiffness: 10,
-    damping: 5,
+    mass: 5,
+    stiffness: 60,
+    damping: 40,
   },
   GLIDE: {
     mass: 1.0,

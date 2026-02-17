@@ -56,13 +56,14 @@ export function rehydrateShareStateLegacy(searchParams: URLSearchParams) {
       damping: newState.springDamping,
       accuracy: newState.editorAccuracy,
     });
-    const { easingValue, sampledPoints } = generateLinearEasing({
+    const { easingValue, sampledPoints, totalTime } = generateLinearEasing({
       type: newState.easingType,
       accuracy: values.accuracy,
       mass: values.mass,
       stiffness: values.stiffness,
       damping: values.damping,
     });
+    newState.springTotalTime = totalTime;
     newState.springValue = easingValue;
     newState.springPoints = sampledPoints;
   }

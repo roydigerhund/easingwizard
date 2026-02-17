@@ -75,6 +75,7 @@ export type EasingState = {
   springMass: SpringParams['mass'];
   springStiffness: SpringParams['stiffness'];
   springDamping: SpringParams['damping'];
+  springTotalTime?: number;
   springValue: string;
   springPoints: Point[];
   springIsCustom: boolean;

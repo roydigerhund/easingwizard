@@ -8,7 +8,7 @@ import {
 } from '~/data/easing-functions';
 import { EasingType, LinearEasingAccuracy, OvershootStyleKey } from '~/types/enums';
 import { EasingStateShare } from '~/types/types';
-import { createCubicBezierString, cssStringToTailwind, generateLinearEasing } from '~/utils/easing';
+import { createCubicBezierString, cssStringToTailwind, generateLinearEasing, suggestDuration } from '~/utils/easing';
 import { encodeState } from '~/utils/state-sharing/url-code';
 import {
   generateBezierSVGPath,
@@ -58,7 +58,7 @@ function main() {
       springCurve: curve,
     };
     const id = encodeState(shareState);
-    const { easingValue, sampledPoints } = generateLinearEasing({
+    const { easingValue, sampledPoints, totalTime } = generateLinearEasing({
       type: EasingType.SPRING,
       accuracy,
       ...params,
@@ -73,6 +73,7 @@ function main() {
         css: easingValue,
         tailwind_css: cssStringToTailwind(easingValue),
         svg_polyline: generateSpringSVGPolyline(sampledPoints),
+        suggested_duration_ms: suggestDuration(EasingType.SPRING, { ...params, accuracy }, totalTime),
       },
     };
   });
@@ -99,6 +100,7 @@ function main() {
         css: easingValue,
         tailwind_css: cssStringToTailwind(easingValue),
         svg_polyline: generateBounceSVGPolyline(sampledPoints),
+        suggested_duration_ms: suggestDuration(EasingType.BOUNCE, { ...params, accuracy }),
       },
     };
   });
@@ -125,6 +127,7 @@ function main() {
         css: easingValue,
         tailwind_css: cssStringToTailwind(easingValue),
         svg_polyline: generateWiggleSVGPolyline(sampledPoints),
+        suggested_duration_ms: suggestDuration(EasingType.WIGGLE, { ...params, accuracy }),
       },
     };
   });
@@ -155,6 +158,11 @@ function main() {
           css: easingValue,
           tailwind_css: cssStringToTailwind(easingValue),
           svg_polyline: generateOvershootSVGPolyline(sampledPoints),
+          suggested_duration_ms: suggestDuration(EasingType.OVERSHOOT, {
+            style: style as OvershootStyleKey,
+            ...params,
+            accuracy,
+          }),
         },
       };
     });
