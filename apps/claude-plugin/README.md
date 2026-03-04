@@ -1,6 +1,6 @@
 # Easing Wizard — Claude Code Plugin
 
-Generate professional CSS easing curves, audit your project's animations, and get expert motion design advice directly in Claude Code.
+Easing Wizard helps developers replace generic CSS easing defaults with professional motion design curves. It provides 7 MCP tools for generating Bezier, Spring, Bounce, Wiggle, and Overshoot curves with ~40 presets covering common UI patterns. Output includes CSS (cubic-bezier/linear()), Tailwind classes, and interactive preview links. Three skills let you describe an animation feel and get a curve recommendation, scan files to upgrade default easings, or audit your entire project for animation improvements. An animation expert agent provides motion design advice grounded in perceptual psychology.
 
 ## Skills
 
