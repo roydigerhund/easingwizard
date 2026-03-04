@@ -5,6 +5,7 @@ A comprehensive toolkit for creating and using CSS easing curves. Generate Bézi
 🌐 **Website**: [easingwizard.com](https://easingwizard.com)  
 🛠️ **API**: [api.easingwizard.com](https://api.easingwizard.com)  
 📦 **MCP Server**: [@easingwizard/mcp-server](https://www.npmjs.com/package/@easingwizard/mcp-server)
+🤖 **Claude Plugin**: [easingwizard-claude-plugin](https://github.com/roydigerhund/easingwizard-claude-plugin)
 
 ## What is Easing Wizard?
 
@@ -25,6 +26,7 @@ This is a monorepo containing multiple packages and applications:
 - **[`apps/frontend/`](apps/frontend/)** - React Router web application ([easingwizard.com](https://easingwizard.com))
 - **[`apps/api/`](apps/api/)** - Hono backend API for curve generation
 - **[`apps/mcp/`](apps/mcp/)** - Model Context Protocol server for AI assistants
+- **[`apps/claude-plugin/`](apps/claude-plugin/)** - Claude Code plugin with skills, agent, and MCP integration
 
 ### 📦 Packages
 
@@ -50,7 +52,21 @@ pnpm dev:frontend  # React app on http://localhost:5173
 pnpm dev:api       # API server on http://localhost:3000
 ```
 
-### For AI Assistants (Claude, VS Code, etc.)
+### For Claude Code
+
+Install the Easing Wizard plugin directly:
+
+```bash
+claude plugin add easingwizard/easingwizard-claude-plugin
+```
+
+This gives you 7 MCP tools, 4 skills, and an animation expert agent:
+
+- `/easingwizard:recommend-curve` — Describe the feel you want, get a curve with CSS + Tailwind output
+- `/easingwizard:improve-easings` — Replace default easings in your CSS/Tailwind files with professional curves
+- `/easingwizard:audit-easings` — Scan your project for animations using default or missing easings
+
+### For Other MCP Clients (VS Code, Cursor, etc.)
 
 Add to your MCP client configuration:
 
@@ -141,6 +157,7 @@ ease-[cubic-bezier(0.42,0,0.58,1)]
 - **Backend**: Hono v4, Node.js, OpenAPI with Zod
 - **Core**: TypeScript, Zod v4 for validation
 - **MCP**: Model Context Protocol SDK
+- **Claude Plugin**: Skills, agent, hooks, MCP integration
 - **Tools**: pnpm, Turbo, Prettier, ESBuild
 
 ## 🤝 Contributing
@@ -163,5 +180,6 @@ This project is licensed under a custom license that allows use in larger projec
 - **API Documentation**: [api.easingwizard.com](https://api.easingwizard.com)
 - **OpenAPI Docs**: [OpenAPI Documentation](https://api.easingwizard.com/openapi)
 - **NPM Package**: [@easingwizard/mcp-server](https://www.npmjs.com/package/@easingwizard/mcp-server)
+- **Claude Plugin**: [easingwizard-claude-plugin](https://github.com/roydigerhund/easingwizard-claude-plugin)
 - **Issues**: [GitHub Issues](https://github.com/roydigerhund/easingwizard/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/roydigerhund/easingwizard/discussions)
