@@ -139,13 +139,13 @@ export default function EasingSelection() {
             overshootValue: easingValue,
             overshootPoints: sampledPoints,
             overshootIsCustom: false,
-            previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
+                  previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
           }
         : {
             overshootStyle: style,
             overshootValue: easingValue,
             overshootPoints: sampledPoints,
-            previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
+                  previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
           },
     );
   };

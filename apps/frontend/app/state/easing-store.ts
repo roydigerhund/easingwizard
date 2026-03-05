@@ -1,7 +1,54 @@
-import { defaultEasingState, EasingType, encodeState, reduceStateForShare, suggestDuration, type EasingState, type EasingTypeKey } from 'easingwizard-core';
+import { defaultEasingState, EasingType, encodeState, generateLinearEasing, reduceStateForShare, suggestDuration, type EasingState, type EasingTypeKey } from 'easingwizard-core';
 import { create } from 'zustand';
 
 const LOCALSTORAGE_KEY = 'easingState';
+
+function regenerateEasing(state: EasingState): Partial<EasingState> {
+  switch (state.easingType) {
+    case EasingType.SPRING: {
+      const { easingValue, sampledPoints, totalTime } = generateLinearEasing({
+        type: EasingType.SPRING,
+        accuracy: state.editorAccuracy,
+        stiffness: state.springStiffness,
+        damping: state.springDamping,
+        mass: state.springMass,
+      });
+      return { springValue: easingValue, springPoints: sampledPoints, springTotalTime: totalTime };
+    }
+    case EasingType.BOUNCE: {
+      const { easingValue, sampledPoints } = generateLinearEasing({
+        type: EasingType.BOUNCE,
+        accuracy: state.editorAccuracy,
+        bounces: state.bounceBounces,
+        mass: state.bounceMass,
+        damping: state.bounceDamping,
+      });
+      return { bounceValue: easingValue, bouncePoints: sampledPoints };
+    }
+    case EasingType.WIGGLE: {
+      const { easingValue, sampledPoints } = generateLinearEasing({
+        type: EasingType.WIGGLE,
+        accuracy: state.editorAccuracy,
+        wiggles: state.wiggleWiggles,
+        mass: state.wiggleMass,
+        damping: state.wiggleDamping,
+      });
+      return { wiggleValue: easingValue, wigglePoints: sampledPoints };
+    }
+    case EasingType.OVERSHOOT: {
+      const { easingValue, sampledPoints } = generateLinearEasing({
+        type: EasingType.OVERSHOOT,
+        accuracy: state.editorAccuracy,
+        style: state.overshootStyle,
+        mass: state.overshootMass,
+        damping: state.overshootDamping,
+      });
+      return { overshootValue: easingValue, overshootPoints: sampledPoints };
+    }
+    default:
+      return {};
+  }
+}
 
 function getSuggestedMidpoint(state: EasingState & { easingType: EasingTypeKey }): number | undefined {
   switch (state.easingType) {
@@ -36,8 +83,9 @@ export const useEasingStore = create<EasingState & EasingAction>((set, get) => (
   ...defaultEasingState,
   setEasingType: (easingType: EasingTypeKey) => {
     const state = get();
-    const stateWithType = { ...state, easingType };
-    const previewDuration = getSuggestedMidpoint(stateWithType);
+    const stateWithType = { ...state, easingType } as EasingState;
+    const regenerated = regenerateEasing(stateWithType);
+    const previewDuration = getSuggestedMidpoint({ ...stateWithType, ...regenerated });
     switch (easingType) {
       case EasingType.BEZIER:
         set(({ bezierY1, bezierY2 }) => ({
@@ -48,16 +96,16 @@ export const useEasingStore = create<EasingState & EasingAction>((set, get) => (
         }));
         break;
       case EasingType.OVERSHOOT:
-        set({ easingType, editorExtraSpaceTop: false, editorExtraSpaceBottom: false, previewDuration });
+        set({ easingType, editorExtraSpaceTop: false, editorExtraSpaceBottom: false, ...regenerated, previewDuration });
         break;
       case EasingType.SPRING:
-        set({ easingType, editorExtraSpaceTop: false, editorExtraSpaceBottom: false, previewDuration });
+        set({ easingType, editorExtraSpaceTop: false, editorExtraSpaceBottom: false, ...regenerated, previewDuration });
         break;
       case EasingType.BOUNCE:
-        set({ easingType, editorExtraSpaceTop: false, editorExtraSpaceBottom: false, previewDuration });
+        set({ easingType, editorExtraSpaceTop: false, editorExtraSpaceBottom: false, ...regenerated, previewDuration });
         break;
       case EasingType.WIGGLE:
-        set({ easingType, editorExtraSpaceTop: false, editorExtraSpaceBottom: false, previewDuration });
+        set({ easingType, editorExtraSpaceTop: false, editorExtraSpaceBottom: false, ...regenerated, previewDuration });
         break;
     }
   },
