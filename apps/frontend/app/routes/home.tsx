@@ -11,7 +11,8 @@ import EasingSelection from '~/components/EasingSelection';
 import EasingTypeSelection from '~/components/EasingTypeSelection';
 import Footer from '~/components/Footer';
 import Header from '~/components/Header';
-import Notification from '~/components/Notification';
+import EasterEggNotification from '~/components/EasterEggNotification';
+import Toast from '~/components/Toast';
 import OvershootEditor from '~/components/OvershootEditor';
 import Share from '~/components/Share';
 import ShootingStars from '~/components/ShootingStars';
@@ -33,9 +34,11 @@ export default function Index() {
   const easingType = useEasingStore((state) => state.easingType);
   const setState = useEasingStore((state) => state.setState);
   const [showUI, setShowUI] = useState(false);
+  const [restoredFromStorage, setRestoredFromStorage] = useState(false);
 
   // we only want to set the state on client side to avoid excessive renders on the server
   useEffect(() => {
+    let didRestoreFromShareLink = false;
     try {
       if (searchParams.get('easingType')) {
         // Legacy sharing mode
@@ -43,20 +46,45 @@ export default function Index() {
 
         setState(newState);
         setSearchParams(new URLSearchParams());
+        didRestoreFromShareLink = true;
       } else if (hash && hash.length > 1) {
         // V0
         // in new sharing mode, we use fragment with a minified code, like #a1b2c3d4e5
         const decodedState = decodeState(hash.slice(1));
         const rehydratedState = rehydrateShareState(decodedState);
         setState(rehydratedState);
+        didRestoreFromShareLink = true;
       }
     } catch (error) {
       console.error('Error parsing value:', error);
-    } finally {
-      window.history.replaceState(null, '', window.location.pathname);
-      setShowUI(true);
     }
+
+    // Restore from localStorage if no share link was used
+    if (!didRestoreFromShareLink) {
+      try {
+        const saved = localStorage.getItem('easingState');
+        if (saved) {
+          const decoded = decodeState(saved);
+          const rehydrated = rehydrateShareState(decoded);
+          setState(rehydrated);
+          setRestoredFromStorage(true);
+        }
+      } catch {
+        localStorage.removeItem('easingState');
+      }
+    }
+
+    window.history.replaceState(null, '', window.location.pathname);
+    setShowUI(true);
   }, [searchParams, setSearchParams, setState, hash]);
+
+  // Auto-dismiss the restored toast
+  useEffect(() => {
+    if (restoredFromStorage) {
+      const timeout = setTimeout(() => setRestoredFromStorage(false), 4000);
+      return () => clearTimeout(timeout);
+    }
+  }, [restoredFromStorage]);
 
   return (
     <div
@@ -98,7 +126,13 @@ export default function Index() {
         </Card>
       </div>
       <Footer />
-      <Notification />
+      <EasterEggNotification />
+      <Toast
+        show={restoredFromStorage}
+        emoji="👋"
+        title="Welcome back!"
+        message="Your last configuration was restored."
+      />
     </div>
   );
 }

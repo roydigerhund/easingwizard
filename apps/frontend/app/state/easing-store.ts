@@ -1,5 +1,7 @@
-import { defaultEasingState, EasingType, suggestDuration, type EasingState, type EasingTypeKey } from 'easingwizard-core';
+import { defaultEasingState, EasingType, encodeState, reduceStateForShare, suggestDuration, type EasingState, type EasingTypeKey } from 'easingwizard-core';
 import { create } from 'zustand';
+
+const LOCALSTORAGE_KEY = 'easingState';
 
 function getSuggestedMidpoint(state: EasingState & { easingType: EasingTypeKey }): number | undefined {
   switch (state.easingType) {
@@ -65,3 +67,23 @@ export const useEasingStore = create<EasingState & EasingAction>((set, get) => (
     return rest as EasingState;
   },
 }));
+
+// Debounced persist to localStorage
+let saveTimeout: ReturnType<typeof setTimeout> | undefined;
+useEasingStore.subscribe((state) => {
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => {
+    try {
+      const { setEasingType: _t, setState: _s, getCurrentState: _c, ...rest } = state;
+      const reduced = reduceStateForShare(rest as EasingState);
+      const encoded = encodeState(reduced);
+      if (encoded) {
+        localStorage.setItem(LOCALSTORAGE_KEY, encoded);
+      } else {
+        localStorage.removeItem(LOCALSTORAGE_KEY);
+      }
+    } catch {
+      // Silently ignore localStorage errors (e.g. private browsing)
+    }
+  }, 500);
+});

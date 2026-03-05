@@ -4,7 +4,6 @@ Prompts and resources support enables MCP servers to provide reusable templates 
 - damped outIn for bezier
 
 - move bezier can still break on touch
-- test mix of , and . in numbers
 
 - present nice error message when easing state is invalid
 - add FAQ section for SEO and also mention API and MCP
