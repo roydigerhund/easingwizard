@@ -2,6 +2,12 @@
   "$schema": "./node_modules/turbo/schema.json",
   "ui": "tui",
   "tasks": {
+    "build:core": {
+      "dependsOn": ["^build:core"],
+      "outputs": ["dist/**"],
+      "inputs": ["src/**", "*.ts", "*.tsx", "*.js", "*.jsx", "package.json"],
+      "env": ["NODEJS_HELPERS"]
+    },
     "build:api": {
       "dependsOn": ["^build:api"],
       "outputs": ["dist/**"],

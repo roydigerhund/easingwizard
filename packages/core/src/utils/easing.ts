@@ -60,8 +60,8 @@ export function suggestDuration(
       const dampingScale = mapRange(damping, 0, 100, 1.2, 0.8);
 
       return buildDurationRange(
-        clamp(Math.round(base * dampingScale * 0.8), 200, 800),
-        clamp(Math.round(base * dampingScale * 1.3), 400, 1500),
+        clamp(Math.round(base * dampingScale * 1.0), 200, 800),
+        clamp(Math.round(base * dampingScale * 1.5), 400, 1500),
       );
     }
     case EasingType.WIGGLE: {
@@ -70,8 +70,8 @@ export function suggestDuration(
       const dampingScale = mapRange(damping, 0, 100, 1.2, 0.8);
 
       return buildDurationRange(
-        clamp(Math.round(base * dampingScale * 0.8), 150, 1000),
-        clamp(Math.round(base * dampingScale * 1.2), 300, 1500),
+        clamp(Math.round(base * dampingScale * 1.0), 150, 1000),
+        clamp(Math.round(base * dampingScale * 1.5), 300, 1500),
       );
     }
     case EasingType.OVERSHOOT: {
@@ -81,7 +81,7 @@ export function suggestDuration(
       const styleScale = style === OvershootStyle.IN_OUT ? 1.3 : 1;
       const base = 400 * massScale * dampingScale * styleScale;
 
-      return buildDurationRange(clamp(Math.round(base * 0.8), 200, 700), clamp(Math.round(base * 1.3), 350, 1000));
+      return buildDurationRange(clamp(Math.round(base * 0.9), 200, 700), clamp(Math.round(base * 1.4), 350, 1000));
     }
   }
 }
