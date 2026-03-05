@@ -77,6 +77,7 @@ export function rehydrateShareStateLegacy(searchParams: URLSearchParams) {
       type: newState.easingType,
       accuracy: values.accuracy,
       bounces: values.bounces,
+      mass: values.mass,
       damping: values.damping,
     });
     newState.bounceValue = easingValue;
@@ -92,6 +93,7 @@ export function rehydrateShareStateLegacy(searchParams: URLSearchParams) {
       type: newState.easingType,
       accuracy: values.accuracy,
       wiggles: values.wiggles,
+      mass: values.mass,
       damping: values.damping,
     });
     newState.wiggleValue = easingValue;

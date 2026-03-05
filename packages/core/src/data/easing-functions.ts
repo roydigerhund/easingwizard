@@ -458,67 +458,80 @@ export const springFunctions: Record<SpringCurveKey, { stiffness: number; dampin
   },
 };
 
-export const bounceFunctions: Record<BounceCurveKey, { bounces: number; damping: number }> = {
+export const bounceFunctions: Record<BounceCurveKey, { bounces: number; damping: number; mass: number }> = {
   FIRM: {
     bounces: 4,
     damping: 60,
+    mass: 1.5,
   },
   SOFT: {
     bounces: 2,
     damping: 75,
+    mass: 4,
   },
   SHARP: {
     bounces: 3,
     damping: 85,
+    mass: 1,
   },
   SUBTLE: {
     bounces: 1,
     damping: 55,
+    mass: 3,
   },
   PLAYFUL: {
     bounces: 6,
     damping: 35,
+    mass: 1.5,
   },
   SPRINGY: {
     bounces: 8,
     damping: 10,
+    mass: 1,
   },
 };
 
-export const wiggleFunctions: Record<WiggleCurveKey, { wiggles: number; damping: number }> = {
+export const wiggleFunctions: Record<WiggleCurveKey, { wiggles: number; damping: number; mass: number }> = {
   SUBTLE: {
     wiggles: 2,
     damping: 75,
+    mass: 5,
   },
   ENERGETIC: {
     wiggles: 6,
     damping: 25,
+    mass: 1,
   },
   PLAYFUL: {
     wiggles: 4,
     damping: 50,
+    mass: 1.5,
   },
   SHARP: {
     wiggles: 3,
     damping: 90,
+    mass: 1,
   },
   SMOOTH: {
     wiggles: 1,
     damping: 100,
+    mass: 4,
   },
   INTENSE: {
     wiggles: 8,
     damping: 10,
+    mass: 1,
   },
   DYNAMIC: {
     wiggles: 10,
     damping: 0,
+    mass: 1,
   },
 };
 
 const overshootCurveFunctions: Record<OvershootCurveKey, { damping: number; mass: number }> = {
   SOFT: {
-    mass: 2,
+    mass: 4,
     damping: 60,
   },
   FIRM: {

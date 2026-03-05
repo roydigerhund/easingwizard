@@ -103,6 +103,7 @@ export function getApiResponseFromState(state: EasingState): ApiRespone {
         type: EasingType.BOUNCE,
         input: {
           bounces: state.bounceBounces,
+          mass: state.bounceMass,
           damping: state.bounceDamping,
           accuracy: state.editorAccuracy,
         },
@@ -112,6 +113,7 @@ export function getApiResponseFromState(state: EasingState): ApiRespone {
           svg_polyline: generateBounceSVGPolyline(state.bouncePoints),
           suggested_duration_ms: suggestDuration(EasingType.BOUNCE, {
             bounces: state.bounceBounces,
+            mass: state.bounceMass,
             damping: state.bounceDamping,
             accuracy: state.editorAccuracy,
           }),
@@ -123,6 +125,7 @@ export function getApiResponseFromState(state: EasingState): ApiRespone {
         type: EasingType.WIGGLE,
         input: {
           wiggles: state.wiggleWiggles,
+          mass: state.wiggleMass,
           damping: state.wiggleDamping,
           accuracy: state.editorAccuracy,
         },
@@ -132,6 +135,7 @@ export function getApiResponseFromState(state: EasingState): ApiRespone {
           svg_polyline: generateWiggleSVGPolyline(state.wigglePoints),
           suggested_duration_ms: suggestDuration(EasingType.WIGGLE, {
             wiggles: state.wiggleWiggles,
+            mass: state.wiggleMass,
             damping: state.wiggleDamping,
             accuracy: state.editorAccuracy,
           }),
@@ -219,6 +223,7 @@ export function getApiResponseFromInput(
       const shareState: EasingStateShare = {
         easingType: EasingType.BOUNCE,
         bounceBounces: bounceConfig.bounces,
+        bounceMass: bounceConfig.mass,
         bounceDamping: bounceConfig.damping,
         editorAccuracy: bounceConfig.accuracy,
       };
@@ -241,6 +246,7 @@ export function getApiResponseFromInput(
       const shareState: EasingStateShare = {
         easingType: EasingType.WIGGLE,
         wiggleWiggles: wiggleConfig.wiggles,
+        wiggleMass: wiggleConfig.mass,
         wiggleDamping: wiggleConfig.damping,
         editorAccuracy: wiggleConfig.accuracy,
       };

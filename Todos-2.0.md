@@ -29,12 +29,8 @@
 - [ ] Fix Bezier curve breaking on touch devices (from original Todos)
 
 ### 6. Accessibility
-- [ ] Respect `prefers-reduced-motion` media query
 - [ ] Keyboard navigation for the curve editor
 - [ ] ARIA labels on interactive controls
-
-### 7. Curve Comparison
-- [ ] Side-by-side A/B preview of two curves
 
 ---
 
@@ -47,11 +43,6 @@
 ### 9. MCP Resources
 - [ ] Add MCP resources (e.g. `easing://presets/spring`) for browsable preset lists in agentic workflows
 
-### 10. Export Formats
-- [ ] SCSS variables
-- [ ] CSS custom properties (`--ease-spring: linear(...)`)
-- [ ] JSON export for JS animation libraries (Framer Motion, GSAP)
-
 ---
 
 ## Code Quality
@@ -62,6 +53,3 @@
 ### 12. ESLint
 - [ ] Add ESLint with TypeScript plugin alongside Prettier
 
-### 13. localStorage Persistence
-- [ ] Save recent curves to localStorage
-- [ ] Add a "History" panel for returning users

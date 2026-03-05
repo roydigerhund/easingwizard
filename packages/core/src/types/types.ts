@@ -40,10 +40,12 @@ export type EasingStateShareKey = keyof EasingState &
     // Bounce
     | 'bounceCurve'
     | 'bounceBounces'
+    | 'bounceMass'
     | 'bounceDamping'
     // Wiggle
     | 'wiggleCurve'
     | 'wiggleWiggles'
+    | 'wiggleMass'
     | 'wiggleDamping'
     // Overshoot
     | 'overshootStyle'
@@ -82,6 +84,7 @@ export type EasingState = {
   // Bounce
   bounceCurve: BounceCurveKey;
   bounceBounces: BounceParams['bounces'];
+  bounceMass: BounceParams['mass'];
   bounceDamping: BounceParams['damping'];
   bounceValue: string;
   bouncePoints: Point[];
@@ -89,6 +92,7 @@ export type EasingState = {
   // Wiggle
   wiggleCurve: WiggleCurveKey;
   wiggleWiggles: WiggleParams['wiggles'];
+  wiggleMass: WiggleParams['mass'];
   wiggleDamping: WiggleParams['damping'];
   wiggleValue: string;
   wigglePoints: Point[];

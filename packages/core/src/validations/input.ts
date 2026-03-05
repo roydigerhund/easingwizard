@@ -104,6 +104,7 @@ export const BounceParamsSchema = z
         description: 'Number of bounces (1-10)',
         example: 3,
       }),
+    mass: massFactorSchema.default(1),
     damping: dampingFactorSchema,
     accuracy: LinearAccuracySchema,
   })
@@ -123,6 +124,7 @@ export const WiggleParamsSchema = z
         description: 'Number of wiggle oscillations (1-10)',
         example: 5,
       }),
+    mass: massFactorSchema.default(1),
     damping: dampingFactorSchema,
     accuracy: LinearAccuracySchema,
   })

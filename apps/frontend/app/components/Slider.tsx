@@ -3,10 +3,12 @@ import { checkCommaRegex, floatSafeModulo, isNil, trailingZeroRegex } from 'easi
 import { useRef, useState } from 'react';
 import { classNames } from '~/css/class-names';
 import { shortTransition } from '~/css/common-classes';
+import Tooltip from './Tooltip';
 
 type Props = {
   className?: string;
   label: string;
+  hint?: string;
   value: number;
   onChange: (value: number) => void;
   min: number;
@@ -16,7 +18,7 @@ type Props = {
   suggestedRange?: { min: number; max: number };
 };
 
-export default function Slider({ className, label, value, onChange, min, max, step, inputStep, suggestedRange }: Props) {
+export default function Slider({ className, label, hint, value, onChange, min, max, step, inputStep, suggestedRange }: Props) {
   const sliderRef = useRef<HTMLSpanElement>(null);
   const [valuePrefix, setValuePrefix] = useState<string | undefined>();
   const [hasTrailingComma, setHasTrailingComma] = useState(false);
@@ -84,7 +86,7 @@ export default function Slider({ className, label, value, onChange, min, max, st
   };
 
   return (
-    <div className="group/all flex">
+    <div className="group/all relative flex">
       <div className={classNames(className, 'group flex grow')}>
         <button
           tabIndex={-1}
@@ -120,7 +122,7 @@ export default function Slider({ className, label, value, onChange, min, max, st
                 const rightFrac = 1 - (Math.min(suggestedRange.max, max) - min) / (max - min);
                 return (
                   <span
-                    className="absolute h-7 rounded-sm bg-zinc-700/40 transition-all duration-300 ease-out-sine"
+                    className="absolute h-7 rounded-sm bg-zinc-700/40"
                     style={{
                       left: `calc(${leftFrac * 100}% - ${leftFrac * thumbWidth}rem)`,
                       right: `calc(${rightFrac * 100}% - ${rightFrac * thumbWidth}rem)`,
@@ -159,6 +161,7 @@ export default function Slider({ className, label, value, onChange, min, max, st
         inputMode="numeric"
         aria-label={label}
       />
+      {hint && <Tooltip groupHoverClass="group-hover/all">{hint}</Tooltip>}
     </div>
   );
 }

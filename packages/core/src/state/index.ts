@@ -53,6 +53,7 @@ export const springStateKeys = Object.keys(defaultSpringState) as (keyof typeof 
 const defaultBounceState: EasingStateBlock<'bounce'> = {
   bounceCurve: defaultBounceCurve,
   bounceBounces: defaultBounceFunction.bounces,
+  bounceMass: defaultBounceFunction.mass,
   bounceDamping: defaultBounceFunction.damping,
   bounceValue: defaultBounceValue,
   bouncePoints: defaultBouncePoints,
@@ -64,6 +65,7 @@ export const bounceStateKeys = Object.keys(defaultBounceState) as (keyof typeof 
 const defaultWiggleState: EasingStateBlock<'wiggle'> = {
   wiggleCurve: defaultWiggleCurve,
   wiggleDamping: defaultWiggleFunction.damping,
+  wiggleMass: defaultWiggleFunction.mass,
   wiggleWiggles: defaultWiggleFunction.wiggles,
   wiggleValue: defaultWiggleValue,
   wigglePoints: defaultWigglePoints,

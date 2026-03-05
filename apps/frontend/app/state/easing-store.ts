@@ -8,11 +8,11 @@ function getSuggestedMidpoint(state: EasingState & { easingType: EasingTypeKey }
       return Math.round((d.min + d.max) / 2 / 25) * 25;
     }
     case EasingType.BOUNCE: {
-      const d = suggestDuration(EasingType.BOUNCE, { bounces: state.bounceBounces, damping: state.bounceDamping, accuracy: state.editorAccuracy });
+      const d = suggestDuration(EasingType.BOUNCE, { bounces: state.bounceBounces, mass: state.bounceMass, damping: state.bounceDamping, accuracy: state.editorAccuracy });
       return Math.round((d.min + d.max) / 2 / 25) * 25;
     }
     case EasingType.WIGGLE: {
-      const d = suggestDuration(EasingType.WIGGLE, { wiggles: state.wiggleWiggles, damping: state.wiggleDamping, accuracy: state.editorAccuracy });
+      const d = suggestDuration(EasingType.WIGGLE, { wiggles: state.wiggleWiggles, mass: state.wiggleMass, damping: state.wiggleDamping, accuracy: state.editorAccuracy });
       return Math.round((d.min + d.max) / 2 / 25) * 25;
     }
     case EasingType.OVERSHOOT: {

@@ -27,8 +27,10 @@ export default function EasingCode() {
   const springTotalTime = useEasingStore((state) => state.springTotalTime);
   const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
   const bounceBounces = useEasingStore((state) => state.bounceBounces);
+  const bounceMass = useEasingStore((state) => state.bounceMass);
   const bounceDamping = useEasingStore((state) => state.bounceDamping);
   const wiggleWiggles = useEasingStore((state) => state.wiggleWiggles);
+  const wiggleMass = useEasingStore((state) => state.wiggleMass);
   const wiggleDamping = useEasingStore((state) => state.wiggleDamping);
   const overshootStyle = useEasingStore((state) => state.overshootStyle);
   const overshootMass = useEasingStore((state) => state.overshootMass);
@@ -39,15 +41,15 @@ export default function EasingCode() {
       case EasingType.SPRING:
         return suggestDuration(EasingType.SPRING, { mass: springMass, stiffness: springStiffness, damping: springDamping, accuracy: editorAccuracy }, springTotalTime);
       case EasingType.BOUNCE:
-        return suggestDuration(EasingType.BOUNCE, { bounces: bounceBounces, damping: bounceDamping, accuracy: editorAccuracy });
+        return suggestDuration(EasingType.BOUNCE, { bounces: bounceBounces, mass: bounceMass, damping: bounceDamping, accuracy: editorAccuracy });
       case EasingType.WIGGLE:
-        return suggestDuration(EasingType.WIGGLE, { wiggles: wiggleWiggles, damping: wiggleDamping, accuracy: editorAccuracy });
+        return suggestDuration(EasingType.WIGGLE, { wiggles: wiggleWiggles, mass: wiggleMass, damping: wiggleDamping, accuracy: editorAccuracy });
       case EasingType.OVERSHOOT:
         return suggestDuration(EasingType.OVERSHOOT, { style: overshootStyle, mass: overshootMass, damping: overshootDamping, accuracy: editorAccuracy });
       default:
         return null;
     }
-  }, [easingType, springMass, springStiffness, springDamping, springTotalTime, editorAccuracy, bounceBounces, bounceDamping, wiggleWiggles, wiggleDamping, overshootStyle, overshootMass, overshootDamping]);
+  }, [easingType, springMass, springStiffness, springDamping, springTotalTime, editorAccuracy, bounceBounces, bounceMass, bounceDamping, wiggleWiggles, wiggleMass, wiggleDamping, overshootStyle, overshootMass, overshootDamping]);
 
   const [codeType, setCodeType] = useState(CodeType.CSS);
 

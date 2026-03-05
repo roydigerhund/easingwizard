@@ -3,6 +3,7 @@ import {
   generateLinearEasing,
   generateOvershootSVGPolyline,
   LinearEasingAccuracy,
+  suggestDuration,
   type EasingState,
 } from 'easingwizard-core';
 import { useEasingStore } from '~/state/easing-store';
@@ -28,17 +29,22 @@ export default function OvershootEditor() {
       ...(state.editorAccuracy ? {} : { overshootIsCustom: true }),
       ...state,
     };
-    const { easingValue, sampledPoints } = generateLinearEasing({
-      type: EasingType.OVERSHOOT,
+    const config = {
       style: overshootStyle,
       accuracy: newState.editorAccuracy || editorAccuracy,
       mass: newState.overshootMass || overshootMass,
       damping: newState.overshootDamping || overshootDamping,
+    };
+    const { easingValue, sampledPoints } = generateLinearEasing({
+      type: EasingType.OVERSHOOT,
+      ...config,
     });
+    const duration = suggestDuration(EasingType.OVERSHOOT, config);
     setState({
       ...newState,
       overshootValue: easingValue,
       overshootPoints: sampledPoints,
+      previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
     });
   };
 

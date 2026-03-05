@@ -1,4 +1,5 @@
 import { classNames } from '~/css/class-names';
+import Tooltip from './Tooltip';
 
 type Props = {
   className?: string;
@@ -47,23 +48,7 @@ export default function IconButton({
             : 'shadow-element_border_inactive',
         )}
       />
-      <span
-        className={classNames(
-          'will-change-transform',
-          'opacity-0 group-hover:opacity-100',
-          'pointer-events-none',
-          'absolute bottom-full mb-2',
-          'translate-y-2 group-hover:translate-y-0',
-          'rounded-md border border-zinc-700 bg-zinc-950 px-2 py-1',
-          'whitespace-nowrap text-base text-zinc-100',
-          'transition-all duration-300 ease-overshoot',
-          position === 'left' && 'left-0',
-          position === 'middle' && 'left-1/2 -translate-x-1/2',
-          position === 'right' && 'right-0',
-        )}
-      >
-        {label}
-      </span>
+      <Tooltip position={position}>{label}</Tooltip>
     </button>
   );
 }

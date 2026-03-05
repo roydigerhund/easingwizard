@@ -55,23 +55,25 @@ export function suggestDuration(
       return buildDurationRange(clamp(Math.round(base * 0.4), 200, 3000), clamp(Math.round(base * 0.8), 300, 4000));
     }
     case EasingType.BOUNCE: {
-      const { bounces, damping } = config as BounceParams;
+      const { bounces, damping, mass = 1 } = config as BounceParams;
       const base = 250 + bounces * 100;
       const dampingScale = mapRange(damping, 0, 100, 1.2, 0.8);
+      const massScale = mapRange(mass, 1, 5, 0.8, 1.3);
 
       return buildDurationRange(
-        clamp(Math.round(base * dampingScale * 1.0), 200, 800),
-        clamp(Math.round(base * dampingScale * 1.5), 400, 1500),
+        clamp(Math.round(base * dampingScale * massScale * 1.0), 200, 800),
+        clamp(Math.round(base * dampingScale * massScale * 1.5), 400, 1500),
       );
     }
     case EasingType.WIGGLE: {
-      const { wiggles, damping } = config as WiggleParams;
+      const { wiggles, damping, mass = 1 } = config as WiggleParams;
       const base = 200 + wiggles * 80;
       const dampingScale = mapRange(damping, 0, 100, 1.2, 0.8);
+      const massScale = mapRange(mass, 1, 5, 0.8, 1.3);
 
       return buildDurationRange(
-        clamp(Math.round(base * dampingScale * 1.0), 150, 1000),
-        clamp(Math.round(base * dampingScale * 1.5), 300, 1500),
+        clamp(Math.round(base * dampingScale * massScale * 1.0), 150, 1000),
+        clamp(Math.round(base * dampingScale * massScale * 1.5), 300, 1500),
       );
     }
     case EasingType.OVERSHOOT: {

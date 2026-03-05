@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { classNames } from '~/css/class-names';
+import Tooltip from './Tooltip';
 
 export type IconTextButtonProps = {
   className?: string;
@@ -46,22 +47,7 @@ export default function IconTextButton({ className, isActive, isStaticButton, te
       />
       {icon}
       <span className={classNames('text-xs uppercase tracking-widest whitespace-nowrap')}>{text}</span>
-      {toast && (
-        <span
-          className={classNames(
-            'will-change-transform',
-            'pointer-events-none',
-            'absolute bottom-full left-1/2 mb-2 -translate-x-1/2',
-            'rounded-md border border-zinc-700 bg-zinc-950 px-2 py-1',
-            'whitespace-nowrap text-base text-zinc-100',
-            'transition-all duration-300 ease-overshoot',
-            showToast ? 'opacity-100' : 'opacity-0',
-            showToast ? 'translate-y-0' : 'translate-y-2',
-          )}
-        >
-          {toast}
-        </span>
-      )}
+      {toast && <Tooltip visible={showToast}>{toast}</Tooltip>}
     </button>
   );
 }

@@ -3,6 +3,7 @@ import {
   generateBounceSVGPolyline,
   generateLinearEasing,
   LinearEasingAccuracy,
+  suggestDuration,
   type EasingState,
 } from 'easingwizard-core';
 import { useEasingStore } from '~/state/easing-store';
@@ -14,6 +15,7 @@ import StepSlider from './StepSlider';
 
 export default function BounceEditor() {
   const bounceBounces = useEasingStore((state) => state.bounceBounces);
+  const bounceMass = useEasingStore((state) => state.bounceMass);
   const bounceDamping = useEasingStore((state) => state.bounceDamping);
   const bouncePoints = useEasingStore((state) => state.bouncePoints);
   const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
@@ -22,21 +24,28 @@ export default function BounceEditor() {
   const handleChange = (state: Partial<EasingState>) => {
     const newState: Partial<EasingState> = {
       bounceBounces,
+      bounceMass,
       bounceDamping,
       // If editorAccuracy is not provided, we assume it's a custom curve
       ...(state.editorAccuracy ? {} : { bounceIsCustom: true }),
       ...state,
     };
-    const { easingValue, sampledPoints } = generateLinearEasing({
-      type: EasingType.BOUNCE,
+    const config = {
       accuracy: newState.editorAccuracy || editorAccuracy,
       bounces: newState.bounceBounces || bounceBounces,
+      mass: newState.bounceMass || bounceMass,
       damping: newState.bounceDamping || bounceDamping,
+    };
+    const { easingValue, sampledPoints } = generateLinearEasing({
+      type: EasingType.BOUNCE,
+      ...config,
     });
+    const duration = suggestDuration(EasingType.BOUNCE, config);
     setState({
       ...newState,
       bounceValue: easingValue,
       bouncePoints: sampledPoints,
+      previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
     });
   };
 
@@ -58,6 +67,15 @@ export default function BounceEditor() {
           min={1}
           max={10}
           step={1}
+        />
+        <Slider
+          label="Mass"
+          hint="Affects duration"
+          value={bounceMass}
+          onChange={(value) => handleChange({ bounceMass: value })}
+          min={1}
+          max={5}
+          step={0.1}
         />
         <Slider
           label="Damping"

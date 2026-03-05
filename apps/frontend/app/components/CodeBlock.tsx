@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { classNames } from '~/css/class-names';
+import Tooltip from './Tooltip';
 import ClipboardIcon from './icons/ClipboardIcon';
 
 type Props = {
@@ -31,20 +32,7 @@ export default function CodeBlock({ children }: Props) {
         aria-label="Copy to Clipboard"
       >
         <ClipboardIcon className="size-6" />
-        <span
-          className={classNames(
-            'will-change-transform',
-            'pointer-events-none',
-            'absolute bottom-full left-1/2 mb-2 -translate-x-1/2',
-            'rounded-md border border-zinc-700 bg-zinc-950 px-2 py-1',
-            'whitespace-nowrap text-base text-zinc-100',
-            'transition-all duration-300 ease-overshoot',
-            showToast ? 'opacity-100' : 'opacity-0',
-            showToast ? 'translate-y-0' : 'translate-y-2',
-          )}
-        >
-          Copied!
-        </span>
+        <Tooltip visible={showToast}>Copied!</Tooltip>
       </button>
       <div
         className={classNames(

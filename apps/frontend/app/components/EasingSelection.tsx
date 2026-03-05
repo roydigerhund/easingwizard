@@ -91,6 +91,7 @@ export default function EasingSelection() {
     const duration = suggestDuration(EasingType.BOUNCE, { ...bounceFunctions[curve], accuracy: editorAccuracy });
     setState({
       bounceBounces: bounceFunctions[curve].bounces,
+      bounceMass: bounceFunctions[curve].mass,
       bounceDamping: bounceFunctions[curve].damping,
       bounceCurve: curve,
       bounceValue: easingValue,
@@ -109,6 +110,7 @@ export default function EasingSelection() {
     const duration = suggestDuration(EasingType.WIGGLE, { ...wiggleFunctions[curve], accuracy: editorAccuracy });
     setState({
       wiggleDamping: wiggleFunctions[curve].damping,
+      wiggleMass: wiggleFunctions[curve].mass,
       wiggleWiggles: wiggleFunctions[curve].wiggles,
       wiggleCurve: curve,
       wiggleValue: easingValue,

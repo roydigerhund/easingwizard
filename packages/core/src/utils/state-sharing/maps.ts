@@ -42,10 +42,12 @@ export const MINI_MAP: Record<EasingStateShareKey, string> = {
   // Bounce
   bounceCurve: 'l',
   bounceBounces: 'm',
+  bounceMass: 'w',
   bounceDamping: 'n',
   // Wiggle
   wiggleCurve: 'o',
   wiggleWiggles: 'p',
+  wiggleMass: 'z',
   wiggleDamping: 'q',
   // Overshoot
   overshootStyle: 'r',

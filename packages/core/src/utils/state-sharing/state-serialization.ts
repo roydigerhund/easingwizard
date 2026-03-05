@@ -44,7 +44,7 @@ export function reduceStateForShare(state: EasingState): EasingStateShare {
     }
     case EasingType.BOUNCE: {
       const requiredBounceStateKeys: EasingStateShareKey[] = state.bounceIsCustom
-        ? ['bounceBounces', 'bounceDamping']
+        ? ['bounceBounces', 'bounceMass', 'bounceDamping']
         : ['bounceCurve'];
       for (const key of requiredBounceStateKeys) {
         reducedState[key] = state[key];
@@ -53,7 +53,7 @@ export function reduceStateForShare(state: EasingState): EasingStateShare {
     }
     case EasingType.WIGGLE: {
       const requiredWiggleStateKeys: EasingStateShareKey[] = state.wiggleIsCustom
-        ? ['wiggleWiggles', 'wiggleDamping']
+        ? ['wiggleWiggles', 'wiggleMass', 'wiggleDamping']
         : ['wiggleCurve'];
       for (const key of requiredWiggleStateKeys) {
         reducedState[key] = state[key];
@@ -133,16 +133,18 @@ export function rehydrateShareState(state: EasingStateShare, version: number = 0
       break;
     }
     case EasingType.BOUNCE: {
-      fullState.bounceIsCustom = isAnyDefined(state.bounceBounces, state.bounceDamping);
+      fullState.bounceIsCustom = isAnyDefined(state.bounceBounces, state.bounceMass, state.bounceDamping);
       if (!fullState.bounceIsCustom) {
         const bounceFunction = bounceFunctions[fullState.bounceCurve];
         fullState.bounceBounces = bounceFunction.bounces;
+        fullState.bounceMass = bounceFunction.mass;
         fullState.bounceDamping = bounceFunction.damping;
       }
       const { easingValue, sampledPoints } = generateLinearEasing({
         type: easingType,
         accuracy: fullState.editorAccuracy,
         bounces: fullState.bounceBounces,
+        mass: fullState.bounceMass,
         damping: fullState.bounceDamping,
       });
       fullState.bounceValue = easingValue;
@@ -150,16 +152,18 @@ export function rehydrateShareState(state: EasingStateShare, version: number = 0
       break;
     }
     case EasingType.WIGGLE: {
-      fullState.wiggleIsCustom = isAnyDefined(state.wiggleWiggles, state.wiggleDamping);
+      fullState.wiggleIsCustom = isAnyDefined(state.wiggleWiggles, state.wiggleMass, state.wiggleDamping);
       if (!fullState.wiggleIsCustom) {
         const wiggleFunction = wiggleFunctions[fullState.wiggleCurve];
         fullState.wiggleWiggles = wiggleFunction.wiggles;
+        fullState.wiggleMass = wiggleFunction.mass;
         fullState.wiggleDamping = wiggleFunction.damping;
       }
       const { easingValue, sampledPoints } = generateLinearEasing({
         type: easingType,
         accuracy: fullState.editorAccuracy,
         wiggles: fullState.wiggleWiggles,
+        mass: fullState.wiggleMass,
         damping: fullState.wiggleDamping,
       });
       fullState.wiggleValue = easingValue;

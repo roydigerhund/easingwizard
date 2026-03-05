@@ -42,8 +42,10 @@ export default function EasingPreview() {
   const springTotalTime = useEasingStore((state) => state.springTotalTime);
   const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
   const bounceBounces = useEasingStore((state) => state.bounceBounces);
+  const bounceMass = useEasingStore((state) => state.bounceMass);
   const bounceDamping = useEasingStore((state) => state.bounceDamping);
   const wiggleWiggles = useEasingStore((state) => state.wiggleWiggles);
+  const wiggleMass = useEasingStore((state) => state.wiggleMass);
   const wiggleDamping = useEasingStore((state) => state.wiggleDamping);
   const overshootStyle = useEasingStore((state) => state.overshootStyle);
   const overshootMass = useEasingStore((state) => state.overshootMass);
@@ -60,12 +62,14 @@ export default function EasingPreview() {
       case EasingType.BOUNCE:
         return suggestDuration(EasingType.BOUNCE, {
           bounces: bounceBounces,
+          mass: bounceMass,
           damping: bounceDamping,
           accuracy: editorAccuracy,
         });
       case EasingType.WIGGLE:
         return suggestDuration(EasingType.WIGGLE, {
           wiggles: wiggleWiggles,
+          mass: wiggleMass,
           damping: wiggleDamping,
           accuracy: editorAccuracy,
         });
@@ -87,8 +91,10 @@ export default function EasingPreview() {
     springTotalTime,
     editorAccuracy,
     bounceBounces,
+    bounceMass,
     bounceDamping,
     wiggleWiggles,
+    wiggleMass,
     wiggleDamping,
     overshootStyle,
     overshootMass,

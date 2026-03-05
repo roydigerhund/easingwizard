@@ -4,6 +4,7 @@ import {
   generateLinearEasing,
   generateSpringSVGPolyline,
   LinearEasingAccuracy,
+  suggestDuration,
 } from 'easingwizard-core';
 import { useEasingStore } from '~/state/easing-store';
 import EditorBase from './EditorBase';
@@ -29,17 +30,23 @@ export default function SpringEditor() {
       ...(state.editorAccuracy ? {} : { springIsCustom: true }),
       ...state,
     };
-    const { easingValue, sampledPoints } = generateLinearEasing({
-      type: EasingType.SPRING,
+    const config = {
       accuracy: newState.editorAccuracy || editorAccuracy,
       stiffness: newState.springStiffness || springStiffness,
       damping: newState.springDamping || springDamping,
       mass: newState.springMass || springMass,
+    };
+    const { easingValue, sampledPoints, totalTime } = generateLinearEasing({
+      type: EasingType.SPRING,
+      ...config,
     });
+    const duration = suggestDuration(EasingType.SPRING, config, totalTime);
     setState({
       ...newState,
       springValue: easingValue,
       springPoints: sampledPoints,
+      springTotalTime: totalTime,
+      previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
     });
   };
 
