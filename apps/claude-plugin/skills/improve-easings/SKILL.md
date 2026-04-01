@@ -1,6 +1,6 @@
 ---
 name: improve-easings
-description: Add or improve easing curves in your CSS and Tailwind code
+description: Add or improve easing curves in specific CSS or Tailwind files. Use when asking "improve the transitions in this file", "replace the default ease", "add easing to my animations", or "make this animation snappier".
 allowed-tools: mcp__easingwizard__get_presets, mcp__easingwizard__create_bezier_curve, mcp__easingwizard__create_spring_curve, mcp__easingwizard__create_bounce_curve, mcp__easingwizard__create_wiggle_curve, mcp__easingwizard__create_overshoot_curve
 disable-model-invocation: true
 ---

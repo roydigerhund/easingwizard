@@ -1,7 +1,7 @@
 ---
 name: animation-expert
 description: Animation and easing specialist with deep knowledge of motion design principles and perceptual psychology. Invoke when working with animation easing choices, choreography, or motion design questions.
-tools: Glob, Grep, Read, WebSearch, WebFetch
+tools: Glob, Grep, Read, WebSearch, WebFetch, mcp__easingwizard__get_presets, mcp__easingwizard__create_bezier_curve, mcp__easingwizard__create_spring_curve, mcp__easingwizard__create_bounce_curve, mcp__easingwizard__create_wiggle_curve, mcp__easingwizard__create_overshoot_curve
 model: sonnet
 ---
 

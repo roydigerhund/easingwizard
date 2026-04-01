@@ -2,7 +2,7 @@
   "mcpServers": {
     "easingwizard": {
       "command": "npx",
-      "args": ["@easingwizard/mcp-server@latest"]
+      "args": ["@easingwizard/mcp-server@^1.0.7"]
     }
   }
 }

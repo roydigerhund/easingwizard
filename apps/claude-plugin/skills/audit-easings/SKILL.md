@@ -1,6 +1,6 @@
 ---
 name: audit-easings
-description: Scan your project's CSS and Tailwind for animation easing improvements
+description: Scan the entire project for animations using default or missing easings and produce a prioritized improvement report. Use when asking "audit my CSS animations", "scan the project for bad transitions", or "give me a report on all my easings".
 allowed-tools: mcp__easingwizard__get_presets, mcp__easingwizard__create_bezier_curve, mcp__easingwizard__create_spring_curve, mcp__easingwizard__create_bounce_curve, mcp__easingwizard__create_wiggle_curve, mcp__easingwizard__create_overshoot_curve
 disable-model-invocation: true
 ---

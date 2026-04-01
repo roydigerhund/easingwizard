@@ -1,6 +1,6 @@
 ---
 name: easing-advice
-description: Provides professional easing curve recommendations when writing or editing CSS transitions and animations. Use when adding transition-timing-function, animation-timing-function, or Tailwind ease utilities.
+description: Suggests professional easing curves when writing or editing CSS transitions, animations, or Tailwind motion utilities. Use when adding transition-timing-function, animation-timing-function, ease-[] classes, or when the user wants something to "feel" a certain way (snappy, smooth, bouncy).
 allowed-tools: mcp__easingwizard__get_presets, mcp__easingwizard__create_bezier_curve, mcp__easingwizard__create_spring_curve, mcp__easingwizard__create_bounce_curve, mcp__easingwizard__create_wiggle_curve, mcp__easingwizard__create_overshoot_curve
 ---
 

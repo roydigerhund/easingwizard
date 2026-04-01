@@ -1,6 +1,6 @@
 ---
 name: recommend-curve
-description: Get easing curve recommendations by describing the animation feel you want
+description: Recommend an easing curve for a specific animation feel or UI pattern. Use when asking "what easing for a dropdown?", "suggest a spring curve", "I want it to feel snappy", or describing how a transition should feel.
 allowed-tools: mcp__easingwizard__get_presets, mcp__easingwizard__create_bezier_curve, mcp__easingwizard__create_spring_curve, mcp__easingwizard__create_bounce_curve, mcp__easingwizard__create_wiggle_curve, mcp__easingwizard__create_overshoot_curve
 disable-model-invocation: true
 ---
