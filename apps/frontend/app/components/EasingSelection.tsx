@@ -77,6 +77,7 @@ export default function EasingSelection() {
       springCurve: curve,
       springValue: easingValue,
       springPoints: sampledPoints,
+      springTotalTime: totalTime,
       springIsCustom: false,
       previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
     });
