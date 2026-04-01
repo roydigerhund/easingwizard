@@ -2,22 +2,10 @@
   "$schema": "./node_modules/turbo/schema.json",
   "ui": "tui",
   "tasks": {
-    "build:core": {
-      "dependsOn": ["^build:core"],
-      "outputs": ["dist/**"],
-      "inputs": ["src/**", "*.ts", "*.tsx", "*.js", "*.jsx", "package.json"],
-      "env": ["NODEJS_HELPERS"]
-    },
-    "build:api": {
-      "dependsOn": ["^build:api"],
-      "outputs": ["dist/**"],
-      "inputs": ["api/**", "public/**", "src/**", "*.ts", "*.tsx", "*.js", "*.jsx", "package.json"],
-      "env": ["NODEJS_HELPERS", "API_URL"]
-    },
-    "build:frontend": {
-      "dependsOn": ["^build:frontend"],
-      "outputs": ["build/**"],
-      "inputs": ["public/**", "app/**", "*.ts", "*.tsx", "*.js", "*.jsx", "package.json"],
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", "build/**"],
+      "inputs": ["api/**", "public/**", "app/**", "src/**", "*.ts", "*.tsx", "*.js", "*.jsx", "package.json"],
       "env": ["NODEJS_HELPERS", "API_URL", "VITE_FRONTEND_URL"]
     },
     "dev": {
