@@ -1,11 +1,16 @@
+MIT License
+
 Copyright (c) 2025 Matthias Martin
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to use, copy, modify, and distribute the Software, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-The Software may be used in commercial or non-commercial projects, provided that the Software is not the primary selling point or core value of any commercial product or service.
-The Software may not be sold, licensed, or distributed as a standalone product or as the main feature of a commercial offering.
-Inclusion of the Software in a larger work is permitted, provided the larger work offers substantial additional functionality and value beyond the Software itself.
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,

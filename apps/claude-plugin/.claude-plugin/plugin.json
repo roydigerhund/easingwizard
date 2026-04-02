@@ -7,6 +7,6 @@
   },
   "homepage": "https://easingwizard.com",
   "repository": "https://github.com/roydigerhund/easingwizard-claude-plugin",
-  "license": "LicenseRef-LICENSE",
+  "license": "MIT",
   "keywords": ["easing", "animation", "css", "tailwind", "motion-design", "transitions", "timing-function", "spring", "bounce"]
 }
