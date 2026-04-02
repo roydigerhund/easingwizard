@@ -4,7 +4,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", "build/**"],
+      "outputs": ["dist/**", "build/**", ".vercel/**"],
       "inputs": ["api/**", "public/**", "app/**", "src/**", "*.ts", "*.tsx", "*.js", "*.jsx", "package.json"],
       "env": ["NODEJS_HELPERS", "API_URL", "VITE_FRONTEND_URL"]
     },
