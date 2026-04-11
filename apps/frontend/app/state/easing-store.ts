@@ -1,7 +1,7 @@
 import { defaultEasingState, EasingType, encodeState, generateLinearEasing, reduceStateForShare, suggestDuration, type EasingState, type EasingTypeKey } from 'easingwizard-core';
 import { create } from 'zustand';
 
-const LOCALSTORAGE_KEY = 'easingState';
+export const LOCALSTORAGE_KEY = 'easingState';
 
 function regenerateEasing(state: EasingState): Partial<EasingState> {
   switch (state.easingType) {

@@ -19,7 +19,7 @@ import ShootingStars from '~/components/ShootingStars';
 import SpringEditor from '~/components/SpringEditor';
 import WiggleEditor from '~/components/WiggleEditor';
 import { classNames } from '~/css/class-names';
-import { useEasingStore } from '~/state/easing-store';
+import { LOCALSTORAGE_KEY, useEasingStore } from '~/state/easing-store';
 import type { Route } from './+types/home';
 
 export function headers(_: Route.HeadersArgs) {
@@ -62,7 +62,7 @@ export default function Index() {
     // Restore from localStorage if no share link was used
     if (!didRestoreFromShareLink) {
       try {
-        const saved = localStorage.getItem('easingState');
+        const saved = localStorage.getItem(LOCALSTORAGE_KEY);
         if (saved) {
           const decoded = decodeState(saved);
           const rehydrated = rehydrateShareState(decoded);
@@ -70,7 +70,7 @@ export default function Index() {
           setRestoredFromStorage(true);
         }
       } catch {
-        localStorage.removeItem('easingState');
+        localStorage.removeItem(LOCALSTORAGE_KEY);
       }
     }
 
