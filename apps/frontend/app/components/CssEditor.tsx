@@ -197,7 +197,7 @@ export default function CssEditor({ value, onChange, mode, rows = 10, ariaLabel,
               {/* Message */}
               <span>
                 {d.line !== undefined && (
-                  <span className="opacity-60 mr-1">Line {d.line}:</span>
+                  <span className="mr-1 opacity-60">Line {d.line}:</span>
                 )}
                 {d.message}
               </span>

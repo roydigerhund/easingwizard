@@ -126,8 +126,10 @@ export function lintKeyframesCSS(css: string): LintDiagnostic[] {
     while ((declMatch = declRe.exec(bodyPart)) !== null) {
       const propRaw = declMatch[1].trim();
       if (!propRaw) continue;
-      // Ignore vendor-prefixed properties (start with -webkit-, -moz- etc.) — valid
-      if (!VALID_CSS_PROPERTY.test(propRaw) && !propRaw.startsWith('-')) {
+      // Accept vendor-prefixed properties (e.g. -webkit-transform) and
+      // skip them before running the stricter identifier regex
+      if (propRaw.startsWith('-')) continue;
+      if (!VALID_CSS_PROPERTY.test(propRaw)) {
         diags.push({
           severity: 'error',
           line: stopLine,

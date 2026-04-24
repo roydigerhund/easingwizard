@@ -79,9 +79,16 @@ export function verifyAndStrip(raw: string): string | null {
  */
 export function encodeKeyframesData(keyframesCSS: string, animationPropertyValue: string): string {
   const json = JSON.stringify({ k: keyframesCSS, a: animationPropertyValue });
-  // Use TextEncoder for reliable Unicode support instead of the deprecated unescape/escape pattern
+  // Use TextEncoder for reliable Unicode support instead of the deprecated unescape/escape pattern.
+  // Process bytes in chunks to avoid stack overflow when spreading large Uint8Arrays into
+  // String.fromCharCode (V8 limits function argument count, typically around 65k).
   const bytes = new TextEncoder().encode(json);
-  return btoa(String.fromCharCode(...bytes));
+  const CHUNK = 8192;
+  let binary = '';
+  for (let i = 0; i < bytes.length; i += CHUNK) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + CHUNK));
+  }
+  return btoa(binary);
 }
 
 /**

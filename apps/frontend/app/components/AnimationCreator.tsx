@@ -89,7 +89,7 @@ export default function AnimationCreator() {
               Keyframes
             </label>
             <p className={classNames(paragraph, 'mb-2 text-xs')}>
-              Define the animation steps. The name after <code>@keyframes</code> must match above.
+              Define the animation steps. The name after <span className="font-mono">@keyframes</span> must match above.
             </p>
             <CssEditor
               mode="keyframes"
