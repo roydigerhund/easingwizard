@@ -48,8 +48,8 @@ const PATTERNS: Record<AnimationTypeKey, CssPattern> = {
     format: (v) => `transform: scale(${v})`,
   },
   [AnimationType.ROTATE]: {
-    // Negative lookahead avoids matching `rotateX` / `rotateY`
-    extractRe: /transform\s*:\s*rotate(?![XYxy])\(([^)]*)\)/,
+    // Negative lookahead avoids matching `rotateX` / `rotateY` (case-insensitive for robustness)
+    extractRe: /transform\s*:\s*rotate(?![XYxy])\(([^)]*)\)/i,
     format: (v) => `transform: rotate(${v})`,
   },
   [AnimationType.ROTATE_X]: {

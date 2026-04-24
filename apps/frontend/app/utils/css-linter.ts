@@ -27,8 +27,8 @@ function lineOfIndex(source: string, index: number): number {
 // ---------------------------------------------------------------------------
 // @keyframes linter
 // ---------------------------------------------------------------------------
-const VALID_CSS_PROPERTY = /^-?[a-z][a-z0-9-]*$/;
-const VALID_PERCENTAGE = /^(from|to|\d{1,3}(\.\d+)?%)$/;
+const VALID_CSS_PROPERTY = /^-?[a-zA-Z][a-zA-Z0-9-]*$/;
+const VALID_PERCENTAGE = /^(from|to|\d{1,3}(\.\d+)?%)$/i;
 
 /** Validates a full @keyframes CSS block. */
 export function lintKeyframesCSS(css: string): LintDiagnostic[] {
