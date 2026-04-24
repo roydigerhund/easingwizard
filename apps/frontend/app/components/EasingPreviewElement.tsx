@@ -36,7 +36,11 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
   }, [clicked, setState]);
 
   // Inject custom @keyframes CSS into the document when keyframes mode is active.
-  // This is safe for a design tool where users deliberately author CSS.
+  // Security note: this injects user-authored CSS into the DOM. This is intentional —
+  // the Animation Creator is a design tool where users deliberately write CSS.
+  // The tool targets trusted design team members, not arbitrary end-users.
+  // Modern browsers do not execute JavaScript through CSS properties or @keyframes rules;
+  // only legacy IE-style expression() calls posed that risk.
   useEffect(() => {
     let styleEl = document.getElementById('ew-custom-keyframes') as HTMLStyleElement | null;
     if (keyframesEnabled && keyframesCSS) {

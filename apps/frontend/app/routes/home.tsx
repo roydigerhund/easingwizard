@@ -88,9 +88,12 @@ export default function Index() {
           try {
             const savedKeyframes = localStorage.getItem('easingKeyframes');
             if (savedKeyframes) {
-              const { k, a } = JSON.parse(savedKeyframes);
-              if (typeof k === 'string') rehydrated.keyframesCSS = k;
-              if (typeof a === 'string') rehydrated.animationPropertyValue = a;
+              const parsed: unknown = JSON.parse(savedKeyframes);
+              if (parsed !== null && typeof parsed === 'object') {
+                const obj = parsed as Record<string, unknown>;
+                if (typeof obj.k === 'string') rehydrated.keyframesCSS = obj.k;
+                if (typeof obj.a === 'string') rehydrated.animationPropertyValue = obj.a;
+              }
             }
           } catch {
             // Ignore malformed keyframes storage

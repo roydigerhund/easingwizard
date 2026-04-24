@@ -132,8 +132,9 @@ useEasingStore.subscribe((state) => {
         localStorage.removeItem(LOCALSTORAGE_KEY);
       }
 
-      // Persist keyframes text separately because the compact encoder only handles numbers
-      if (rest.keyframesCSS !== undefined || rest.animationPropertyValue !== undefined) {
+      // Persist keyframes text separately because the compact encoder only handles numbers.
+      // Only save when both fields are non-empty strings to avoid partial/inconsistent state.
+      if (typeof rest.keyframesCSS === 'string' && typeof rest.animationPropertyValue === 'string') {
         localStorage.setItem(
           KEYFRAMES_LOCALSTORAGE_KEY,
           JSON.stringify({ k: rest.keyframesCSS, a: rest.animationPropertyValue }),

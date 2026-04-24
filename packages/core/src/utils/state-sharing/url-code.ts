@@ -78,7 +78,10 @@ export function verifyAndStrip(raw: string): string | null {
  * because it can contain arbitrary CSS strings.
  */
 export function encodeKeyframesData(keyframesCSS: string, animationPropertyValue: string): string {
-  return btoa(unescape(encodeURIComponent(JSON.stringify({ k: keyframesCSS, a: animationPropertyValue }))));
+  const json = JSON.stringify({ k: keyframesCSS, a: animationPropertyValue });
+  // Use TextEncoder for reliable Unicode support instead of the deprecated unescape/escape pattern
+  const bytes = new TextEncoder().encode(json);
+  return btoa(String.fromCharCode(...bytes));
 }
 
 /**
@@ -87,9 +90,22 @@ export function encodeKeyframesData(keyframesCSS: string, animationPropertyValue
  */
 export function decodeKeyframesData(encoded: string): { keyframesCSS: string; animationPropertyValue: string } | null {
   try {
-    const parsed = JSON.parse(decodeURIComponent(escape(atob(encoded))));
-    if (typeof parsed.k === 'string' && typeof parsed.a === 'string') {
-      return { keyframesCSS: parsed.k, animationPropertyValue: parsed.a };
+    // Use TextDecoder for reliable Unicode support instead of the deprecated escape pattern
+    const bytes = Uint8Array.from(atob(encoded), (c) => c.charCodeAt(0));
+    const json = new TextDecoder().decode(bytes);
+    const parsed: unknown = JSON.parse(json);
+    if (
+      parsed !== null &&
+      typeof parsed === 'object' &&
+      'k' in parsed &&
+      'a' in parsed &&
+      typeof (parsed as Record<string, unknown>).k === 'string' &&
+      typeof (parsed as Record<string, unknown>).a === 'string'
+    ) {
+      return {
+        keyframesCSS: (parsed as Record<string, string>).k,
+        animationPropertyValue: (parsed as Record<string, string>).a,
+      };
     }
     return null;
   } catch {
