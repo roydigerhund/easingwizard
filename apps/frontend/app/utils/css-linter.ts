@@ -78,7 +78,7 @@ export function lintKeyframesCSS(css: string): LintDiagnostic[] {
 
   // Animation name must follow immediately after @keyframes whitespace
   const afterAt = trimmed.slice(atMatch.index + atMatch[0].length);
-  const nameMatch = /^([\w-]+)/.exec(afterAt);
+  const nameMatch = /^([a-zA-Z_][\w-]*)/.exec(afterAt);
   if (!nameMatch) {
     diags.push({
       severity: 'error',

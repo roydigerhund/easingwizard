@@ -97,7 +97,7 @@ export function formatKeyframesCSS(css: string): string {
     const trimmed = css.trim();
 
     // Must open with @keyframes <name> {
-    const headerMatch = /^(@keyframes\s+[\w-]+)\s*\{/.exec(trimmed);
+    const headerMatch = /^(@keyframes\s+[a-zA-Z_][\w-]*)\s*\{/.exec(trimmed);
     if (!headerMatch) return css;
 
     const header = headerMatch[1].trim();
