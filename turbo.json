@@ -9,6 +9,7 @@
       "env": ["NODEJS_HELPERS", "API_URL", "VITE_FRONTEND_URL"]
     },
     "dev": {
+      "dependsOn": ["^build"],
       "persistent": true,
       "cache": false
     },
