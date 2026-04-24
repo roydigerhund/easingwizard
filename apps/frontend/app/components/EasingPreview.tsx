@@ -104,6 +104,7 @@ export default function EasingPreview() {
   const [counter, setCounter] = useState(0);
   const [hidePreviewElement, setHidePreviewElement] = useState(false);
   const [previewHasRestarted, setPreviewHasRestarted] = useState(false);
+  const keyframesEnabled = useEasingStore((state) => state.keyframesEnabled);
 
   useEffect(() => {
     // hide preview during duration change
@@ -137,8 +138,8 @@ export default function EasingPreview() {
         <div className="flex justify-between">
           <IconButton
             label="Show Linear Comparison"
-            disabled={!allowPreviewShowLinear}
-            isActive={previewShowLinear && allowPreviewShowLinear}
+            disabled={!allowPreviewShowLinear || keyframesEnabled}
+            isActive={previewShowLinear && allowPreviewShowLinear && !keyframesEnabled}
             onClick={() => setState({ previewShowLinear: !previewShowLinear })}
             position="left"
           >

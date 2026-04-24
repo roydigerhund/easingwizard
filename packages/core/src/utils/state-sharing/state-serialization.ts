@@ -74,6 +74,13 @@ export function reduceStateForShare(state: EasingState): EasingStateShare {
   for (const key of Object.keys(state) as EasingStateShareKey[]) {
     if (state[key] === DEFAULTS_V0[key]) delete reducedState[key];
   }
+
+  // Include keyframesEnabled as a numeric flag (1 = enabled) – only when true to save URL space
+  delete reducedState.keyframesEnabled;
+  if (state.keyframesEnabled) {
+    reducedState.keyframesEnabled = 1;
+  }
+
   return reducedState;
 }
 
@@ -189,5 +196,9 @@ export function rehydrateShareState(state: EasingStateShare, version: number = 0
       break;
     }
   }
+
+  // Restore keyframesEnabled: stored as numeric 1 (enabled) or absent (disabled)
+  fullState.keyframesEnabled = !!state.keyframesEnabled;
+
   return fullState;
 }

@@ -52,6 +52,8 @@ export type EasingStateShareKey = keyof EasingState &
     | 'overshootCurve'
     | 'overshootMass'
     | 'overshootDamping'
+    // Animation Creator
+    | 'keyframesEnabled'
   );
 
 export type EasingStateShare = Partial<Record<EasingStateShareKey, EasingStateValue>>;
@@ -116,4 +118,8 @@ export type EasingState = {
   editorAccuracy: LinearEasingAccuracyKey;
   // Easter Egg
   foundEasterEgg: boolean;
+  // Animation Creator (Custom Keyframes)
+  keyframesEnabled: boolean;
+  keyframesCSS: string;
+  animationPropertyValue: string;
 };

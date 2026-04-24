@@ -1,4 +1,4 @@
-import { encodeState, reduceStateForShare } from 'easingwizard-core';
+import { encodeState, encodeKeyframesData, reduceStateForShare } from 'easingwizard-core';
 import { paragraph } from '~/css/common-classes';
 import { description, frontendUrl } from '~/data/globals';
 import { useEasingStore } from '~/state/easing-store';
@@ -16,9 +16,14 @@ export default function Share() {
     const configuration = reduceStateForShare(currentState);
     const encodedConfiguration = encodeState(configuration);
 
-    const configurationLink = encodedConfiguration
-      ? `${window.location.origin}/#${encodedConfiguration}`
-      : window.location.origin;
+    // Append keyframes text payload when custom keyframes are active
+    let fragment = encodedConfiguration;
+    if (currentState.keyframesEnabled) {
+      const keyframesPayload = encodeKeyframesData(currentState.keyframesCSS, currentState.animationPropertyValue);
+      fragment = encodedConfiguration ? `${encodedConfiguration}|${keyframesPayload}` : `|${keyframesPayload}`;
+    }
+
+    const configurationLink = fragment ? `${window.location.origin}/#${fragment}` : window.location.origin;
     navigator.clipboard.writeText(configurationLink);
   };
 

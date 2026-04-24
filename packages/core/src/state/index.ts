@@ -95,12 +95,22 @@ const defaultRestState = {
 
 export const restStateKeys = Object.keys(defaultRestState) as (keyof typeof defaultRestState)[];
 
+// Default CSS for the Animation Creator feature
+export const DEFAULT_KEYFRAMES_CSS =
+  '@keyframes CustomSlide {\n  0% {\n    transform: translateX(-100%);\n  }\n  15% {\n    transform: translateX(0%);\n  }\n  75% {\n    transform: translateX(0%);\n  }\n  100% {\n    transform: translateX(-100%);\n  }\n}';
+
+export const DEFAULT_ANIMATION_PROPERTY_VALUE = 'CustomSlide 3s cubic-bezier(0.25, 0.1, 0.25, 1) infinite';
+
 export const defaultOtherState = {
   editorExtraSpaceTop: false,
   editorExtraSpaceBottom: false,
   previewPlayMode: PreviewPlayMode.INFINITE,
   previewShowLinear: false,
   foundEasterEgg: false,
+  // Animation Creator
+  keyframesEnabled: false,
+  keyframesCSS: DEFAULT_KEYFRAMES_CSS,
+  animationPropertyValue: DEFAULT_ANIMATION_PROPERTY_VALUE,
 };
 
 export const defaultEasingState: EasingState = {

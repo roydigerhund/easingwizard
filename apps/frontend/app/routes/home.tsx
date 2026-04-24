@@ -1,6 +1,7 @@
-import { decodeState, EasingType, rehydrateShareState, rehydrateShareStateLegacy } from 'easingwizard-core';
+import { decodeState, decodeKeyframesData, EasingType, rehydrateShareState, rehydrateShareStateLegacy } from 'easingwizard-core';
 import { useEffect, useState } from 'react';
 import { useLocation, useSearchParams } from 'react-router';
+import AnimationCreator from '~/components/AnimationCreator';
 import BezierEditor from '~/components/BezierEditor';
 import BounceEditor from '~/components/BounceEditor';
 import Card from '~/components/Card';
@@ -50,8 +51,24 @@ export default function Index() {
       } else if (hash && hash.length > 1) {
         // V0
         // in new sharing mode, we use fragment with a minified code, like #a1b2c3d4e5
-        const decodedState = decodeState(hash.slice(1));
+        // The fragment may contain a "|"-separated keyframes payload: #<state>|<base64keyframes>
+        const rawFragment = hash.slice(1);
+        const pipeIndex = rawFragment.indexOf('|');
+        const encodedState = pipeIndex >= 0 ? rawFragment.slice(0, pipeIndex) : rawFragment;
+        const encodedKeyframes = pipeIndex >= 0 ? rawFragment.slice(pipeIndex + 1) : '';
+
+        const decodedState = decodeState(encodedState);
         const rehydratedState = rehydrateShareState(decodedState);
+
+        // Restore keyframes text payload if present
+        if (encodedKeyframes) {
+          const keyframesData = decodeKeyframesData(encodedKeyframes);
+          if (keyframesData) {
+            rehydratedState.keyframesCSS = keyframesData.keyframesCSS;
+            rehydratedState.animationPropertyValue = keyframesData.animationPropertyValue;
+          }
+        }
+
         setState(rehydratedState);
         didRestoreFromShareLink = true;
       }
@@ -66,6 +83,19 @@ export default function Index() {
         if (saved) {
           const decoded = decodeState(saved);
           const rehydrated = rehydrateShareState(decoded);
+
+          // Also restore keyframes text which is stored in a separate key
+          try {
+            const savedKeyframes = localStorage.getItem('easingKeyframes');
+            if (savedKeyframes) {
+              const { k, a } = JSON.parse(savedKeyframes);
+              if (typeof k === 'string') rehydrated.keyframesCSS = k;
+              if (typeof a === 'string') rehydrated.animationPropertyValue = a;
+            }
+          } catch {
+            // Ignore malformed keyframes storage
+          }
+
           setState(rehydrated);
           setRestoredFromStorage(true);
         }
@@ -123,6 +153,9 @@ export default function Index() {
         </Card>
         <Card className="col-span-6 px-6 py-5 [--animation-delay:0.5s] lg:col-span-2">
           <Share />
+        </Card>
+        <Card className="col-span-6 px-6 py-5 [--animation-delay:0.5s]">
+          <AnimationCreator />
         </Card>
       </div>
       <Footer />

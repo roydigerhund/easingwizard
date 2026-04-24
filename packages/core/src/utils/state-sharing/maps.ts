@@ -59,6 +59,8 @@ export const MINI_MAP: Record<EasingStateShareKey, string> = {
   previewAnimationType: 'x',
   // Editor
   editorAccuracy: 'y',
+  // Animation Creator
+  keyframesEnabled: 'A',
 };
 
 export const REVERSE_MINI_MAP: Record<string, EasingStateShareKey> = Object.fromEntries(

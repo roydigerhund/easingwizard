@@ -71,3 +71,28 @@ export function verifyAndStrip(raw: string): string | null {
 
   return crcCalc === crcSeen ? code : null; // null ⇒ Link korrupt
 }
+
+/**
+ * Encodes keyframes text data to a base64 string for inclusion in share URLs.
+ * The keyframes text is stored separately from the compact state encoding
+ * because it can contain arbitrary CSS strings.
+ */
+export function encodeKeyframesData(keyframesCSS: string, animationPropertyValue: string): string {
+  return btoa(unescape(encodeURIComponent(JSON.stringify({ k: keyframesCSS, a: animationPropertyValue }))));
+}
+
+/**
+ * Decodes keyframes text data from a base64 string produced by encodeKeyframesData.
+ * Returns null if the encoded string is invalid or malformed.
+ */
+export function decodeKeyframesData(encoded: string): { keyframesCSS: string; animationPropertyValue: string } | null {
+  try {
+    const parsed = JSON.parse(decodeURIComponent(escape(atob(encoded))));
+    if (typeof parsed.k === 'string' && typeof parsed.a === 'string') {
+      return { keyframesCSS: parsed.k, animationPropertyValue: parsed.a };
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}

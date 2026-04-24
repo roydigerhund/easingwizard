@@ -15,6 +15,10 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
   const previewAnimationType = useEasingStore((state) => state.previewAnimationType);
   const previewShowLinear = useEasingStore((state) => state.previewShowLinear);
   const setState = useEasingStore((state) => state.setState);
+  // Animation Creator state
+  const keyframesEnabled = useEasingStore((state) => state.keyframesEnabled);
+  const keyframesCSS = useEasingStore((state) => state.keyframesCSS);
+  const animationPropertyValue = useEasingStore((state) => state.animationPropertyValue);
   const [clicked, setClicked] = useState(false);
 
   const handleClick = () => {
@@ -30,6 +34,27 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
       return () => clearTimeout(timeout);
     }
   }, [clicked, setState]);
+
+  // Inject custom @keyframes CSS into the document when keyframes mode is active.
+  // This is safe for a design tool where users deliberately author CSS.
+  useEffect(() => {
+    let styleEl = document.getElementById('ew-custom-keyframes') as HTMLStyleElement | null;
+    if (keyframesEnabled && keyframesCSS) {
+      if (!styleEl) {
+        styleEl = document.createElement('style');
+        styleEl.id = 'ew-custom-keyframes';
+        document.head.appendChild(styleEl);
+      }
+      styleEl.textContent = keyframesCSS;
+    } else if (styleEl) {
+      styleEl.textContent = '';
+    }
+    return () => {
+      // Clean up on unmount
+      const el = document.getElementById('ew-custom-keyframes');
+      if (el) el.textContent = '';
+    };
+  }, [keyframesEnabled, keyframesCSS]);
 
   const getValue = () => {
     switch (easingType) {
@@ -59,6 +84,13 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
     animationFillMode: 'both',
     animationPlayState: clicked ? 'paused' : 'running',
   });
+
+  // When custom keyframes are enabled, the user-authored animation shorthand takes over.
+  // animation-play-state is overridden separately to support the easter egg pause.
+  const customAnimationStyles = {
+    animation: animationPropertyValue,
+    animationPlayState: clicked ? 'paused' : 'running',
+  };
 
   return (
     <>
@@ -90,16 +122,17 @@ export default function EasingPreviewElement({ counter }: { counter: number }) {
           role="button"
           tabIndex={-1}
           className="relative z-10 col-span-full row-span-full size-1/4 cursor-help rounded-xl border-none! bg-grdt-from"
-          style={animationStyles(value)}
+          style={keyframesEnabled ? customAnimationStyles : animationStyles(value)}
           onClick={handleClick}
           onKeyUp={(e) => e.key === 'Enter' && handleClick()}
           aria-label="Easteregg"
         />
 
+        {/* Linear comparison – hidden when custom keyframes are active */}
         <div
           className={classNames(
             'pointer-events-none col-span-full row-span-full grid size-full items-center justify-items-center',
-            previewShowLinear && easingType !== EasingType.WIGGLE ? 'opacity-50' : 'opacity-0',
+            previewShowLinear && easingType !== EasingType.WIGGLE && !keyframesEnabled ? 'opacity-50' : 'opacity-0',
           )}
           style={{
             // settings for 3d perspective
