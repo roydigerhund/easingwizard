@@ -137,6 +137,67 @@ export function lintKeyframesCSS(css: string): LintDiagnostic[] {
         });
       }
     }
+
+    // ── Unit-compatibility warnings inside transform declarations ──────────
+    const transformDecl = /transform\s*:\s*([^;]+)/.exec(bodyPart);
+    if (transformDecl) {
+      const tv = transformDecl[1].trim();
+
+      // rotate() / rotateX() / rotateY() — argument must be an angle
+      const rotateMatch = /\b(rotate[XY]?)\(([^)]*)\)/i.exec(tv);
+      if (rotateMatch) {
+        const fn = rotateMatch[1];
+        const arg = rotateMatch[2].trim();
+        const ANGLE_UNIT = /\d(deg|rad|turn|grad)\b/i;
+        if (/%/.test(arg)) {
+          // Percentages are invalid for angle arguments
+          const numPart = arg.replace(/%/g, '');
+          diags.push({
+            severity: 'warning',
+            line: stopLine,
+            message: `${fn}() needs an angle unit — replace % with deg (e.g. ${arg} → ${numPart}deg)`,
+          });
+        } else if (!ANGLE_UNIT.test(arg) && arg !== '0' && /\S/.test(arg)) {
+          // Non-zero value with no angle unit (e.g. bare number)
+          diags.push({
+            severity: 'warning',
+            line: stopLine,
+            message: `${fn}() needs an angle unit — add deg, rad, or turn (e.g. ${arg} → ${arg}deg)`,
+          });
+        }
+      }
+
+      // translateX() / translateY() — argument must be length or %
+      const translateMatch = /\b(translateX|translateY)\(([^)]*)\)/i.exec(tv);
+      if (translateMatch) {
+        const fn = translateMatch[1];
+        const arg = translateMatch[2].trim();
+        const angleUnitMatch = /(deg|rad|turn|grad)/i.exec(arg);
+        if (angleUnitMatch) {
+          const unit = angleUnitMatch[1];
+          const numPart = arg.replace(new RegExp(unit, 'gi'), '');
+          diags.push({
+            severity: 'warning',
+            line: stopLine,
+            message: `${fn}() needs a length or % — replace ${unit} with % or px (e.g. ${arg} → ${numPart}%)`,
+          });
+        }
+      }
+
+      // scale() (not scaleX / scaleY / scale3d) — argument must be unitless
+      // Negative lookahead prevents matching scaleX, scaleY, scale3d
+      const scaleMatch = /\bscale(?![XY3])\(([^)]*)\)/i.exec(tv);
+      if (scaleMatch) {
+        const arg = scaleMatch[1].trim();
+        if (/%/.test(arg)) {
+          diags.push({
+            severity: 'warning',
+            line: stopLine,
+            message: `scale() needs a unitless number — remove % (e.g. 100% → 1, 50% → 0.5)`,
+          });
+        }
+      }
+    }
   }
 
   if (stopCount === 0 && depth === 0) {

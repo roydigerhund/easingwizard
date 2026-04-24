@@ -15,6 +15,7 @@ import { useCallback, useMemo, useRef, type KeyboardEvent } from 'react';
 import { classNames } from '~/css/class-names';
 import { highlightAnimationValue, highlightKeyframesCSS } from '~/utils/css-highlight';
 import { lintAnimationValue, lintKeyframesCSS, type LintDiagnostic } from '~/utils/css-linter';
+import { formatKeyframesCSS } from '~/utils/keyframes-transform';
 
 // ---------------------------------------------------------------------------
 // Shared editor styles (must be identical on <pre> and <textarea>)
@@ -89,6 +90,17 @@ export default function CssEditor({ value, onChange, mode, rows = 10, ariaLabel,
     [value, onChange],
   );
 
+  // On blur, pretty-print the @keyframes block (keyframes mode only).
+  // The formatted value goes through the same onChange path so the live
+  // preview and store stay consistent.
+  const handleBlur = useCallback(() => {
+    if (mode !== 'keyframes') return;
+    const formatted = formatKeyframesCSS(value);
+    if (formatted !== value) {
+      onChange(formatted);
+    }
+  }, [mode, value, onChange]);
+
   // Highlighted HTML (memoised — only re-computes when value changes)
   const highlighted = useMemo(() => {
     // Append a trailing newline so the last line of the pre has the same
@@ -150,6 +162,7 @@ export default function CssEditor({ value, onChange, mode, rows = 10, ariaLabel,
           onChange={(e) => onChange(e.target.value)}
           onScroll={syncScroll}
           onKeyDown={handleKeyDown}
+          onBlur={handleBlur}
           spellCheck={false}
           autoComplete="off"
           autoCorrect="off"

@@ -81,6 +81,74 @@ const PATTERNS: Record<AnimationTypeKey, CssPattern> = {
 };
 
 /**
+ * Pretty-prints a @keyframes CSS block with consistent indentation:
+ *   @keyframes Name {
+ *     0% {
+ *       property: value;
+ *     }
+ *   }
+ *
+ * Returns the original string unchanged if the block cannot be parsed
+ * (e.g. unbalanced braces, missing @keyframes header).  Intentionally
+ * conservative — never corrupts user content.
+ */
+export function formatKeyframesCSS(css: string): string {
+  try {
+    const trimmed = css.trim();
+
+    // Must open with @keyframes <name> {
+    const headerMatch = /^(@keyframes\s+[\w-]+)\s*\{/.exec(trimmed);
+    if (!headerMatch) return css;
+
+    const header = headerMatch[1].trim();
+
+    // Locate outer braces
+    const outerOpen = trimmed.indexOf('{');
+    const outerClose = trimmed.lastIndexOf('}');
+    if (outerOpen < 0 || outerClose < 0 || outerOpen >= outerClose) return css;
+
+    const outerBody = trimmed.slice(outerOpen + 1, outerClose);
+
+    // Parse each stop block  selector { … }
+    const stopBlockRe = /([^{}]+)\{([^{}]*)\}/g;
+    let m: RegExpExecArray | null;
+    const formattedStops: string[] = [];
+
+    while ((m = stopBlockRe.exec(outerBody)) !== null) {
+      const selector = m[1]
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .join(', ');
+      const body = m[2];
+
+      // Parse declarations
+      const decls: string[] = [];
+      const declRe = /([^:;{}]+):([^;{}]*);/g;
+      let d: RegExpExecArray | null;
+      while ((d = declRe.exec(body)) !== null) {
+        const prop = d[1].trim();
+        const val = d[2].trim();
+        if (prop) decls.push(`    ${prop}: ${val};`);
+      }
+
+      if (decls.length === 0) {
+        formattedStops.push(`  ${selector} {}`);
+      } else {
+        formattedStops.push(`  ${selector} {\n${decls.join('\n')}\n  }`);
+      }
+    }
+
+    // If no stops were parsed, return the original (don't silently wipe content)
+    if (formattedStops.length === 0) return css;
+
+    return `${header} {\n${formattedStops.join('\n')}\n}`;
+  } catch {
+    return css;
+  }
+}
+
+/**
  * Replaces the animated CSS property in every keyframe stop of a @keyframes
  * block with the property/function used by `toType`, while keeping the
  * existing argument values unchanged.
