@@ -136,9 +136,17 @@ export default function Index() {
           'gap-4 xl:gap-8',
         )}
       >
-        <Card className="col-span-6 px-6 py-5 [--animation-delay:0.5s] lg:col-span-2">
-          <EasingSelection />
-        </Card>
+        {/* ── Left column: Presets (collapsible) + Animation Creator ─────── */}
+        <div className="col-span-6 flex flex-col gap-4 xl:gap-8 lg:col-span-2">
+          <Card className="px-6 py-5 [--animation-delay:0.5s]">
+            <EasingSelection />
+          </Card>
+          <Card className="px-6 py-5 [--animation-delay:0.5s]">
+            <AnimationCreator />
+          </Card>
+        </div>
+
+        {/* ── Middle column: Customize editor ──────────────────────────── */}
         <Card className="col-span-6 py-5 [--animation-delay:0.5s] sm:col-span-3 lg:col-span-2">
           <CardHeadline className="mx-6">Customize</CardHeadline>
           {easingType === EasingType.BEZIER && <BezierEditor />}
@@ -147,18 +155,19 @@ export default function Index() {
           {easingType === EasingType.BOUNCE && <BounceEditor />}
           {easingType === EasingType.WIGGLE && <WiggleEditor />}
         </Card>
+
+        {/* ── Right column: Preview ─────────────────────────────────────── */}
         <Card className="col-span-6 py-5 [--animation-delay:0.5s] sm:col-span-3 lg:col-span-2">
           <EasingPreview />
         </Card>
+
+        {/* ── Bottom row: Code + Share ──────────────────────────────────── */}
         <Card className="col-span-6 px-6 py-5 [--animation-delay:0.5s] lg:col-span-4">
           <CardHeadline>Code</CardHeadline>
           <EasingCode />
         </Card>
         <Card className="col-span-6 px-6 py-5 [--animation-delay:0.5s] lg:col-span-2">
           <Share />
-        </Card>
-        <Card className="col-span-6 px-6 py-5 [--animation-delay:0.5s]">
-          <AnimationCreator />
         </Card>
       </div>
       <Footer />

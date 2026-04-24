@@ -1,23 +1,22 @@
 /**
- * AnimationCreator – lets designers author custom CSS @keyframes and animation
- * properties, with an instant live preview in the existing Preview card.
+ * AnimationCreator – lets designers author custom CSS @keyframes and an
+ * animation shorthand, with instant live preview in the Preview card.
  *
  * When the toggle is enabled:
- *  • The user edits two textareas: the animation shorthand and the @keyframes block.
- *  • Changes are applied immediately via the Zustand store.
- *  • EasingPreviewElement reads from the store and injects the @keyframes CSS via a
- *    <style> tag, then overrides the preview element's animation shorthand.
+ *  • Two CssEditor panels (with syntax-highlighting + lint feedback) replace
+ *    the plain textareas.
+ *  • EasingPreviewElement reads from the Zustand store, injects the @keyframes
+ *    CSS via a <style> tag, and overrides the preview element's animation.
  *
- * The custom state is included in the share link and persisted to localStorage.
+ * Custom state is included in the share link and persisted to localStorage.
  */
 import { DEFAULT_ANIMATION_PROPERTY_VALUE, DEFAULT_KEYFRAMES_CSS } from 'easingwizard-core';
-import { useRef } from 'react';
 import { classNames } from '~/css/class-names';
 import { paragraph } from '~/css/common-classes';
 import { useEasingStore } from '~/state/easing-store';
-import CardHeadline from './CardHeadline';
-import Toggle from './Toggle';
+import CssEditor from './CssEditor';
 import IconTextButton from './IconTextButton';
+import Toggle from './Toggle';
 import ResetIcon from './icons/ResetIcon';
 
 export default function AnimationCreator() {
@@ -26,103 +25,80 @@ export default function AnimationCreator() {
   const keyframesCSS = useEasingStore((state) => state.keyframesCSS);
   const animationPropertyValue = useEasingStore((state) => state.animationPropertyValue);
 
-  // Textarea refs to avoid controlled-component overhead on every keystroke
-  const animationRef = useRef<HTMLTextAreaElement>(null);
-  const keyframesRef = useRef<HTMLTextAreaElement>(null);
-
   const handleReset = () => {
     setState({
       keyframesCSS: DEFAULT_KEYFRAMES_CSS,
       animationPropertyValue: DEFAULT_ANIMATION_PROPERTY_VALUE,
     });
-    // Sync refs so the textareas display the reset values immediately
-    if (animationRef.current) animationRef.current.value = DEFAULT_ANIMATION_PROPERTY_VALUE;
-    if (keyframesRef.current) keyframesRef.current.value = DEFAULT_KEYFRAMES_CSS;
   };
 
   return (
-    <div className="@container">
-      <CardHeadline>Animation Creator</CardHeadline>
-
-      <p className={classNames(paragraph, 'mb-6')}>
-        Write custom CSS keyframes and see them animate instantly in the Preview. Enable the toggle, then edit the two
-        fields below — no coding experience required.
-      </p>
+    <div>
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-xs font-normal uppercase tracking-widest text-zinc-500">Animation Creator</h2>
+        {keyframesEnabled && (
+          <IconTextButton
+            text="Reset"
+            icon={<ResetIcon className="size-4" />}
+            onClick={handleReset}
+            isStaticButton
+            className="py-1.5 text-xs"
+          />
+        )}
+      </div>
 
       <Toggle
         label="Enable custom keyframes"
         value={keyframesEnabled}
         onChange={(value) => setState({ keyframesEnabled: value })}
-        className="mb-6"
+        className="mb-5"
       />
 
       {keyframesEnabled && (
-        <div className="flex flex-col gap-6">
-          {/* Animation shorthand */}
+        <div className="flex flex-col gap-5">
+          {/* Animation property shorthand */}
           <div>
-            <label className="mb-2 block text-xs font-normal uppercase tracking-widest text-zinc-500">
-              Animation property
+            <label className="mb-1.5 block text-xs font-normal uppercase tracking-widest text-zinc-500">
+              Animation
             </label>
             <p className={classNames(paragraph, 'mb-2 text-xs')}>
-              Controls the animation name, duration, easing, and repeat. The name must match the one in the Keyframes
-              block.
+              Name, duration, easing, and repeat. The name must match the @keyframes block.
             </p>
+            {/* Prefix label + editor on the same line */}
             <div className="relative">
-              <span className="pointer-events-none absolute left-4 top-3 font-mono text-sm text-zinc-600 select-none">
-                animation:{' '}
+              <span
+                className="pointer-events-none absolute left-3 top-3 z-10 select-none font-mono text-zinc-600"
+                style={{ fontSize: '0.8125rem', lineHeight: '1.6' }}
+              >
+                animation:&nbsp;
               </span>
-              <textarea
-                ref={animationRef}
+              <CssEditor
+                mode="animation-value"
+                value={animationPropertyValue}
+                onChange={(v) => setState({ animationPropertyValue: v })}
                 rows={2}
-                defaultValue={animationPropertyValue}
-                spellCheck={false}
-                aria-label="Animation property value"
-                onChange={(e) => setState({ animationPropertyValue: e.target.value })}
-                className={classNames(
-                  'w-full resize-none rounded-xl py-3 pr-4 font-mono text-sm text-zinc-300',
-                  'bg-linear-to-r from-zinc-900 to-zinc-950',
-                  'shadow-[0_0_0_1px_var(--tw-shadow-color)] shadow-zinc-950',
-                  'hover:shadow-zinc-700 focus:shadow-zinc-700',
-                  'transition-all duration-300 ease-out-sine',
-                  'outline-hidden focus:outline-hidden',
-                  'pl-[7.5rem]', // leaves space for the "animation: " prefix label
-                )}
+                ariaLabel="Animation property value"
+                className="[&>div]:pl-[7.25rem]"
               />
             </div>
           </div>
 
           {/* @keyframes block */}
           <div>
-            <label className="mb-2 block text-xs font-normal uppercase tracking-widest text-zinc-500">Keyframes</label>
+            <label className="mb-1.5 block text-xs font-normal uppercase tracking-widest text-zinc-500">
+              Keyframes
+            </label>
             <p className={classNames(paragraph, 'mb-2 text-xs')}>
-              Define the animation steps. The name after <code>@keyframes</code> must match the animation property
-              above.
+              Define the animation steps. The name after <code>@keyframes</code> must match above.
             </p>
-            <textarea
-              ref={keyframesRef}
-              rows={10}
-              defaultValue={keyframesCSS}
-              spellCheck={false}
-              aria-label="CSS @keyframes block"
-              onChange={(e) => setState({ keyframesCSS: e.target.value })}
-              className={classNames(
-                'w-full resize-y rounded-xl p-4 font-mono text-sm text-zinc-300',
-                'bg-linear-to-r from-zinc-900 to-zinc-950',
-                'shadow-[0_0_0_1px_var(--tw-shadow-color)] shadow-zinc-950',
-                'hover:shadow-zinc-700 focus:shadow-zinc-700',
-                'transition-all duration-300 ease-out-sine',
-                'outline-hidden focus:outline-hidden',
-              )}
+            <CssEditor
+              mode="keyframes"
+              value={keyframesCSS}
+              onChange={(v) => setState({ keyframesCSS: v })}
+              rows={12}
+              ariaLabel="CSS @keyframes block"
             />
           </div>
-
-          {/* Reset button */}
-          <IconTextButton
-            text="Reset to default"
-            icon={<ResetIcon className="size-6" />}
-            onClick={handleReset}
-            isStaticButton
-          />
         </div>
       )}
     </div>

@@ -27,7 +27,7 @@ import {
   type WiggleCurveKey,
 } from 'easingwizard-core';
 import { useEasingStore } from '~/state/easing-store';
-import CardHeadline from './CardHeadline';
+import CollapsibleSection from './CollapsibleSection';
 import CurveIconTextButton from './CurveIconTextButton';
 
 export default function EasingSelection() {
@@ -152,170 +152,177 @@ export default function EasingSelection() {
   };
 
   return (
-    <>
-      <CardHeadline>Basis</CardHeadline>
+    <CollapsibleSection title="Presets" defaultOpen={true}>
       {easingType === EasingType.BEZIER && (
         <>
-          <div className="flex flex-wrap gap-4">
-            {Object.keys(bezierFunctions)
-              .filter(isBezierStyle)
-              .map((style) => {
-                const values = bezierStyleFunctions[style];
-                return (
-                  <CurveIconTextButton
-                    key={style}
-                    isActive={!bezierIsCustom && bezierStyle === style}
-                    onClick={() => {
-                      if (bezierCurve in bezierFunctions[style]) {
-                        onBezierValueChange(style, bezierCurve);
-                      } else {
-                        onBezierValueChange(style, BezierCurve.SINE);
+          {/* Style group (In / Out / In-Out / Out-In) */}
+          <CollapsibleSection title="Style" defaultOpen={true} className="mb-3">
+            <div className="flex flex-wrap gap-4 pb-1">
+              {Object.keys(bezierFunctions)
+                .filter(isBezierStyle)
+                .map((style) => {
+                  const values = bezierStyleFunctions[style];
+                  return (
+                    <CurveIconTextButton
+                      key={style}
+                      isActive={!bezierIsCustom && bezierStyle === style}
+                      onClick={() => {
+                        if (bezierCurve in bezierFunctions[style]) {
+                          onBezierValueChange(style, bezierCurve);
+                        } else {
+                          onBezierValueChange(style, BezierCurve.SINE);
+                        }
+                      }}
+                      text={humanize(style)}
+                      icon={
+                        <path
+                          d={`M0,100 C${values.x1 * 100},${100 - values.y1 * 100} ${values.x2 * 100},${100 - values.y2 * 100} 100,0`}
+                        />
                       }
-                    }}
-                    text={humanize(style)}
-                    icon={
-                      <path
-                        d={`M0,100 C${values.x1 * 100},${100 - values.y1 * 100} ${values.x2 * 100},${100 - values.y2 * 100} 100,0`}
-                      />
-                    }
-                  />
-                );
-              })}
-          </div>
-          <hr
-            className="my-5 border-t border-zinc-700"
-            style={{
-              maskImage: 'linear-gradient(to right,rgba(0,0,0,1),rgba(0,0,0,0.1))',
-            }}
-          />
+                    />
+                  );
+                })}
+            </div>
+          </CollapsibleSection>
+
+          {/* Curve group (Sine / Quad / Cubic / …) */}
+          <CollapsibleSection title="Curves" defaultOpen={true}>
+            <div className="flex flex-wrap gap-4 pb-1">
+              {Object.entries(bezierFunctions[bezierStyle]).map(([curve, values]) => (
+                <CurveIconTextButton
+                  key={curve}
+                  isActive={!bezierIsCustom && bezierCurve === curve}
+                  onClick={() => onBezierValueChange(bezierStyle, curve as BezierCurveKey)}
+                  text={humanize(curve)}
+                  icon={
+                    <path
+                      d={`M0,100 C${values.x1 * 100},${100 - values.y1 * 100} ${values.x2 * 100},${100 - values.y2 * 100} 100,0`}
+                    />
+                  }
+                />
+              ))}
+            </div>
+          </CollapsibleSection>
         </>
       )}
-      {easingType === EasingType.BEZIER && (
-        <div className="flex flex-wrap gap-4">
-          {Object.entries(bezierFunctions[bezierStyle]).map(([curve, values]) => (
-            <CurveIconTextButton
-              key={curve}
-              isActive={!bezierIsCustom && bezierCurve === curve}
-              onClick={() => onBezierValueChange(bezierStyle, curve as BezierCurveKey)}
-              text={humanize(curve)}
-              icon={
-                <path
-                  d={`M0,100 C${values.x1 * 100},${100 - values.y1 * 100} ${values.x2 * 100},${100 - values.y2 * 100} 100,0`}
-                />
-              }
-            />
-          ))}
-        </div>
-      )}
+
       {easingType === EasingType.OVERSHOOT && (
         <>
-          <div className="flex flex-wrap gap-4">
-            {Object.keys(overshootFunctions)
-              .filter(isOvershootStyle)
-              .map((style) => {
-                return (
-                  <CurveIconTextButton
-                    key={style}
-                    isActive={overshootStyle === style}
-                    onClick={() => {
-                      onOvershootValueChange(style, overshootIsCustom ? undefined : overshootCurve);
-                    }}
-                    text={humanize(style)}
-                    icon={
-                      <polyline
-                        points={overshootCalculations[style][defaultOvershootCurve].sampledPoints
-                          .map((point) => `${point.x},${point.y / 2 + 25}`)
-                          .join(' ')}
-                      />
-                    }
-                  />
-                );
-              })}
-          </div>
-          <hr
-            className="my-5 border-t border-zinc-700"
-            style={{
-              maskImage: 'linear-gradient(to right,rgba(0,0,0,1),rgba(0,0,0,0.1))',
-            }}
-          />
+          {/* Overshoot style group */}
+          <CollapsibleSection title="Style" defaultOpen={true} className="mb-3">
+            <div className="flex flex-wrap gap-4 pb-1">
+              {Object.keys(overshootFunctions)
+                .filter(isOvershootStyle)
+                .map((style) => {
+                  return (
+                    <CurveIconTextButton
+                      key={style}
+                      isActive={overshootStyle === style}
+                      onClick={() => {
+                        onOvershootValueChange(style, overshootIsCustom ? undefined : overshootCurve);
+                      }}
+                      text={humanize(style)}
+                      icon={
+                        <polyline
+                          points={overshootCalculations[style][defaultOvershootCurve].sampledPoints
+                            .map((point) => `${point.x},${point.y / 2 + 25}`)
+                            .join(' ')}
+                        />
+                      }
+                    />
+                  );
+                })}
+            </div>
+          </CollapsibleSection>
+
+          {/* Overshoot curve group */}
+          <CollapsibleSection title="Curves" defaultOpen={true}>
+            <div className="flex flex-wrap gap-4 pb-1">
+              {Object.keys(overshootFunctions[overshootStyle]).map((curve) => (
+                <CurveIconTextButton
+                  key={curve}
+                  isActive={!overshootIsCustom && overshootCurve === curve}
+                  onClick={() => onOvershootValueChange(overshootStyle, curve as OvershootCurveKey)}
+                  text={humanize(curve)}
+                  icon={
+                    <polyline
+                      points={overshootCalculations[overshootStyle][curve as OvershootCurveKey].sampledPoints
+                        .map((point) => `${point.x},${point.y / 2 + 25}`)
+                        .join(' ')}
+                    />
+                  }
+                />
+              ))}
+            </div>
+          </CollapsibleSection>
         </>
       )}
+
       {easingType === EasingType.SPRING && (
-        <div className="flex flex-wrap gap-4">
-          {Object.keys(springFunctions).map((curve) => (
-            <CurveIconTextButton
-              key={curve}
-              isActive={!springIsCustom && springCurve === curve}
-              onClick={() => onSpringValueChange(curve as SpringCurveKey)}
-              text={humanize(curve)}
-              icon={
-                <polyline
-                  points={springCalculations[curve as SpringCurveKey].sampledPoints
-                    .map((point) => `${point.x},${point.y / 2 + 50}`)
-                    .join(' ')}
-                />
-              }
-            />
-          ))}
-        </div>
+        <CollapsibleSection title="Curves" defaultOpen={true}>
+          <div className="flex flex-wrap gap-4 pb-1">
+            {Object.keys(springFunctions).map((curve) => (
+              <CurveIconTextButton
+                key={curve}
+                isActive={!springIsCustom && springCurve === curve}
+                onClick={() => onSpringValueChange(curve as SpringCurveKey)}
+                text={humanize(curve)}
+                icon={
+                  <polyline
+                    points={springCalculations[curve as SpringCurveKey].sampledPoints
+                      .map((point) => `${point.x},${point.y / 2 + 50}`)
+                      .join(' ')}
+                  />
+                }
+              />
+            ))}
+          </div>
+        </CollapsibleSection>
       )}
+
       {easingType === EasingType.BOUNCE && (
-        <div className="flex flex-wrap gap-4">
-          {Object.keys(bounceFunctions).map((curve) => (
-            <CurveIconTextButton
-              key={curve}
-              isActive={!bounceIsCustom && bounceCurve === curve}
-              onClick={() => onBounceValueChange(curve as BounceCurveKey)}
-              text={humanize(curve)}
-              icon={
-                <polyline
-                  points={bounceCalculations[curve as BounceCurveKey].sampledPoints
-                    .map((point) => `${point.x},${100 - point.y}`)
-                    .join(' ')}
-                />
-              }
-            />
-          ))}
-        </div>
+        <CollapsibleSection title="Curves" defaultOpen={true}>
+          <div className="flex flex-wrap gap-4 pb-1">
+            {Object.keys(bounceFunctions).map((curve) => (
+              <CurveIconTextButton
+                key={curve}
+                isActive={!bounceIsCustom && bounceCurve === curve}
+                onClick={() => onBounceValueChange(curve as BounceCurveKey)}
+                text={humanize(curve)}
+                icon={
+                  <polyline
+                    points={bounceCalculations[curve as BounceCurveKey].sampledPoints
+                      .map((point) => `${point.x},${100 - point.y}`)
+                      .join(' ')}
+                  />
+                }
+              />
+            ))}
+          </div>
+        </CollapsibleSection>
       )}
+
       {easingType === EasingType.WIGGLE && (
-        <div className="flex flex-wrap gap-4">
-          {Object.keys(wiggleFunctions).map((curve) => (
-            <CurveIconTextButton
-              key={curve}
-              isActive={!wiggleIsCustom && wiggleCurve === curve}
-              onClick={() => onWiggleValueChange(curve as WiggleCurveKey)}
-              text={humanize(curve)}
-              icon={
-                <polyline
-                  points={wiggleCalculations[curve as WiggleCurveKey].sampledPoints
-                    .map((point) => `${point.x},${point.y / 2}`)
-                    .join(' ')}
-                />
-              }
-            />
-          ))}
-        </div>
+        <CollapsibleSection title="Curves" defaultOpen={true}>
+          <div className="flex flex-wrap gap-4 pb-1">
+            {Object.keys(wiggleFunctions).map((curve) => (
+              <CurveIconTextButton
+                key={curve}
+                isActive={!wiggleIsCustom && wiggleCurve === curve}
+                onClick={() => onWiggleValueChange(curve as WiggleCurveKey)}
+                text={humanize(curve)}
+                icon={
+                  <polyline
+                    points={wiggleCalculations[curve as WiggleCurveKey].sampledPoints
+                      .map((point) => `${point.x},${point.y / 2}`)
+                      .join(' ')}
+                  />
+                }
+              />
+            ))}
+          </div>
+        </CollapsibleSection>
       )}
-      {easingType === EasingType.OVERSHOOT && (
-        <div className="flex flex-wrap gap-4">
-          {Object.keys(overshootFunctions[overshootStyle]).map((curve) => (
-            <CurveIconTextButton
-              key={curve}
-              isActive={!overshootIsCustom && overshootCurve === curve}
-              onClick={() => onOvershootValueChange(overshootStyle, curve as OvershootCurveKey)}
-              text={humanize(curve)}
-              icon={
-                <polyline
-                  points={overshootCalculations[overshootStyle][curve as OvershootCurveKey].sampledPoints
-                    .map((point) => `${point.x},${point.y / 2 + 25}`)
-                    .join(' ')}
-                />
-              }
-            />
-          ))}
-        </div>
-      )}
-    </>
+    </CollapsibleSection>
   );
 }
