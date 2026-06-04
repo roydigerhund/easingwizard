@@ -4,7 +4,7 @@ A comprehensive toolkit for creating and using CSS easing curves. Generate Bézi
 
 🌐 **Website**: [easingwizard.com](https://easingwizard.com)  
 🛠️ **API**: [api.easingwizard.com](https://api.easingwizard.com)  
-📦 **MCP Server**: [@easingwizard/mcp-server](https://www.npmjs.com/package/@easingwizard/mcp-server)
+📦 **MCP Server**: [@easingwizard/mcp-server](https://www.npmjs.com/package/@easingwizard/mcp-server)  
 🤖 **Claude Plugin**: [easingwizard-claude-plugin](https://github.com/roydigerhund/easingwizard-claude-plugin)
 
 ## What is Easing Wizard?
