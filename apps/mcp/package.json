@@ -1,6 +1,6 @@
 {
   "name": "@easingwizard/mcp-server",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "description": "Model Context Protocol (MCP) server for the Easing Wizard API - enables generation of various CSS easing curves: Bézier, Spring, Bounce, Wiggle, and Overshoot",
   "type": "module",
   "main": "./dist/index.js",
