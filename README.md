@@ -54,11 +54,21 @@ pnpm dev:api       # API server on http://localhost:3000
 
 ### For Claude Code
 
-Install the Easing Wizard plugin directly:
+The plugin is published in the `claude-community` marketplace. In Claude Code:
+
+```
+/plugin marketplace add anthropics/claude-plugins-community
+/plugin install easing-wizard@claude-community
+```
+
+Or from your terminal:
 
 ```bash
-claude plugin add easingwizard/easingwizard-claude-plugin
+claude plugin marketplace add anthropics/claude-plugins-community
+claude plugin install easing-wizard@claude-community
 ```
+
+Then run `/reload-plugins` (or restart Claude Code) to activate it.
 
 This gives you 7 MCP tools, 4 skills, and an animation expert agent:
 

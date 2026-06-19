@@ -2,6 +2,24 @@
 
 Easing Wizard helps developers replace generic CSS easing defaults with professional motion design curves. It provides 7 MCP tools for generating Bezier, Spring, Bounce, Wiggle, and Overshoot curves with 68 presets covering common UI patterns. Output includes CSS (cubic-bezier/linear()), Tailwind classes, and interactive preview links. Three skills let you describe an animation feel and get a curve recommendation, scan files to upgrade default easings, or audit your entire project for animation improvements. An animation expert agent provides motion design advice grounded in perceptual psychology.
 
+## Installation
+
+The plugin is published in the `claude-community` marketplace. In Claude Code:
+
+```
+/plugin marketplace add anthropics/claude-plugins-community
+/plugin install easing-wizard@claude-community
+```
+
+Or from your terminal:
+
+```bash
+claude plugin marketplace add anthropics/claude-plugins-community
+claude plugin install easing-wizard@claude-community
+```
+
+Then run `/reload-plugins` (or restart Claude Code) to activate it.
+
 ## Use Cases
 
 1. **Describe the feel, get the curve.** A developer types `/easingwizard:recommend-curve snappy dropdown menu` and receives a Spring SNAP preset recommendation with ready-to-paste CSS, a Tailwind utility class, and a visual preview link — no manual curve tweaking needed.
