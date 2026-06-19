@@ -12,6 +12,7 @@ import EasingTypeSelection from '~/components/EasingTypeSelection';
 import EasterEggNotification from '~/components/EasterEggNotification';
 import Footer from '~/components/Footer';
 import Header from '~/components/Header';
+import Integrations from '~/components/Integrations';
 import OvershootEditor from '~/components/OvershootEditor';
 import Share from '~/components/Share';
 import SpringEditor from '~/components/SpringEditor';
@@ -123,6 +124,9 @@ export default function Index() {
         </Card>
         <Card className="col-span-6 px-6 py-5 [--animation-delay:0.5s] lg:col-span-2">
           <Share />
+        </Card>
+        <Card className="col-span-6 px-6 py-5 [--animation-delay:0.5s]">
+          <Integrations />
         </Card>
       </div>
       <Footer />

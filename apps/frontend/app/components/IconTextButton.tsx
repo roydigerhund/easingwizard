@@ -9,31 +9,44 @@ export type IconTextButtonProps = {
   isActive?: boolean;
   isStaticButton?: boolean;
   toast?: string;
-  onClick: () => void;
+  onClick?: () => void;
+  href?: string;
+  target?: React.HTMLAttributeAnchorTarget;
+  rel?: string;
 };
 
-export default function IconTextButton({ className, isActive, isStaticButton, text, icon, toast, onClick }: IconTextButtonProps) {
+export default function IconTextButton({
+  className,
+  isActive,
+  isStaticButton,
+  text,
+  icon,
+  toast,
+  onClick,
+  href,
+  target,
+  rel,
+}: IconTextButtonProps) {
   const [showToast, setShowToast] = useState(false);
 
   const handleClick = () => {
-    onClick();
+    onClick?.();
     setShowToast(true);
     setTimeout(() => setShowToast(false), 1000);
   };
 
-  return (
-    <button
-      className={classNames(
-        'group relative z-0 flex items-center gap-2 px-4 py-2.5 select-none',
-        isActive || isStaticButton ? 'text-zinc-100' : 'text-zinc-500 hover:text-zinc-400',
-        'transition-all duration-300 ease-out-sine will-change-transform',
-        'rounded-xl focus:outline-hidden outline-hidden',
-        'shadow-element_inactive hover:shadow-element_focused focus:shadow-element_focused active:shadow-element_pressed',
-        '[--shadow-retract:-0.6rem]',
-        className,
-      )}
-      onClick={handleClick}
-    >
+  const sharedClassName = classNames(
+    'group relative z-0 flex items-center gap-2 px-4 py-2.5 select-none',
+    isActive || isStaticButton ? 'text-zinc-100' : 'text-zinc-500 hover:text-zinc-400',
+    'transition-all duration-300 ease-out-sine will-change-transform',
+    'rounded-xl focus:outline-hidden outline-hidden',
+    'shadow-element_inactive hover:shadow-element_focused focus:shadow-element_focused active:shadow-element_pressed',
+    '[--shadow-retract:-0.6rem]',
+    className,
+  );
+
+  const inner = (
+    <>
       <span
         className={classNames(
           'absolute inset-0 rounded-xl',
@@ -48,6 +61,20 @@ export default function IconTextButton({ className, isActive, isStaticButton, te
       {icon}
       <span className={classNames('text-xs uppercase tracking-widest whitespace-nowrap')}>{text}</span>
       {toast && <Tooltip visible={showToast}>{toast}</Tooltip>}
+    </>
+  );
+
+  if (href) {
+    return (
+      <a className={sharedClassName} href={href} target={target} rel={rel} onClick={handleClick}>
+        {inner}
+      </a>
+    );
+  }
+
+  return (
+    <button className={sharedClassName} onClick={handleClick}>
+      {inner}
     </button>
   );
 }
