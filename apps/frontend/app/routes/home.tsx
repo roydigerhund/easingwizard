@@ -9,14 +9,13 @@ import EasingCode from '~/components/EasingCode';
 import EasingPreview from '~/components/EasingPreview';
 import EasingSelection from '~/components/EasingSelection';
 import EasingTypeSelection from '~/components/EasingTypeSelection';
+import EasterEggNotification from '~/components/EasterEggNotification';
 import Footer from '~/components/Footer';
 import Header from '~/components/Header';
-import EasterEggNotification from '~/components/EasterEggNotification';
-import Toast from '~/components/Toast';
 import OvershootEditor from '~/components/OvershootEditor';
 import Share from '~/components/Share';
-import ShootingStars from '~/components/ShootingStars';
 import SpringEditor from '~/components/SpringEditor';
+import Toast from '~/components/Toast';
 import WiggleEditor from '~/components/WiggleEditor';
 import { classNames } from '~/css/class-names';
 import { LOCALSTORAGE_KEY, useEasingStore } from '~/state/easing-store';
@@ -93,7 +92,8 @@ export default function Index() {
         showUI ? 'opacity-100' : 'no-transition opacity-0',
       )}
     >
-      <ShootingStars />
+      {/* Had to disable shooting stars for performance reasons */}
+      {/* <ShootingStars /> */}
       <Header />
       <EasingTypeSelection />
       <div
