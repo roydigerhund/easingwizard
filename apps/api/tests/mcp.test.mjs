@@ -14,7 +14,14 @@ const modernVersion = '2026-07-28';
 const legacyVersion = '2025-11-25';
 const clientInfo = { name: 'easingwizard-api-test', version: '1.0.0' };
 const accept = 'application/json, text/event-stream';
+const publicUrl = 'https://api.easingwizard.com/mcp';
+const foreignOrigin = 'https://ai.example';
 let nextId = 1;
+
+function assertCors(response, origin) {
+  assert.equal(response.headers.get('Access-Control-Allow-Origin'), origin);
+  assert.equal(response.headers.get('Access-Control-Allow-Credentials'), null);
+}
 
 function legacyMessage(method, params = {}) {
   return { jsonrpc: '2.0', id: nextId++, method, params };
@@ -143,17 +150,173 @@ test('modern requests reject missing envelopes and mismatched method/name header
   }
 });
 
-test('allowed browser origins receive CORS headers, including configured origins', async () => {
+test('private destinations retain their configured origin allowlist without credentials', async () => {
   for (const origin of ['https://easingwizard.com', 'https://api.easingwizard.com', 'https://studio.example']) {
     const response = await postModern(modernMessage('tools/list'), { headers: { Origin: origin } });
     assert.equal(response.status, 200, origin);
-    assert.equal(response.headers.get('Access-Control-Allow-Origin'), origin);
+    assertCors(response, origin);
     assert.match(response.headers.get('Access-Control-Expose-Headers'), /MCP-Protocol-Version/i);
     await rpc(response);
   }
 });
 
-test('unknown origins and localhost in production are rejected before MCP processing', async () => {
+test('public API and preview destinations accept arbitrary web origins, opaque origins, and native clients', async () => {
+  for (const url of [publicUrl, 'https://easingwizard-preview.vercel.app/mcp']) {
+    for (const origin of [foreignOrigin, 'https://studio.example', 'http://localhost:5173', 'null', undefined]) {
+      const response = await postModern(modernMessage('tools/list'), {
+        url,
+        headers: origin === undefined ? {} : { Origin: origin },
+      });
+      assert.equal(response.status, 200, `${url} from ${origin}`);
+      assertCors(response, '*');
+      assert.equal((await rpc(response)).result.tools.length, 7);
+    }
+  }
+});
+
+test('foreign browsers can discover and call modern MCP and complete the legacy handshake', async () => {
+  const options = { url: publicUrl, headers: { Origin: foreignOrigin } };
+  const discovery = await postModern(modernMessage('server/discover'), options);
+  assert.equal(discovery.status, 200);
+  assertCors(discovery, '*');
+  assert.ok((await rpc(discovery)).result.supportedVersions.includes(modernVersion));
+  const modernCall = await postModern(modernMessage('tools/call', curveCall), options);
+  assert.equal(modernCall.status, 200);
+  assertCors(modernCall, '*');
+  assertCurveResult(await rpc(modernCall));
+
+  const initialized = await post(
+    legacyMessage('initialize', { protocolVersion: legacyVersion, clientInfo, capabilities: {} }),
+    options,
+  );
+  assert.equal(initialized.status, 200);
+  assertCors(initialized, '*');
+  assert.equal((await rpc(initialized)).result.protocolVersion, legacyVersion);
+  const notification = await post({ jsonrpc: '2.0', method: 'notifications/initialized' }, options);
+  assert.equal(notification.status, 202);
+  assertCors(notification, '*');
+  const legacyCall = await post(legacyMessage('tools/call', curveCall), {
+    ...options,
+    headers: { ...options.headers, 'MCP-Protocol-Version': legacyVersion },
+  });
+  assert.equal(legacyCall.status, 200);
+  assertCors(legacyCall, '*');
+  assertCurveResult(await rpc(legacyCall));
+});
+
+test('public preflights allow standard MCP headers and let browsers read unsupported-method responses', async () => {
+  const requestHeaders = [
+    'content-type',
+    'accept',
+    'authorization',
+    'mcp-protocol-version',
+    'mcp-method',
+    'mcp-name',
+    'mcp-session-id',
+    'last-event-id',
+  ];
+  for (const origin of [foreignOrigin, 'null']) {
+    for (const method of ['POST', 'GET', 'DELETE']) {
+      const response = await app.request(publicUrl, {
+        method: 'OPTIONS',
+        headers: {
+          Origin: origin,
+          'Access-Control-Request-Method': method,
+          'Access-Control-Request-Headers': requestHeaders.join(','),
+        },
+      });
+      assert.equal(response.status, 204);
+      assertCors(response, '*');
+      const methods = response.headers.get('Access-Control-Allow-Methods').split(/\s*,\s*/);
+      for (const name of ['GET', 'POST', 'DELETE', 'OPTIONS']) assert.ok(methods.includes(name), name);
+      const allowed = response.headers
+        .get('Access-Control-Allow-Headers')
+        .toLowerCase()
+        .split(/\s*,\s*/);
+      for (const name of requestHeaders) assert.ok(allowed.includes(name), name);
+      assert.ok(!allowed.includes('*'), 'request headers remain explicit');
+    }
+  }
+  for (const method of ['GET', 'DELETE']) {
+    const response = await app.request(publicUrl, {
+      method,
+      headers: { Origin: foreignOrigin, Accept: accept, 'MCP-Protocol-Version': legacyVersion },
+    });
+    assert.equal(response.status, 405);
+    assertCors(response, '*');
+    const exposed = response.headers
+      .get('Access-Control-Expose-Headers')
+      .toLowerCase()
+      .split(/\s*,\s*/);
+    for (const name of ['mcp-protocol-version', 'mcp-session-id', 'retry-after', 'allow']) {
+      assert.ok(exposed.includes(name), name);
+    }
+    assert.ok((await rpc(response)).error);
+  }
+});
+
+test('public destinations reject malformed or non-web origins before CORS and MCP processing', async () => {
+  for (const origin of [
+    '',
+    'not-an-origin',
+    'file://',
+    'ftp://example.com',
+    'https://example.com/',
+    'https://example.com/path',
+    'https://user@example.com',
+    'https://example.com:443',
+    'https://EXAMPLE.com',
+    'https://one.example https://two.example',
+  ]) {
+    for (const method of ['POST', 'OPTIONS']) {
+      const response = await app.request(publicUrl, {
+        method,
+        headers: { Origin: origin, 'Content-Type': 'application/json' },
+        ...(method === 'POST' ? { body: JSON.stringify(legacyMessage('tools/list')) } : {}),
+      });
+      assert.equal(response.status, 403, `${method} from ${JSON.stringify(origin)}`);
+      assertCors(response, null);
+      assert.match((await response.json()).error, /Origin/);
+    }
+  }
+});
+
+test('public CORS cannot be enabled by mixing private URL and public Host, or vice versa', async () => {
+  for (const host of ['localhost:3000', '127.0.0.1:3000', '[::1]:3000', 'proxy.example', 'custom.example']) {
+    for (const [url, hostHeader] of [
+      [`http://${host}/mcp`, host],
+      [`http://${host}/mcp`, 'api.easingwizard.com'],
+      [publicUrl, host],
+    ]) {
+      const response = await postModern(modernMessage('tools/list'), {
+        url,
+        headers: { Host: hostHeader, Origin: foreignOrigin },
+      });
+      assert.equal(response.status, 403, `${url} with Host ${hostHeader}`);
+      assertCors(response, null);
+      assert.match((await response.json()).error, /Origin/);
+    }
+  }
+});
+
+test('public protocol and body-limit errors remain readable without credentials', async () => {
+  for (const [body, contentType, status] of [
+    ['{', 'application/json', 400],
+    [JSON.stringify(legacyMessage('tools/list')), 'text/plain', 415],
+    [JSON.stringify(legacyMessage('tools/list', { padding: 'x'.repeat(64 * 1024) })), 'application/json', 413],
+  ]) {
+    const response = await app.request(publicUrl, {
+      method: 'POST',
+      headers: { Origin: foreignOrigin, Accept: accept, 'Content-Type': contentType },
+      body,
+    });
+    assert.equal(response.status, status);
+    assertCors(response, '*');
+    assert.ok((await rpc(response)).error);
+  }
+});
+
+test('private destinations reject unknown origins and local browser origins in production', async () => {
   for (const origin of ['https://attacker.example', 'null', 'http://localhost:3000']) {
     const response = await postModern(modernMessage('tools/list'), { headers: { Origin: origin } });
     assert.equal(response.status, 403, origin);
@@ -162,7 +325,7 @@ test('unknown origins and localhost in production are rejected before MCP proces
   }
 });
 
-test('browser preflight allows MCP request headers only for approved origins', async () => {
+test('private destination preflights allow MCP request headers only for approved origins', async () => {
   const response = await app.request('/mcp', {
     method: 'OPTIONS',
     headers: {
@@ -285,7 +448,7 @@ test('unapproved request URLs remain blocked even with an allowed Host header', 
   for (const url of ['https://attacker.example/mcp', 'http://api.easingwizard.com.attacker.example/mcp']) {
     const response = await postModern(modernMessage('tools/list'), {
       url,
-      headers: { Host: 'api.easingwizard.com' },
+      headers: { Host: 'api.easingwizard.com', Origin: foreignOrigin },
     });
     assert.equal(response.status, 403, url);
     assert.match((await response.json()).error, /Host/);
@@ -307,60 +470,84 @@ test('malformed or unapproved Host headers cannot bypass the hostname allowlist'
   ]) {
     const response = await postModern(modernMessage('tools/list'), {
       url: 'https://api.easingwizard.com/mcp',
-      headers: { Host: host },
+      headers: { Host: host, Origin: foreignOrigin },
     });
     assert.equal(response.status, 403, host);
+    assertCors(response, null);
     assert.match((await response.json()).error, /Host/);
   }
 });
 
-test('the per-instance request budget returns 429 with CORS and recovers after the window', async (t) => {
-  let now = 1_800_000_000_000;
-  t.mock.method(Date, 'now', () => now);
-  process.env.MCP_REQUESTS_PER_MINUTE = '2';
-  let limitedApp;
-  let otherApp;
-  try {
-    limitedApp = createApp();
-    otherApp = createApp();
-  } finally {
-    process.env.MCP_REQUESTS_PER_MINUTE = '600';
-  }
-  const options = { target: limitedApp, headers: { Origin: 'https://easingwizard.com' } };
-  const blockedOrigin = await postModern(modernMessage('tools/list'), {
-    target: limitedApp,
-    headers: { Origin: 'https://attacker.example' },
+for (const { label, url, origin, expectedOrigin, blockedOrigin } of [
+  {
+    label: 'private',
+    url: '/mcp',
+    origin: 'https://easingwizard.com',
+    expectedOrigin: 'https://easingwizard.com',
+    blockedOrigin: foreignOrigin,
+  },
+  {
+    label: 'public',
+    url: publicUrl,
+    origin: foreignOrigin,
+    expectedOrigin: '*',
+    blockedOrigin: 'https://example.com/path',
+  },
+]) {
+  test(`${label} request budget excludes rejected origins and preflights, exposes 429, and recovers`, async (t) => {
+    let now = 1_800_000_000_000;
+    t.mock.method(Date, 'now', () => now);
+    process.env.MCP_REQUESTS_PER_MINUTE = '2';
+    let limitedApp;
+    let otherApp;
+    try {
+      limitedApp = createApp();
+      otherApp = createApp();
+    } finally {
+      process.env.MCP_REQUESTS_PER_MINUTE = '600';
+    }
+    const options = { target: limitedApp, url, headers: { Origin: origin } };
+    const rejectedOrigin = await postModern(modernMessage('tools/list'), {
+      target: limitedApp,
+      url,
+      headers: { Origin: blockedOrigin },
+    });
+    assert.equal(rejectedOrigin.status, 403);
+    assertCors(rejectedOrigin, null);
+    const preflight = await limitedApp.request(url, {
+      method: 'OPTIONS',
+      headers: { Origin: origin, 'Access-Control-Request-Method': 'POST' },
+    });
+    assert.equal(preflight.status, 204);
+    assertCors(preflight, expectedOrigin);
+    for (let i = 0; i < 2; i++) {
+      const accepted = await postModern(modernMessage('tools/list'), options);
+      assert.equal(accepted.status, 200);
+      assertCors(accepted, expectedOrigin);
+      await rpc(accepted);
+    }
+    const rejected = await postModern(modernMessage('tools/list'), options);
+    assert.equal(rejected.status, 429);
+    assert.equal(rejected.headers.get('Retry-After'), '60');
+    assertCors(rejected, expectedOrigin);
+    assert.match(rejected.headers.get('Access-Control-Expose-Headers'), /Retry-After/i);
+    assert.match((await rejected.json()).error, /limit/);
+    now += 59_001;
+    const almostReset = await postModern(modernMessage('tools/list'), options);
+    assert.equal(almostReset.status, 429);
+    assert.equal(almostReset.headers.get('Retry-After'), '1');
+    assertCors(almostReset, expectedOrigin);
+    const independent = await postModern(modernMessage('tools/list'), { ...options, target: otherApp });
+    assert.equal(independent.status, 200);
+    await rpc(independent);
+    now += 999;
+    const recovered = await postModern(modernMessage('tools/list'), options);
+    assert.equal(recovered.status, 200);
+    assert.equal(recovered.headers.get('Retry-After'), null);
+    assertCors(recovered, expectedOrigin);
+    await rpc(recovered);
   });
-  assert.equal(blockedOrigin.status, 403);
-  const preflight = await limitedApp.request('/mcp', {
-    method: 'OPTIONS',
-    headers: { Origin: 'https://easingwizard.com', 'Access-Control-Request-Method': 'POST' },
-  });
-  assert.equal(preflight.status, 204);
-  for (let i = 0; i < 2; i++) {
-    const accepted = await postModern(modernMessage('tools/list'), options);
-    assert.equal(accepted.status, 200);
-    await rpc(accepted);
-  }
-  const rejected = await postModern(modernMessage('tools/list'), options);
-  assert.equal(rejected.status, 429);
-  assert.equal(rejected.headers.get('Retry-After'), '60');
-  assert.equal(rejected.headers.get('Access-Control-Allow-Origin'), 'https://easingwizard.com');
-  assert.match(rejected.headers.get('Access-Control-Expose-Headers'), /Retry-After/i);
-  assert.match((await rejected.json()).error, /limit/);
-  now += 59_001;
-  const almostReset = await postModern(modernMessage('tools/list'), options);
-  assert.equal(almostReset.status, 429);
-  assert.equal(almostReset.headers.get('Retry-After'), '1');
-  const independent = await postModern(modernMessage('tools/list'), { target: otherApp });
-  assert.equal(independent.status, 200);
-  await rpc(independent);
-  now += 999;
-  const recovered = await postModern(modernMessage('tools/list'), options);
-  assert.equal(recovered.status, 200);
-  assert.equal(recovered.headers.get('Retry-After'), null);
-  await rpc(recovered);
-});
+}
 
 test('invalid request-limit configuration fails at application creation', () => {
   try {

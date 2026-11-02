@@ -1,6 +1,7 @@
 import { Scalar } from '@scalar/hono-api-reference';
 import { API_VERSION } from 'easingwizard-core';
 import { Hono } from 'hono';
+import { cors } from 'hono/cors';
 
 import curves from './routes/curves';
 import healthz from './routes/healthz';
@@ -11,6 +12,19 @@ import presets from './routes/presets';
 export function createApp() {
   const app = new Hono();
   registerMcpRoutes(app);
+
+  // Public, credential-free REST calculations and their discovery document.
+  // Keep this separate from MCP's public/loopback Origin and Host policy.
+  const restCors = cors({
+    origin: '*',
+    allowMethods: ['GET', 'HEAD', 'POST', 'OPTIONS'],
+    allowHeaders: ['Content-Type', 'Accept', 'Authorization'],
+    exposeHeaders: ['Retry-After'],
+    maxAge: 3600,
+  });
+  app.use(`${API_VERSION}/*`, restCors);
+  app.use('/healthz', restCors);
+  app.use('/openapi', restCors);
 
   app.get('/', (c) => {
     return c.redirect(`/docs`, 301);

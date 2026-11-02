@@ -118,19 +118,71 @@ test('the OpenAPI document remains deterministic between requests', async () => 
   assert.deepEqual(await requestJson('/openapi'), document);
 });
 
-test('REST browser access from foreign origins remains disabled', async () => {
-  const headers = { Origin: 'https://example.com' };
-  const response = await app.request(apiPath('/presets'), { headers });
-  assert.equal(response.status, 200);
-  assert.equal(response.headers.get('Access-Control-Allow-Origin'), null);
-  const preflight = await app.request(apiPath('/curves/bezier'), {
-    method: 'OPTIONS',
-    headers: {
-      ...headers,
-      'Access-Control-Request-Method': 'POST',
-      'Access-Control-Request-Headers': 'content-type',
-    },
-  });
-  assert.equal(preflight.status, 404);
-  assert.equal(preflight.headers.get('Access-Control-Allow-Origin'), null);
+function assertPublicCors(response) {
+  assert.equal(response.headers.get('Access-Control-Allow-Origin'), '*');
+  assert.equal(response.headers.get('Access-Control-Allow-Credentials'), null);
+}
+
+test('foreign browsers can read REST presets, health, and OpenAPI without credentials', async () => {
+  for (const origin of ['https://ai.example', 'http://localhost:5173', 'null']) {
+    for (const path of [apiPath('/presets'), '/healthz', apiPath('/healthz'), '/openapi']) {
+      const response = await app.request(new URL(path, server).href, { headers: { Origin: origin } });
+      assert.equal(response.status, 200, `${path} from ${origin}`);
+      assertPublicCors(response);
+      assert.match(response.headers.get('Access-Control-Expose-Headers'), /Retry-After/i);
+      const body = await response.json();
+      if (path.endsWith('/healthz')) assert.equal(body.status, 'ok');
+      else if (path.endsWith('/openapi')) assert.equal(body.openapi, '3.1.0');
+      else assert.equal(body.presets.length, 68);
+    }
+  }
+});
+
+test('REST preflights permit public GET, HEAD, and POST with explicit request headers', async () => {
+  for (const [method, path] of [
+    ['POST', apiPath('/curves/bezier')],
+    ['GET', apiPath('/presets')],
+    ['HEAD', '/openapi'],
+  ]) {
+    const preflight = await app.request(new URL(path, server).href, {
+      method: 'OPTIONS',
+      headers: {
+        Origin: 'https://ai.example',
+        'Access-Control-Request-Method': method,
+        'Access-Control-Request-Headers': 'content-type,accept,authorization',
+      },
+    });
+    assert.equal(preflight.status, 204);
+    assertPublicCors(preflight);
+    const methods = preflight.headers.get('Access-Control-Allow-Methods').split(/\s*,\s*/);
+    for (const allowed of ['GET', 'HEAD', 'POST', 'OPTIONS']) assert.ok(methods.includes(allowed), allowed);
+    const headers = preflight.headers
+      .get('Access-Control-Allow-Headers')
+      .toLowerCase()
+      .split(/\s*,\s*/);
+    for (const allowed of ['content-type', 'accept', 'authorization']) assert.ok(headers.includes(allowed), allowed);
+    assert.ok(!headers.includes('*'));
+  }
+});
+
+test('foreign browsers can create curves, follow their self links, and read validation errors', async () => {
+  const operation = document.paths['/curves/bezier'].post;
+  const request = operation.requestBody.content['application/json'].example;
+  const headers = { Origin: 'https://ai.example', 'Content-Type': 'application/json' };
+  const path = new URL(apiPath('/curves/bezier'), server).href;
+  const created = await app.request(path, { method: 'POST', headers, body: JSON.stringify(request) });
+  assert.equal(created.status, 200);
+  assertPublicCors(created);
+  const curve = await created.json();
+  assert.deepEqual(withoutTimestamp(curve), withoutTimestamp(responseMedia(operation).example));
+  const restored = await app.request(new URL(curve.links.self, server).href, { headers: { Origin: headers.Origin } });
+  assert.equal(restored.status, 200);
+  assertPublicCors(restored);
+  assert.deepEqual((await restored.json()).output, curve.output);
+  for (const body of ['{', JSON.stringify({ ...request, x1: 'invalid' })]) {
+    const invalid = await app.request(path, { method: 'POST', headers, body });
+    assert.equal(invalid.status, 400);
+    assertPublicCors(invalid);
+    assert.ok(Array.isArray((await invalid.json()).errors));
+  }
 });

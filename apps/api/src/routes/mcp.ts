@@ -4,12 +4,27 @@ import { cors } from 'hono/cors';
 
 const defaultOrigins = ['https://easingwizard.com', 'https://api.easingwizard.com'];
 
+function isPublicBrowserOrigin(origin: string) {
+  // Sandboxed webviews serialize their origin as "null". They may use this
+  // public calculator too; it has no credentials, user data, or write actions.
+  if (origin === 'null') return true;
+  try {
+    const url = new URL(origin);
+    return (url.protocol === 'https:' || url.protocol === 'http:') && url.origin === origin;
+  } catch {
+    return false;
+  }
+}
+
 export function registerMcpRoutes(app: Hono) {
   const localHosts = ['localhost', '127.0.0.1', '[::1]'];
-  const allowedHosts = new Set([
+  const publicHosts = new Set([
     'api.easingwizard.com',
+    ...(process.env.VERCEL_URL ? [process.env.VERCEL_URL.toLowerCase()] : []),
+  ]);
+  const allowedHosts = new Set([
+    ...publicHosts,
     ...localHosts,
-    ...(process.env.VERCEL_URL ? [process.env.VERCEL_URL] : []),
     ...(process.env.MCP_ALLOWED_HOSTS ?? '')
       .split(',')
       .map((host) => host.trim().toLowerCase())
@@ -25,6 +40,25 @@ export function registerMcpRoutes(app: Hono) {
       .map((origin) => origin.trim())
       .filter(Boolean),
   ]);
+  const corsOptions = {
+    // Stateless GET/DELETE return 405. Let browser clients read that response
+    // instead of turning an optional stream/session probe into a CORS error.
+    allowMethods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+    allowHeaders: [
+      'Content-Type',
+      'Accept',
+      'Authorization',
+      'MCP-Protocol-Version',
+      'Mcp-Method',
+      'Mcp-Name',
+      'Mcp-Session-Id',
+      'Last-Event-ID',
+    ],
+    exposeHeaders: ['MCP-Protocol-Version', 'Mcp-Session-Id', 'Retry-After', 'Allow'],
+    maxAge: 3600,
+  };
+  const publicCors = cors({ ...corsOptions, origin: '*' });
+  const restrictedCors = cors({ ...corsOptions, origin: (origin) => (allowedOrigins.has(origin) ? origin : '') });
   const handler = createEasingWizardMcpHandler();
   const requestLimit = Number(process.env.MCP_REQUESTS_PER_MINUTE ?? 600);
   if (!Number.isSafeInteger(requestLimit) || requestLimit < 1) {
@@ -36,11 +70,12 @@ export function registerMcpRoutes(app: Hono) {
   let windowStart = Date.now();
   let requests = 0;
 
-  // Native MCP clients omit Origin. Browser origins must be explicitly allowed;
-  // a public, read-only calculator does not require accounts or bearer tokens.
+  // Open browser access only on the public deployment. Local/custom hosts keep
+  // their explicit Origin policy; Host validation also prevents DNS rebinding.
   app.use('/mcp', async (c, next) => {
     const url = new URL(c.req.url);
     const hostHeader = c.req.header('Host');
+    let isPublicEndpoint = publicHosts.has(url.hostname.toLowerCase());
     if (!allowedHosts.has(url.hostname.toLowerCase())) {
       return c.json({ error: 'Host is not allowed' }, 403);
     }
@@ -57,26 +92,17 @@ export function registerMcpRoutes(app: Hono) {
         ) {
           return c.json({ error: 'Host is not allowed' }, 403);
         }
+        isPublicEndpoint &&= publicHosts.has(host.hostname.toLowerCase());
       } catch {
         return c.json({ error: 'Host is not allowed' }, 403);
       }
     }
     const origin = c.req.header('Origin');
-    if (origin && !allowedOrigins.has(origin)) {
+    if (origin !== undefined && !(isPublicEndpoint ? isPublicBrowserOrigin(origin) : allowedOrigins.has(origin))) {
       return c.json({ error: 'Origin is not allowed' }, 403);
     }
-    await next();
+    return (isPublicEndpoint ? publicCors : restrictedCors)(c, next);
   });
-  app.use(
-    '/mcp',
-    cors({
-      origin: (origin) => (allowedOrigins.has(origin) ? origin : ''),
-      allowMethods: ['POST', 'OPTIONS'],
-      allowHeaders: ['Content-Type', 'Accept', 'MCP-Protocol-Version', 'Mcp-Method', 'Mcp-Name'],
-      exposeHeaders: ['MCP-Protocol-Version', 'Retry-After'],
-      maxAge: 3600,
-    }),
-  );
   app.use('/mcp', async (c, next) => {
     if (c.req.method === 'POST') {
       const now = Date.now();
