@@ -1,3 +1,3 @@
-import { handle } from '@hono/node-server/vercel';
-const { default: app } = await import('../dist/index.js');
-export default handle(app);
+import { getRequestListener } from '@hono/node-server';
+import app from '../dist/app.js';
+export default getRequestListener(app.fetch);

@@ -8,6 +8,9 @@ export const description =
 // Integrations & external resources
 export const apiUrl = 'https://api.easingwizard.com';
 export const apiDocsUrl = apiUrl + '/docs';
+export const mcpUrl = apiUrl + '/mcp';
 export const mcpNpmUrl = 'https://www.npmjs.com/package/@easingwizard/mcp-server';
 export const pluginUrl = 'https://github.com/roydigerhund/easingwizard-claude-plugin';
 export const githubUrl = 'https://github.com/roydigerhund/easingwizard';
+export const codexPluginUrl = githubUrl + '/tree/main/apps/codex-plugin#install-from-this-repository';
+export const mcpLocalSetupUrl = githubUrl + '/tree/main/apps/mcp#connect-over-stdio';

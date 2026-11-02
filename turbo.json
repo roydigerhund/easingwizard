@@ -5,7 +5,19 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "build/**", ".vercel/**"],
-      "inputs": ["api/**", "public/**", "app/**", "src/**", "*.ts", "*.tsx", "*.js", "*.jsx", "package.json"],
+      "inputs": [
+        "api/**",
+        "public/**",
+        "app/**",
+        "src/**",
+        "*.ts",
+        "*.tsx",
+        "*.js",
+        "*.jsx",
+        "package.json",
+        "tsconfig.json",
+        "scripts/**"
+      ],
       "env": ["NODEJS_HELPERS", "API_URL", "VITE_FRONTEND_URL"]
     },
     "dev": {
@@ -14,7 +26,8 @@
     },
     "typecheck": {
       "outputs": [],
-      "inputs": ["src/**", "app/**", "*.ts", "*.tsx", "tsconfig.json", "package.json"]
+      "inputs": ["src/**", "app/**", "*.ts", "*.tsx", "tsconfig.json", "package.json"],
+      "dependsOn": ["^build"]
     },
     "clean": {
       "cache": false,
@@ -23,6 +36,11 @@
     "generate": {
       "outputs": ["src/generated/**"],
       "inputs": ["scripts/**", "src/**", "package.json"]
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "outputs": [],
+      "inputs": ["src/**", "tests/**", "scripts/**", "package.json", "tsconfig.json"]
     }
   }
 }

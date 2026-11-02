@@ -1,5 +1,7 @@
+import { Link } from 'react-router';
 import { classNames } from '~/css/class-names';
-import { apiDocsUrl, githubUrl, mcpNpmUrl, pluginUrl } from '~/data/globals';
+import { apiDocsUrl, codexPluginUrl, githubUrl, pluginUrl } from '~/data/globals';
+import { handleIntegrationLinkClick } from '~/utils/integration-navigation';
 import BlueskyIcon from './icons/BlueskyIcon';
 import XIcon from './icons/XIcon';
 
@@ -7,6 +9,7 @@ const footerLink = classNames(
   'font-medium text-zinc-100 underline decoration-transparent underline-offset-0',
   'transition-all duration-200 ease-in-sine',
   'hover:text-grdt-to hover:decoration-grdt-to hover:underline-offset-4 hover:duration-200 hover:ease-out-sine',
+  'rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-grdt-to',
 );
 
 export default function Footer() {
@@ -26,14 +29,20 @@ export default function Footer() {
           <span aria-hidden="true" className="text-zinc-700">
             ·
           </span>
-          <a href={mcpNpmUrl} target="_blank" rel="noopener noreferrer" className={footerLink}>
-            MCP Server
-          </a>
+          <Link to="#mcp-setup" preventScrollReset onClick={handleIntegrationLinkClick} className={footerLink}>
+            MCP Setup
+          </Link>
           <span aria-hidden="true" className="text-zinc-700">
             ·
           </span>
           <a href={pluginUrl} target="_blank" rel="noopener noreferrer" className={footerLink}>
             Claude Plugin
+          </a>
+          <span aria-hidden="true" className="text-zinc-700">
+            ·
+          </span>
+          <a href={codexPluginUrl} target="_blank" rel="noopener noreferrer" className={footerLink}>
+            Codex Plugin
           </a>
           <span aria-hidden="true" className="text-zinc-700">
             ·

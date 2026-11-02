@@ -20,24 +20,30 @@ export const LinearAccuracySchema = z.enum(LinearEasingAccuracy).meta({
 });
 
 const dampingFactorSchema = z
-  // z.toJSONSchema does not support transform yet
-  .preprocess((val) => roundTo(z.number().parse(val), 0), z.number().min(0).max(100))
+  .number()
+  .min(0)
+  .max(100)
+  .overwrite((value) => roundTo(value, 0))
   .meta({
     description: 'Damping (0-100)',
     example: 50,
   });
 
 const stiffnessFactorSchema = z
-  // z.toJSONSchema does not support transform yet
-  .preprocess((val) => roundTo(z.number().parse(val), 0), z.number().min(0).max(100))
+  .number()
+  .min(0)
+  .max(100)
+  .overwrite((value) => roundTo(value, 0))
   .meta({
     description: 'Stiffness (0-100)',
     example: 50,
   });
 
 const massFactorSchema = z
-  // z.toJSONSchema does not support transform yet
-  .preprocess((val) => roundTo(z.number().parse(val), 1), z.number().min(1).max(5))
+  .number()
+  .min(1)
+  .max(5)
+  .overwrite((value) => roundTo(value, 1))
   .meta({
     description: 'Mass (1-5)',
     example: 2.5,
@@ -46,29 +52,37 @@ const massFactorSchema = z
 export const BezierParamsSchema = z
   .object({
     x1: z
-      // z.toJSONSchema does not support transform yet
-      .preprocess((val) => roundTo(z.number().parse(val), 3), z.number().min(0).max(1))
+      .number()
+      .min(0)
+      .max(1)
+      .overwrite((value) => roundTo(value, 3))
       .meta({
         description: 'First control point X coordinate (0-1)',
         example: 0.25,
       }),
     y1: z
-      // z.toJSONSchema does not support transform yet
-      .preprocess((val) => roundTo(z.number().parse(val), 3), z.number().min(-1).max(2))
+      .number()
+      .min(-1)
+      .max(2)
+      .overwrite((value) => roundTo(value, 3))
       .meta({
         description: 'First control point Y coordinate (-1 to 2)',
         example: 0.1,
       }),
     x2: z
-      // z.toJSONSchema does not support transform yet
-      .preprocess((val) => roundTo(z.number().parse(val), 3), z.number().min(0).max(1))
+      .number()
+      .min(0)
+      .max(1)
+      .overwrite((value) => roundTo(value, 3))
       .meta({
         description: 'Second control point X coordinate (0-1)',
         example: 0.75,
       }),
     y2: z
-      // z.toJSONSchema does not support transform yet
-      .preprocess((val) => roundTo(z.number().parse(val), 3), z.number().min(-1).max(2))
+      .number()
+      .min(-1)
+      .max(2)
+      .overwrite((value) => roundTo(value, 3))
       .meta({
         description: 'Second control point Y coordinate (-1 to 2)',
         example: 0.9,
@@ -98,8 +112,10 @@ export type SpringParams = z.infer<typeof SpringParamsSchema>;
 export const BounceParamsSchema = z
   .object({
     bounces: z
-      // z.toJSONSchema does not support transform yet
-      .preprocess((val) => roundTo(z.number().parse(val), 0), z.number().min(1).max(10))
+      .number()
+      .min(1)
+      .max(10)
+      .overwrite((value) => roundTo(value, 0))
       .meta({
         description: 'Number of bounces (1-10)',
         example: 3,
@@ -118,8 +134,10 @@ export type BounceParams = z.infer<typeof BounceParamsSchema>;
 export const WiggleParamsSchema = z
   .object({
     wiggles: z
-      // z.toJSONSchema does not support transform yet
-      .preprocess((val) => roundTo(z.number().parse(val), 0), z.number().min(1).max(10))
+      .number()
+      .min(1)
+      .max(10)
+      .overwrite((value) => roundTo(value, 0))
       .meta({
         description: 'Number of wiggle oscillations (1-10)',
         example: 5,

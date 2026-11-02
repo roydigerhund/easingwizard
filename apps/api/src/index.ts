@@ -1,60 +1,15 @@
 import { serve } from '@hono/node-server';
-import { Scalar } from '@scalar/hono-api-reference';
 import 'dotenv/config';
-import { API_VERSION } from 'easingwizard-core';
-import { Hono } from 'hono';
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import app from './app';
 
-import curves from './routes/curves';
-import healthz from './routes/healthz';
-import openapi from './routes/openapi';
-import presets from './routes/presets';
-
-const app = new Hono();
-
-app.get('/', (c) => {
-  return c.redirect(`/docs`, 301);
-});
-
-app.route('/healthz', healthz);
-app.route(`${API_VERSION}/healthz`, healthz);
-
-app.route(`${API_VERSION}/curves`, curves);
-
-app.route(`${API_VERSION}/presets`, presets);
-
-app.route('/openapi', openapi);
-
-app.get(
-  '/docs',
-  Scalar({
-    url: '/openapi',
-    customCss: '.section:focus { outline: none; } .section-flare { display: none; }',
-    pageTitle: 'Easing Wizard API Documentation',
-    // layout: 'classic',
-    hideModels: true,
-    theme: 'deepSpace',
-    darkMode: true,
-    metaData: {
-      ogImage: 'https://api.easingwizard.com/share-image.png',
-    },
-    favicon: '/favicon.svg',
-    defaultOpenAllTags: true,
-    hideClientButton: true,
-  }),
-);
-
-// Export the app for Vercel
 export default app;
 
-// Start server for local development
-if (process.env.NODE_ENV !== 'production') {
-  serve(
-    {
-      fetch: app.fetch,
-      port: 3000,
-    },
-    (info) => {
-      console.log(`Server is running on http://localhost:${info.port}`);
-    },
-  );
+// Vercel imports the app directly; standalone execution binds only to loopback.
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  const port = Number(process.env.PORT ?? 3000);
+  serve({ fetch: app.fetch, hostname: '127.0.0.1', port }, (info) => {
+    console.log(`Easing Wizard API and MCP: http://127.0.0.1:${info.port}`);
+  });
 }

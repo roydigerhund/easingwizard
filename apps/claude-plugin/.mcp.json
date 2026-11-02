@@ -1,8 +1,9 @@
 {
   "mcpServers": {
     "easingwizard": {
+      "type": "stdio",
       "command": "npx",
-      "args": ["@easingwizard/mcp-server@^1.1.0"]
+      "args": ["-y", "@easingwizard/mcp-server@1.2.0"]
     }
   }
 }

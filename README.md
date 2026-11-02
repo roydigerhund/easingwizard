@@ -5,7 +5,7 @@ A comprehensive toolkit for creating and using CSS easing curves. Generate Bézi
 🌐 **Website**: [easingwizard.com](https://easingwizard.com)  
 🛠️ **API**: [api.easingwizard.com](https://api.easingwizard.com)  
 📦 **MCP Server**: [@easingwizard/mcp-server](https://www.npmjs.com/package/@easingwizard/mcp-server)  
-🤖 **Claude Plugin**: [easingwizard-claude-plugin](https://github.com/roydigerhund/easingwizard-claude-plugin)
+🤖 **Agent plugins**: [Claude Code](apps/claude-plugin/README.md) · [Codex](apps/codex-plugin/README.md)
 
 ## What is Easing Wizard?
 
@@ -26,7 +26,8 @@ This is a monorepo containing multiple packages and applications:
 - **[`apps/frontend/`](apps/frontend/)** - React Router web application ([easingwizard.com](https://easingwizard.com))
 - **[`apps/api/`](apps/api/)** - Hono backend API for curve generation
 - **[`apps/mcp/`](apps/mcp/)** - Model Context Protocol server for AI assistants
-- **[`apps/claude-plugin/`](apps/claude-plugin/)** - Claude Code plugin with skills, agent, and MCP integration
+- **[`apps/claude-plugin/`](apps/claude-plugin/)** - Claude Code plugin and shared skill source
+- **[`apps/codex-plugin/`](apps/codex-plugin/)** - Generated portable Codex plugin with five skills and MCP integration
 
 ### 📦 Packages
 
@@ -73,31 +74,85 @@ Then run `/reload-plugins` (or restart Claude Code) to activate it.
 This gives you 7 MCP tools, 4 skills, and an animation expert agent:
 
 - `/easingwizard:recommend-curve` — Describe the feel you want, get a curve with CSS + Tailwind output
-- `/easingwizard:improve-easings` — Replace default easings in your CSS/Tailwind files with professional curves
-- `/easingwizard:audit-easings` — Scan your project for animations using default or missing easings
+- `/easingwizard:improve-easings` — Improve selected animations while preserving suitable defaults, design tokens, and reduced-motion behavior
+- `/easingwizard:audit-easings` — Review easing choices, durations, browser support, and reduced-motion behavior
+
+### For Codex
+
+Use the published MCP package directly (Node 22.14+):
+
+```bash
+codex mcp add easingwizard -- npx -y @easingwizard/mcp-server
+```
+
+For recommendations, animation reviews, and implementation workflows, use the [Codex plugin](apps/codex-plugin/README.md). Its repository marketplace is defined in `.agents/plugins/marketplace.json`. The prepared plugin pins MCP 1.2.0, which must be published before installation.
 
 ### For Other MCP Clients (VS Code, Cursor, etc.)
 
-Add to your MCP client configuration:
+Cursor and Claude Desktop use `mcpServers`:
 
 ```json
 {
   "mcpServers": {
     "easingwizard": {
       "command": "npx",
-      "args": ["@easingwizard/mcp-server"]
+      "args": ["-y", "@easingwizard/mcp-server"]
     }
   }
 }
 ```
 
+VS Code uses a `servers` object in `.vscode/mcp.json`. Full client-specific instructions, exact tool names, and local development setup are in the [MCP README](apps/mcp/README.md). Pin a published version when reproducibility matters.
+
+The MCP server computes curves locally with the shared core; it does not call the REST API. The API also includes a Streamable HTTP `/mcp` endpoint for URL-based connections without Node on the client. It is available remotely only after deploying the updated API; publishing npm alone does not enable it. See [API setup](apps/api/README.md).
+
+## Checks and releases
+
+```bash
+pnpm check             # types, regression/contract tests, plugin/version checks
+pnpm build             # all applications and packages
+pnpm plugins:sync      # regenerate Codex content after changing Claude skills
+pnpm plugins:package   # validated reproducible plugin ZIPs
+pnpm release:prepare   # checks/builds plus npm and plugin release artifacts
+```
+
+Follow [the release guide](docs/RELEASING.md) to publish npm, synchronize the separate Claude repository and marketplace pin, distribute the Codex plugin, and deploy the API in the right order. Prepared artifacts and a passing local build do not imply publication or deployment.
+
 ## 🎨 Examples
 
-### Spring Animation 
+### Spring Animation
 
 ```css
 .spring-curve {
-  transition-timing-function: linear(0, 0.053 0.8%, 0.197 1.6%, 1.267 5.5%, 1.432 6.6%, 1.484 7.6%, 1.463 8.4%, 1.386 9.3%, 0.868 13.2%, 0.794 14.2%, 0.766 15.2%, 0.774 16%, 0.809 16.9%, 1.065 20.9%, 1.1 21.9%, 1.113 22.9%, 1.109 23.7%, 1.092 24.6%, 0.968 28.6%, 0.945 30.5%, 0.956 32.3%, 1.016 36.3%, 1.027 38.2%, 0.987 45.9%, 1.006 53.5%, 0.997 61.2%, 1);
+  transition-timing-function: linear(
+    0,
+    0.053 0.8%,
+    0.197 1.6%,
+    1.267 5.5%,
+    1.432 6.6%,
+    1.484 7.6%,
+    1.463 8.4%,
+    1.386 9.3%,
+    0.868 13.2%,
+    0.794 14.2%,
+    0.766 15.2%,
+    0.774 16%,
+    0.809 16.9%,
+    1.065 20.9%,
+    1.1 21.9%,
+    1.113 22.9%,
+    1.109 23.7%,
+    1.092 24.6%,
+    0.968 28.6%,
+    0.945 30.5%,
+    0.956 32.3%,
+    1.016 36.3%,
+    1.027 38.2%,
+    0.987 45.9%,
+    1.006 53.5%,
+    0.997 61.2%,
+    1
+  );
 }
 ```
 
@@ -135,6 +190,7 @@ ease-[cubic-bezier(0.42,0,0.58,1)]
 ```
 
 **Tailwind CSS:**
+
 ```css
 ease-[cubic-bezier(0.42,0,0.58,1)]
 ```
@@ -145,7 +201,32 @@ ease-[cubic-bezier(0.42,0,0.58,1)]
 
 ```css
 .bounce-curve {
-  transition-timing-function: linear(0, 0.059 7.7%, 0.113 12.8%, 0.181 17.2%, 0.27 21.2%, 0.537 28.8%, 1 37.8%, 0.617 45.7%, 0.531 48.8%, 0.503 51.7%, 0.529 54.5%, 0.606 57.3%, 0.998 65.5%, 0.823 69.9%, 0.781 71.9%, 0.768 73.8%, 0.779 75.6%, 0.812 77.5%, 1 84.5%, 0.956 87.1%, 0.943 89.6%, 0.951 91.7%, 0.993 96.9%, 1);
+  transition-timing-function: linear(
+    0,
+    0.059 7.7%,
+    0.113 12.8%,
+    0.181 17.2%,
+    0.27 21.2%,
+    0.537 28.8%,
+    1 37.8%,
+    0.617 45.7%,
+    0.531 48.8%,
+    0.503 51.7%,
+    0.529 54.5%,
+    0.606 57.3%,
+    0.998 65.5%,
+    0.823 69.9%,
+    0.781 71.9%,
+    0.768 73.8%,
+    0.779 75.6%,
+    0.812 77.5%,
+    1 84.5%,
+    0.956 87.1%,
+    0.943 89.6%,
+    0.951 91.7%,
+    0.993 96.9%,
+    1
+  );
 }
 ```
 
@@ -155,7 +236,29 @@ ease-[cubic-bezier(0.42,0,0.58,1)]
 
 ```css
 .wiggle-curve {
-  transition-timing-function: linear(0, 0.72 8.4%, 0.884 11.9%, 0.925 13.6%, 0.94 15.4%, 0.929 16.9%, 0.9 18.4%, 0.785 21.5%, -0.196 36.6%, -0.371 40.6%, -0.457 44.5%, -0.468 46.1%, -0.465 47.7%, -0.422 51.1%, -0.046 64.6%, 0.025 68.1%, 0.066 71.5%, 0.081 74.3%, 0.081 77.4%, 0.012 90.8%, 0);
+  transition-timing-function: linear(
+    0,
+    0.72 8.4%,
+    0.884 11.9%,
+    0.925 13.6%,
+    0.94 15.4%,
+    0.929 16.9%,
+    0.9 18.4%,
+    0.785 21.5%,
+    -0.196 36.6%,
+    -0.371 40.6%,
+    -0.457 44.5%,
+    -0.468 46.1%,
+    -0.465 47.7%,
+    -0.422 51.1%,
+    -0.046 64.6%,
+    0.025 68.1%,
+    0.066 71.5%,
+    0.081 74.3%,
+    0.081 77.4%,
+    0.012 90.8%,
+    0
+  );
 }
 ```
 
@@ -175,7 +278,7 @@ ease-[cubic-bezier(0.42,0,0.58,1)]
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/your-feature`
 3. Make your changes and add tests
-4. Run `pnpm typecheck` and `pnpm format`
+4. Run `pnpm check`, `pnpm build`, and format the changed files
 5. Commit your changes: `git commit -m 'Add some feature'`
 6. Push to the branch: `git push origin feature/your-feature`
 7. Open a Pull Request

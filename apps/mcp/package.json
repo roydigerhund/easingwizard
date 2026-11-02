@@ -1,25 +1,27 @@
 {
   "name": "@easingwizard/mcp-server",
-  "version": "1.1.0",
-  "description": "Model Context Protocol (MCP) server for the Easing Wizard API - enables generation of various CSS easing curves: Bézier, Spring, Bounce, Wiggle, and Overshoot",
+  "version": "1.2.0",
+  "description": "Local and HTTP MCP tools for generating CSS and Tailwind easing curves",
   "type": "module",
   "main": "./dist/index.js",
   "bin": {
     "easingwizard-mcp": "./dist/index.js"
   },
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --platform=node --target=node18 --format=esm --outfile=dist/index.js --minify",
+    "build": "esbuild src/index.ts src/server.ts src/http.ts --bundle --platform=node --target=node22 --format=esm --outdir=dist --external:@modelcontextprotocol/* --external:zod --external:zod/* && tsc --emitDeclarationOnly",
     "build:types": "tsc --emitDeclarationOnly",
-    "build:full": "pnpm run build && pnpm run build:types",
-    "watch": "tsc --watch",
-    "start": "node ./dist/index.js",
-    "inspect": "npx @modelcontextprotocol/inspector node dist/index.js",
-    "prepublishOnly": "pnpm run build:full"
+    "build:full": "pnpm build",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.mjs",
+    "watch": "esbuild src/index.ts src/server.ts src/http.ts --bundle --platform=node --target=node22 --format=esm --outdir=dist --external:@modelcontextprotocol/* --external:zod --external:zod/* --watch",
+    "start": "node dist/index.js",
+    "inspect": "pnpm dlx @modelcontextprotocol/inspector node dist/index.js",
+    "prepack": "pnpm --filter easingwizard-core build && pnpm build"
   },
   "files": [
     "dist",
     "README.md",
-    "../../LICENSE"
+    "LICENSE"
   ],
   "keywords": [
     "mcp",
@@ -45,16 +47,30 @@
     "url": "https://github.com/roydigerhund/easingwizard/issues"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=22.14.0"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.17.0",
-    "zod": "^4.0.14"
+    "@modelcontextprotocol/server": "^2.4.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@types/node": "^24.1.0",
+    "@modelcontextprotocol/client": "^2.4.0",
+    "@types/node": "^22.20.5",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
     "easingwizard-core": "workspace:*",
-    "esbuild": "^0.24.0",
-    "typescript": "^5.8.0"
-  }
+    "esbuild": "^0.28.2",
+    "typescript": "^5.9.3"
+  },
+  "exports": {
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.js"
+    },
+    "./http": {
+      "types": "./dist/http.d.ts",
+      "import": "./dist/http.js"
+    }
+  },
+  "license": "SEE LICENSE IN LICENSE"
 }

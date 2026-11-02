@@ -338,7 +338,15 @@ export function createOvershootFunction({
 function getTotalTime(springFunc: (t: number) => number, endValue: number): number {
   let time = 0;
   const dt = 0.016; // Start with 60 FPS time step
-  let value = springFunc(time);
+  // The slowest supported spring settles within 150 seconds. Keep a bounded
+  // horizon for invalid or future parameter combinations as well.
+  const maxTime = 300;
+  const sample = (time: number) => {
+    const value = springFunc(time);
+    if (!Number.isFinite(value)) throw new Error('Spring calculation produced a non-finite value');
+    return value;
+  };
+  let value = sample(time);
   let velocity = 1;
   const epsilon = 0.05; // Threshold for settling
 
@@ -346,7 +354,7 @@ function getTotalTime(springFunc: (t: number) => number, endValue: number): numb
 
   while (Math.abs(velocity) > epsilon || endFrames < 60) {
     time += dt;
-    const newValue = springFunc(time);
+    const newValue = sample(time);
     velocity = (newValue - value) / dt;
     value = newValue;
 
@@ -356,7 +364,7 @@ function getTotalTime(springFunc: (t: number) => number, endValue: number): numb
       endFrames = 0;
     }
 
-    // Avoid infinite loops after 100 seconds
+    // Continue with the position check after the velocity settling phase.
     if (time > 25) {
       break;
     }
@@ -364,8 +372,9 @@ function getTotalTime(springFunc: (t: number) => number, endValue: number): numb
 
   // if value is not 1, we need to continue until it reaches 1 (rounded to 2 decimal places)
   while (roundTo(value, 2) !== endValue) {
+    if (time >= maxTime) throw new Error('Spring did not settle within the supported time limit');
     time += dt;
-    value = roundTo(springFunc(time), 2);
+    value = roundTo(sample(time), 2);
   }
 
   // round to step of 100ms

@@ -1,0 +1,36 @@
+name: Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      API_URL: https://api.easingwizard.com
+      VITE_FRONTEND_URL: https://easingwizard.com
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check
+      - run: pnpm build
+      - run: pnpm audit --prod --audit-level=high
+      - run: pnpm plugins:package
+      - uses: actions/upload-artifact@v7
+        with:
+          name: plugins
+          path: dist/plugins/
+          if-no-files-found: error

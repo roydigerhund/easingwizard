@@ -1,34 +1,15 @@
 ---
 name: easing-advice
-description: Suggests professional easing curves when writing or editing CSS transitions, animations, or Tailwind motion utilities. Use when adding transition-timing-function, animation-timing-function, ease-[] classes, or when the user wants something to "feel" a certain way (snappy, smooth, bouncy).
-allowed-tools: mcp__easingwizard__get_presets, mcp__easingwizard__create_bezier_curve, mcp__easingwizard__create_spring_curve, mcp__easingwizard__create_bounce_curve, mcp__easingwizard__create_wiggle_curve, mcp__easingwizard__create_overshoot_curve
+description: Choose suitable easing while working on CSS transitions, animations, or Tailwind motion utilities. Use for motion decisions within the requested work, not unrelated styling.
+allowed-tools: mcp__plugin_easingwizard_easingwizard__get_presets, mcp__plugin_easingwizard_easingwizard__get_curve_by_id, mcp__plugin_easingwizard_easingwizard__create_bezier_curve, mcp__plugin_easingwizard_easingwizard__create_spring_curve, mcp__plugin_easingwizard_easingwizard__create_bounce_curve, mcp__plugin_easingwizard_easingwizard__create_wiggle_curve, mcp__plugin_easingwizard_easingwizard__create_overshoot_curve
 ---
 
-# Easing Advice
+# Easing advice
 
-When writing or editing CSS that includes transitions or animations, use Easing Wizard to select appropriate easing curves instead of relying on browser defaults (`ease`, `linear`, `ease-in`, `ease-out`, `ease-in-out`).
+Use this guidance for a motion choice the current task actually needs. Respect the user's requested style and scope, existing motion tokens, intentional standard easings, and reduced-motion settings. Do not turn unrelated CSS work into an animation redesign.
 
-## When this applies
+Read the [motion guide](../../references/motion-design.md) when choosing between curve families, checking property limits, or considering accessibility. A calm interface may need a simple standard `ease-out`; a constant-speed spinner usually needs `linear`. Spring, bounce, and wiggle are alternatives for specific movement, not automatic upgrades.
 
-- Adding a `transition` or `animation` property to CSS/SCSS/Less
-- Adding Tailwind `transition-*` utilities to an element
-- The user asks for something to "feel" a certain way (snappy, smooth, bouncy, etc.)
+When a generated curve helps, use the Easing Wizard MCP tools rather than approximating their values. Query `get_presets` filtered by type where possible. Reuse the preset's `output.css`, `output.tailwind_css`, and `links.share_url`; use `get_curve_by_id` to restore an existing ID, and the `create_*_curve` tools for custom parameters only. Follow the advertised input schema and report unavailable tools instead of inventing results.
 
-## What to do
-
-1. Use `get_presets` to find a preset that matches the animation context
-2. Pick based on the UI pattern:
-   - Dropdowns, menus, toggles: Spring SNAP
-   - Modals, overlays: Overshoot SOFT OUT or Spring GLIDE
-   - Hover states: Bezier SINE or QUAD IN_OUT
-   - Page transitions: Bezier QUART or EXPO IN_OUT
-   - Notifications arriving: Bounce SUBTLE or Spring DROP
-   - Error feedback: Wiggle SHARP
-3. Apply the CSS `linear()` or `cubic-bezier()` value directly, or use a Tailwind `ease-[...]` class
-4. Briefly explain why the curve fits (one sentence)
-
-## What NOT to do
-
-- Do not add easing advice unsolicited when the user is focused on non-animation work
-- Do not replace custom `cubic-bezier()` or `linear()` values that are already intentional
-- Do not use this for JavaScript animation libraries (Framer Motion, GSAP, anime.js)
+For requested implementation, apply the returned value within the existing motion system and explain the choice briefly. For advice-only work, present a copyable example and preview link without changing files. Check `linear()` against the project's browser baseline and keep nonessential movement optional under reduced motion. JavaScript animation libraries need their own integration and are outside this skill's CSS/Tailwind scope.

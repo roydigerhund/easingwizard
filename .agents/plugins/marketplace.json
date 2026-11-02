@@ -1,0 +1,12 @@
+{
+  "name": "easingwizard",
+  "interface": { "displayName": "Easing Wizard" },
+  "plugins": [
+    {
+      "name": "easingwizard",
+      "source": { "source": "local", "path": "./apps/codex-plugin" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "category": "Developer Tools"
+    }
+  ]
+}

@@ -1,60 +1,18 @@
 ---
 name: audit-easings
-description: Scan the entire project for animations using default or missing easings and produce a prioritized improvement report. Use when asking "audit my CSS animations", "scan the project for bad transitions", or "give me a report on all my easings".
-allowed-tools: mcp__easingwizard__get_presets, mcp__easingwizard__create_bezier_curve, mcp__easingwizard__create_spring_curve, mcp__easingwizard__create_bounce_curve, mcp__easingwizard__create_wiggle_curve, mcp__easingwizard__create_overshoot_curve
+description: Review CSS, component styles, and Tailwind animations for inappropriate easing, inconsistent motion, and reduced-motion gaps. Return findings without editing files.
+allowed-tools: mcp__plugin_easingwizard_easingwizard__get_presets, mcp__plugin_easingwizard_easingwizard__get_curve_by_id, mcp__plugin_easingwizard_easingwizard__create_bezier_curve, mcp__plugin_easingwizard_easingwizard__create_spring_curve, mcp__plugin_easingwizard_easingwizard__create_bounce_curve, mcp__plugin_easingwizard_easingwizard__create_wiggle_curve, mcp__plugin_easingwizard_easingwizard__create_overshoot_curve
 disable-model-invocation: true
 ---
 
-# Easing Audit
+# Audit easings
 
-The user wants a comprehensive review of their project's animation easings.
+Review the requested scope without modifying it. Search authored CSS/SCSS/Less, component styles, CSS-in-JS, and Tailwind transition/animation utilities. Exclude dependencies, generated output, and vendor files. Inspect surrounding code, keyframes, design tokens, framework configuration, and reduced-motion rules before judging a match.
 
-## Step 1: Scan the Project
+Read the [motion guide](../../references/motion-design.md). A standard keyword or an omitted timing function is not itself a defect: determine the effective value from shorthands, cascade, inheritance where applicable, and framework defaults. Preserve intentional `linear` spinners, established motion tokens, and appropriate custom curves. Distinguish a demonstrable problem from an optional design alternative.
 
-Search for animation and transition properties across the codebase:
+Prioritize findings that affect behavior: overshoot applied to a bounded property, inconsistent curves within one interaction, distracting repeated movement, a missing reduced-motion alternative, or an easing at odds with an explicit design goal. Check the target browser baseline before treating CSS `linear()` as available. Keep JavaScript animation-library migrations outside this CSS/Tailwind audit unless the user expands the scope.
 
-1. Search for CSS files (`.css`, `.scss`, `.sass`, `.less`) containing `transition` or `animation` properties
-2. Search for component files (`.jsx`, `.tsx`, `.vue`, `.svelte`) containing Tailwind easing classes (`ease-`, `transition-`) or inline style animation properties
-3. Search for CSS-in-JS patterns (`style=`, `css=`, `styled.`) with transition/animation values
+For a finding that benefits from a replacement, call `get_presets` with the relevant type and reuse the returned `output.css`, `output.tailwind_css`, and `links.share_url`. Use `get_curve_by_id` for an existing Easing Wizard ID. Only create a custom curve when presets do not fit; pass only parameters in the advertised tool schema. Reuse one returned preset for repeated findings rather than generating it again.
 
-## Step 2: Categorize Findings
-
-For each animation/transition found, categorize:
-- **Defaults** — Using `ease`, `linear`, `ease-in`, `ease-out`, `ease-in-out` (browser defaults, likely unintentional)
-- **Custom** — Using `cubic-bezier(...)`, `linear(...)`, or Tailwind `ease-[...]` (intentional choices)
-- **Missing** — Animations/transitions with no easing specified (falls back to browser default `ease`)
-
-## Step 3: Generate Suggestions
-
-For each default or missing easing, suggest a specific Easing Wizard curve replacement. Base suggestions on:
-- The CSS property being animated (opacity → subtle, transform → responsive, etc.)
-- The surrounding code context (hover → quick ease-out, modal → spring, etc.)
-- Motion design best practices
-
-Use `get_presets` with `verbose: true` to get share URLs for each suggested preset.
-
-Only use curve creation tools if no preset is a good match.
-
-## Step 4: Output the Report
-
-Present findings as a structured markdown report:
-
-```
-## Easing Audit Report
-
-### Summary
-- **X** animations/transitions found
-- **Y** using browser defaults
-- **Z** with no easing specified
-- **W** using custom easings
-
-### Findings
-
-| File | Line | Property | Current | Suggested | Reasoning | Preview |
-|------|------|----------|---------|-----------|-----------|---------|
-| src/App.css | 12 | transition | ease | Spring SNAP | Hover state benefits from responsive spring feel | [Preview](url) |
-| ... | ... | ... | ... | ... | ... | ... |
-
-### Recommendations
-[Prioritized list of highest-impact improvements, starting with the most visible/frequently triggered animations]
-```
+Report the inspected scope and concrete findings with file/line, observed behavior, impact, and an actionable suggestion. Include a preview link when a curve is suggested. Keep optional alternatives separate from defects; an audit with no findings is valid. State whether the observations come from code inspection or a rendered animation, and list any material verification limits.

@@ -1,0 +1,35 @@
+name: Prepare release
+
+# Produces the exact artifacts to publish; does not publish packages or deploy.
+on:
+  workflow_dispatch:
+  push:
+    tags: ['mcp-v*']
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      API_URL: https://api.easingwizard.com
+      VITE_FRONTEND_URL: https://easingwizard.com
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm release:prepare
+      - uses: actions/upload-artifact@v7
+        with:
+          name: easingwizard-release
+          path: dist/releases/
+          include-hidden-files: true
+          if-no-files-found: error

@@ -18,19 +18,20 @@
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "dependency-check": "madge --circular --ts-config ./tsconfig.json --extensions ts,tsx src/",
-    "prepublish-only": "npm run clean && npm run build",
     "generate": "pnpm generate:linear-easings && pnpm generate:preset-data",
     "generate:linear-easings": "tsx ./scripts/generate-linear-easings.ts && prettier --write ./src/generated/linear-easings.ts",
-    "generate:preset-data": "tsx ./scripts/generate-preset-data.ts && prettier --write ./src/generated/preset-data.ts"
+    "generate:preset-data": "tsx ./scripts/generate-preset-data.ts && prettier --write ./src/generated/preset-data.ts",
+    "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
-    "zod": "^4.0.14"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@types/node": "^24.0.15",
-    "fs": "0.0.1-security",
+    "@types/node": "^22.20.5",
     "madge": "^8.0.0",
-    "tsc-alias": "^1.8.16",
-    "tsx": "^4.20.3"
-  }
+    "tsc-alias": "^1.9.10",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
+  },
+  "private": true
 }

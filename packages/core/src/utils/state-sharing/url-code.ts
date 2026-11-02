@@ -1,7 +1,8 @@
+import type { EasingStateShare, EasingStateShareKey, EasingStateValue } from '~/types/types';
+import { ShareStateSchema } from '~/validations/share-state';
+import { BASE62_DICTIONARY, crc8, fromBase62, toBase62 } from './crc';
 import { decodeValue, encodeValue } from './encoding';
 import { MINI_MAP, REVERSE_MINI_MAP } from './maps';
-import { BASE62_DICTIONARY, crc8, toBase62, fromBase62 } from './crc';
-import type { EasingStateShare, EasingStateValue, EasingStateShareKey } from '~/types/types';
 
 export function encodeState(stateObj: EasingStateShare) {
   if (!stateObj || Object.keys(stateObj).length === 0) {
@@ -33,6 +34,7 @@ export function decodeState(shareString: string) {
 
   const version = BASE62_DICTIONARY.indexOf(shareString[0]); // 0–61
   if (version < 0) throw Error('Invalid version in ID');
+  if (version !== 0) throw Error(`Unsupported version in ID: ${version}`);
 
   const state = verifyAndStrip(shareString.slice(1));
 
@@ -47,11 +49,13 @@ export function decodeState(shareString: string) {
     if (key && value.length > 0) {
       const fullKey = REVERSE_MINI_MAP[key];
       if (fullKey) {
-        fullState[fullKey] = decodeValue(fullKey, value.join(''));
+        const decoded = decodeValue(fullKey, value.join(''));
+        if (decoded === undefined) throw Error(`Invalid value for ${fullKey} in ID`);
+        fullState[fullKey] = decoded;
       }
     }
   }
-  return fullState;
+  return ShareStateSchema.parse(fullState);
 }
 
 export function addCrc(code: string): string {

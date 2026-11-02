@@ -1,6 +1,6 @@
 import { decodeState, EasingType, rehydrateShareState, rehydrateShareStateLegacy } from 'easingwizard-core';
-import { useEffect, useState } from 'react';
-import { useLocation, useSearchParams } from 'react-router';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 import BezierEditor from '~/components/BezierEditor';
 import BounceEditor from '~/components/BounceEditor';
 import Card from '~/components/Card';
@@ -20,6 +20,7 @@ import Toast from '~/components/Toast';
 import WiggleEditor from '~/components/WiggleEditor';
 import { classNames } from '~/css/class-names';
 import { LOCALSTORAGE_KEY, useEasingStore } from '~/state/easing-store';
+import { focusIntegrationTarget, isIntegrationHash } from '~/utils/integration-navigation';
 import type { Route } from './+types/home';
 
 export function headers(_: Route.HeadersArgs) {
@@ -29,28 +30,38 @@ export function headers(_: Route.HeadersArgs) {
 }
 
 export default function Index() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { hash } = useLocation();
+  const location = useLocation();
+  const navigate = useNavigate();
   const easingType = useEasingStore((state) => state.easingType);
   const setState = useEasingStore((state) => state.setState);
   const [showUI, setShowUI] = useState(false);
   const [restoredFromStorage, setRestoredFromStorage] = useState(false);
+  const initialized = useRef(false);
+  const handledLocation = useRef<string | null>(null);
 
   // we only want to set the state on client side to avoid excessive renders on the server
   useEffect(() => {
+    const locationId = `${location.key}:${location.search}:${location.hash}`;
+    if (handledLocation.current === locationId) return;
+    handledLocation.current = locationId;
+
+    const initialLoad = !initialized.current;
+    initialized.current = true;
+    const searchParams = new URLSearchParams(location.search);
+    const hasLegacyShare = Boolean(searchParams.get('easingType'));
+    const hasCurveHash = location.hash.length > 1 && !isIntegrationHash(location.hash);
     let didRestoreFromShareLink = false;
     try {
-      if (searchParams.get('easingType')) {
+      if (hasLegacyShare) {
         // Legacy sharing mode
         const newState = rehydrateShareStateLegacy(searchParams);
 
         setState(newState);
-        setSearchParams(new URLSearchParams());
         didRestoreFromShareLink = true;
-      } else if (hash && hash.length > 1) {
+      } else if (hasCurveHash) {
         // V0
         // in new sharing mode, we use fragment with a minified code, like #a1b2c3d4e5
-        const decodedState = decodeState(hash.slice(1));
+        const decodedState = decodeState(location.hash.slice(1));
         const rehydratedState = rehydrateShareState(decodedState);
         setState(rehydratedState);
         didRestoreFromShareLink = true;
@@ -59,8 +70,8 @@ export default function Index() {
       console.error('Error parsing value:', error);
     }
 
-    // Restore from localStorage if no share link was used
-    if (!didRestoreFromShareLink) {
+    // Restore once on initial load. Section navigation must not reset edits or replay the toast.
+    if (initialLoad && !didRestoreFromShareLink) {
       try {
         const saved = localStorage.getItem(LOCALSTORAGE_KEY);
         if (saved) {
@@ -74,9 +85,25 @@ export default function Index() {
       }
     }
 
-    window.history.replaceState(null, '', window.location.pathname);
-    setShowUI(true);
-  }, [searchParams, setSearchParams, setState, hash]);
+    if (hasLegacyShare || hasCurveHash) {
+      // Consume share links through the router while retaining its browser-history state.
+      void navigate(
+        {
+          pathname: location.pathname,
+          search: hasLegacyShare ? '' : location.search,
+          hash: isIntegrationHash(location.hash) ? location.hash : '',
+        },
+        { replace: true, preventScrollReset: true },
+      );
+    }
+    if (initialLoad) setShowUI(true);
+  }, [location, navigate, setState]);
+
+  useEffect(() => {
+    if (!showUI || !isIntegrationHash(location.hash)) return;
+    const frame = window.requestAnimationFrame(() => focusIntegrationTarget(location.hash));
+    return () => window.cancelAnimationFrame(frame);
+  }, [location.hash, location.key, showUI]);
 
   // Auto-dismiss the restored toast
   useEffect(() => {

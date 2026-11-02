@@ -22,5 +22,6 @@
       "inputGlob": "{js,jsx,mjs}",
       "outputCheck": ["js", "json", "jsx", "mjs"]
     }
-  }
+  },
+  "include": ["src/**/*.ts"]
 }

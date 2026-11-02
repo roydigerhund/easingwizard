@@ -1,4 +1,4 @@
-import { FRONTEND_URL } from '~/data/globals';
+import { API_VERSION, FRONTEND_URL } from '~/data/globals';
 import {
   getAllPresets,
   getBezierPresets,
@@ -14,9 +14,9 @@ import type { Preset, PresetsResponse } from '~/validations/preset';
 const enhancePresetWithApiData = (preset: Preset) => ({
   ...preset,
   links: {
-    self: `/curves/${preset.id}`,
+    self: `/${API_VERSION}/curves/${preset.id}`,
     share_url: `${FRONTEND_URL}/#${preset.id}`,
-    create: `/curves/${preset.type.toLowerCase()}`,
+    create: `/${API_VERSION}/curves/${preset.type.toLowerCase()}`,
   },
 });
 
@@ -62,8 +62,8 @@ export const createPresetsResponse = async (type?: EasingTypeKey): Promise<Prese
     presets,
     // HATEOAS
     links: {
-      self: `/presets${type ? `?type=${type}` : ''}`,
-      filter: '/presets{?type}', // RFC 6570 URI-Template
+      self: `/${API_VERSION}/presets${type ? `?type=${type}` : ''}`,
+      filter: `/${API_VERSION}/presets{?type}`, // RFC 6570 URI-Template
     },
   };
 };

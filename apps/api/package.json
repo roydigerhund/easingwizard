@@ -6,20 +6,24 @@
     "build": "tsc && tsc-alias",
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
-    "@hono/node-server": "^1.17.1",
-    "@scalar/hono-api-reference": "^0.9.13",
-    "dotenv": "^17.2.0",
+    "@easingwizard/mcp-server": "workspace:*",
+    "@hono/node-server": "^2.1.5",
+    "@scalar/hono-api-reference": "^0.12.17",
+    "dotenv": "^17.4.2",
     "easingwizard-core": "workspace:*",
-    "hono": "^4.8.5",
-    "zod": "^4.0.14",
-    "zod-openapi": "^5.2.0"
+    "hono": "^4.13.16",
+    "zod": "^4.6.7",
+    "zod-openapi": "^5.4.6"
   },
   "devDependencies": {
-    "@types/node": "^20.19.9",
-    "tsc-alias": "^1.8.16",
-    "tsx": "^4.7.1"
-  }
+    "@types/node": "^22.20.5",
+    "tsc-alias": "^1.9.10",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
+  },
+  "private": true
 }

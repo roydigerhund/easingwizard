@@ -1,52 +1,21 @@
 ---
 name: recommend-curve
-description: Recommend an easing curve for a specific animation feel or UI pattern. Use when asking "what easing for a dropdown?", "suggest a spring curve", "I want it to feel snappy", or describing how a transition should feel.
-allowed-tools: mcp__easingwizard__get_presets, mcp__easingwizard__create_bezier_curve, mcp__easingwizard__create_spring_curve, mcp__easingwizard__create_bounce_curve, mcp__easingwizard__create_wiggle_curve, mcp__easingwizard__create_overshoot_curve
+description: Recommend a CSS easing curve for a requested animation feel or UI interaction, with CSS, Tailwind output, and a preview link.
+allowed-tools: mcp__plugin_easingwizard_easingwizard__get_presets, mcp__plugin_easingwizard_easingwizard__get_curve_by_id, mcp__plugin_easingwizard_easingwizard__create_bezier_curve, mcp__plugin_easingwizard_easingwizard__create_spring_curve, mcp__plugin_easingwizard_easingwizard__create_bounce_curve, mcp__plugin_easingwizard_easingwizard__create_wiggle_curve, mcp__plugin_easingwizard_easingwizard__create_overshoot_curve
 disable-model-invocation: true
 ---
 
-# Animation Consultant
+# Recommend a curve
 
-The user wants an easing curve recommendation. Follow this process:
+Recommend motion for the element, animated property, and feeling the user describes. Use the supplied context; ask only when a missing detail changes the choice. A recommendation request alone does not authorize editing files.
 
-## Step 1: Understand the Request
+Read the [motion guide](../../references/motion-design.md) for property limits, reduced motion, and common pattern choices. Keep a suitable existing easing or design token, including standard CSS keywords. Constant-speed spinners usually need `linear`.
 
-Ask the user (if not already clear) what animation they're building. What element is being animated? What feeling should it convey? (e.g., "snappy," "gentle," "playful," "professional")
+Use the Easing Wizard MCP server to retrieve real values:
 
-## Step 2: Search Presets First
+- Call `get_presets` with a relevant `type` (`BEZIER`, `SPRING`, `BOUNCE`, `WIGGLE`, or `OVERSHOOT`) when known; omit the filter only when comparing types.
+- Select a preset by its returned `curve` and, where present, `style`. Use `output.css`, `output.tailwind_css`, and `links.share_url` directly. Presets already contain these values; do not regenerate them or invent extra arguments.
+- For an existing curve ID, use `get_curve_by_id`. Call a `create_*_curve` tool only for a custom curve, using its advertised input schema.
+- If the MCP tools are unavailable, report that limitation. Do not invent generated values or claim a preview was tested.
 
-Use the `get_presets` tool to retrieve all available presets. Match the user's description to the most appropriate preset based on:
-
-- **Type matching:** Snappy/responsive → SPRING. Bouncy/playful → BOUNCE. Oscillating/attention → WIGGLE. Overshoot/elastic → OVERSHOOT. Smooth/subtle → BEZIER.
-- **Curve variant matching:** Match descriptive words to variant names (e.g., "snappy" → SNAP spring, "gentle" → SOFT overshoot, "subtle" → SUBTLE bounce).
-- **Style matching (Bezier/Overshoot):** Entrance animations → OUT (decelerating). Exit animations → IN (accelerating). State changes → IN_OUT.
-
-## Step 3: Recommend
-
-If a preset matches well, recommend it with clear reasoning connecting the curve's physics to the desired feel.
-
-Only generate a custom curve (via create tools) if no preset adequately matches the description.
-
-Always call with `verbose: true` to include the preview link.
-
-## Step 4: Output Format
-
-Present the recommendation in this format:
-
-**Recommendation:** [Preset name or "Custom curve"]
-**Type:** [BEZIER/SPRING/BOUNCE/WIGGLE/OVERSHOOT]
-**Why:** [1-2 sentences connecting the curve physics to the desired feel]
-
-**CSS:**
-```css
-transition-timing-function: [value];
-```
-
-**Tailwind:**
-```html
-class="[ease-[...] class]"
-```
-
-**Preview:** [easingwizard.com share URL]
-
-IMPORTANT: Always present CSS and Tailwind values inside fenced code blocks (triple backticks) with the appropriate language tag (css, html). This makes them easy to copy. Never output them as plain text.
+Present the curve and a short reason, followed by copyable CSS and Tailwind code blocks and the returned preview link. Treat `suggested_duration_ms`, when returned, as a starting range to preview in the actual UI, not a measured optimum. Mention reduced-motion behavior when recommending nonessential movement. Do not add unsupported scientific percentages or claim that a visual preview was inspected unless it was.

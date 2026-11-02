@@ -1,4 +1,4 @@
-import { FRONTEND_URL } from '~/data/globals';
+import { API_VERSION, FRONTEND_URL } from '~/data/globals';
 import type { EasingTypeKey } from '~/types/enums';
 import type { EasingCurveResponse } from '~/validations/curve';
 import { getApiResponseFromInput, getApiResponseFromState } from '../api';
@@ -6,9 +6,9 @@ import { rehydrateShareState } from '../state-sharing/state-serialization';
 import { decodeState, encodeState } from '../state-sharing/url-code';
 
 const createCurveLinks = (id: string, type: EasingTypeKey) => ({
-  self: `/curves/${id}`,
+  self: `/${API_VERSION}/curves/${id}`,
   share_url: `${FRONTEND_URL}/#${id}`,
-  create: `/curves/${type.toLowerCase()}`,
+  create: `/${API_VERSION}/curves/${type.toLowerCase()}`,
 });
 
 export const createCurveResponseFromId = (id: string): EasingCurveResponse => {
