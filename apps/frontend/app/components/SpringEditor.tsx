@@ -31,10 +31,10 @@ export default function SpringEditor() {
       ...state,
     };
     const config = {
-      accuracy: newState.editorAccuracy || editorAccuracy,
-      stiffness: newState.springStiffness || springStiffness,
-      damping: newState.springDamping || springDamping,
-      mass: newState.springMass || springMass,
+      accuracy: newState.editorAccuracy ?? editorAccuracy,
+      stiffness: newState.springStiffness ?? springStiffness,
+      damping: newState.springDamping ?? springDamping,
+      mass: newState.springMass ?? springMass,
     };
     const { easingValue, sampledPoints, totalTime } = generateLinearEasing({
       type: EasingType.SPRING,

@@ -19,7 +19,7 @@ export default function Share() {
     const configurationLink = encodedConfiguration
       ? `${window.location.origin}/#${encodedConfiguration}`
       : window.location.origin;
-    navigator.clipboard.writeText(configurationLink);
+    return navigator.clipboard.writeText(configurationLink);
   };
 
   return (
@@ -36,6 +36,7 @@ export default function Share() {
             onClick={handleCopyLink}
             isStaticButton
             toast="Copied!"
+            errorToast="Copy failed"
           />
         </div>
         <hr

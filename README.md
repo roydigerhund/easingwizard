@@ -55,21 +55,23 @@ pnpm dev:api       # API server on http://localhost:3000
 
 ### For Claude Code
 
-The plugin is published in the `claude-community` marketplace. In Claude Code:
+Install the current release from the Easing Wizard marketplace. In Claude Code:
 
 ```
-/plugin marketplace add anthropics/claude-plugins-community
-/plugin install easing-wizard@claude-community
+/plugin marketplace add roydigerhund/easingwizard-claude-plugin
+/plugin install easingwizard@easingwizard
 ```
 
 Or from your terminal:
 
 ```bash
-claude plugin marketplace add anthropics/claude-plugins-community
-claude plugin install easing-wizard@claude-community
+claude plugin marketplace add roydigerhund/easingwizard-claude-plugin
+claude plugin install easingwizard@easingwizard
 ```
 
 Then run `/reload-plugins` (or restart Claude Code) to activate it.
+
+If you previously installed `easing-wizard@claude-community`, disable or uninstall that entry first to avoid duplicate skills and MCP servers. The community directory updates independently; this repository marketplace provides the current release directly.
 
 This gives you 7 MCP tools, 4 skills, and an animation expert agent:
 
@@ -85,7 +87,7 @@ Use the published MCP package directly (Node 22.14+):
 codex mcp add easingwizard -- npx -y @easingwizard/mcp-server
 ```
 
-For recommendations, animation reviews, and implementation workflows, use the [Codex plugin](apps/codex-plugin/README.md). Its repository marketplace is defined in `.agents/plugins/marketplace.json`. The prepared plugin pins MCP 1.2.0, which must be published before installation.
+For recommendations, animation reviews, and implementation workflows, use the [Codex plugin](apps/codex-plugin/README.md). Its repository marketplace is defined in `.agents/plugins/marketplace.json`. The plugin pins the published MCP 1.2.0 package.
 
 ### For Other MCP Clients (VS Code, Cursor, etc.)
 
@@ -104,7 +106,7 @@ Cursor and Claude Desktop use `mcpServers`:
 
 VS Code uses a `servers` object in `.vscode/mcp.json`. Full client-specific instructions, exact tool names, and local development setup are in the [MCP README](apps/mcp/README.md). Pin a published version when reproducibility matters.
 
-The MCP server computes curves locally with the shared core; it does not call the REST API. The API also includes a Streamable HTTP `/mcp` endpoint for URL-based connections without Node on the client. It is available remotely only after deploying the updated API; publishing npm alone does not enable it. See [API setup](apps/api/README.md).
+The MCP server computes curves locally with the shared core; it does not call the REST API. The API also provides the Streamable HTTP endpoint `https://api.easingwizard.com/mcp` for URL-based connections without Node on the client. See [API setup](apps/api/README.md).
 
 ## Checks and releases
 

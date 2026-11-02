@@ -13,7 +13,7 @@ import { BezierEasingOutputSchema, LinearEasingOutputSchema, OutputUnionSchema }
 
 export const CurveIdSchema = z.string().meta({
   description: 'The ID of the easing curve',
-  example: '0a1b2c3xy',
+  example: '0a0d.25e.1f.75g.914',
 });
 
 export const generatedAtSchema = z.string().meta({
@@ -105,15 +105,14 @@ export const EasingCurveResponseSchema = z
     description: 'Complete easing curve response with metadata and links',
   });
 
-export const NonUnionEasingCurveResponseSchema = z
-  .object({
-    id: CurveIdSchema,
-    type: z.enum(EasingType),
-    input: ParamsUnionSchema,
-    output: OutputUnionSchema,
-    links: curveLinksResponseSchema,
-    generated_at: generatedAtSchema,
-  })
+export const NonUnionEasingCurveResponseSchema = z.object({
+  id: CurveIdSchema,
+  type: z.enum(EasingType),
+  input: ParamsUnionSchema,
+  output: OutputUnionSchema,
+  links: curveLinksResponseSchema,
+  generated_at: generatedAtSchema,
+});
 
 export type BezierEasingCurveResponse = z.infer<typeof BezierEasingCurveResponseSchema>;
 export type SpringEasingCurveResponse = z.infer<typeof SpringEasingCurveResponseSchema>;

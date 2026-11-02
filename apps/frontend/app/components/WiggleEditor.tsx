@@ -31,10 +31,10 @@ export default function WiggleEditor() {
       ...state,
     };
     const config = {
-      accuracy: newState.editorAccuracy || editorAccuracy,
-      wiggles: newState.wiggleWiggles || wiggleWiggles,
-      mass: newState.wiggleMass || wiggleMass,
-      damping: newState.wiggleDamping || wiggleDamping,
+      accuracy: newState.editorAccuracy ?? editorAccuracy,
+      wiggles: newState.wiggleWiggles ?? wiggleWiggles,
+      mass: newState.wiggleMass ?? wiggleMass,
+      damping: newState.wiggleDamping ?? wiggleDamping,
     };
     const { easingValue, sampledPoints } = generateLinearEasing({
       type: EasingType.WIGGLE,

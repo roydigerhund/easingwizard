@@ -1,0 +1,15 @@
+{
+  "name": "easingwizard",
+  "description": "Official Easing Wizard plugin for CSS easing curves and motion advice",
+  "owner": {
+    "name": "Matthias Martin"
+  },
+  "plugins": [
+    {
+      "name": "easingwizard",
+      "source": "./",
+      "description": "Generate CSS easing curves, review animations, and choose motion that fits your interface with Easing Wizard",
+      "homepage": "https://easingwizard.com"
+    }
+  ]
+}

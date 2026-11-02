@@ -39,17 +39,52 @@ export default function EasingCode() {
   const suggestedDuration = useMemo(() => {
     switch (easingType) {
       case EasingType.SPRING:
-        return suggestDuration(EasingType.SPRING, { mass: springMass, stiffness: springStiffness, damping: springDamping, accuracy: editorAccuracy }, springTotalTime);
+        return suggestDuration(
+          EasingType.SPRING,
+          { mass: springMass, stiffness: springStiffness, damping: springDamping, accuracy: editorAccuracy },
+          springTotalTime,
+        );
       case EasingType.BOUNCE:
-        return suggestDuration(EasingType.BOUNCE, { bounces: bounceBounces, mass: bounceMass, damping: bounceDamping, accuracy: editorAccuracy });
+        return suggestDuration(EasingType.BOUNCE, {
+          bounces: bounceBounces,
+          mass: bounceMass,
+          damping: bounceDamping,
+          accuracy: editorAccuracy,
+        });
       case EasingType.WIGGLE:
-        return suggestDuration(EasingType.WIGGLE, { wiggles: wiggleWiggles, mass: wiggleMass, damping: wiggleDamping, accuracy: editorAccuracy });
+        return suggestDuration(EasingType.WIGGLE, {
+          wiggles: wiggleWiggles,
+          mass: wiggleMass,
+          damping: wiggleDamping,
+          accuracy: editorAccuracy,
+        });
       case EasingType.OVERSHOOT:
-        return suggestDuration(EasingType.OVERSHOOT, { style: overshootStyle, mass: overshootMass, damping: overshootDamping, accuracy: editorAccuracy });
+        return suggestDuration(EasingType.OVERSHOOT, {
+          style: overshootStyle,
+          mass: overshootMass,
+          damping: overshootDamping,
+          accuracy: editorAccuracy,
+        });
       default:
         return null;
     }
-  }, [easingType, springMass, springStiffness, springDamping, springTotalTime, editorAccuracy, bounceBounces, bounceMass, bounceDamping, wiggleWiggles, wiggleMass, wiggleDamping, overshootStyle, overshootMass, overshootDamping]);
+  }, [
+    easingType,
+    springMass,
+    springStiffness,
+    springDamping,
+    springTotalTime,
+    editorAccuracy,
+    bounceBounces,
+    bounceMass,
+    bounceDamping,
+    wiggleWiggles,
+    wiggleMass,
+    wiggleDamping,
+    overshootStyle,
+    overshootMass,
+    overshootDamping,
+  ]);
 
   const [codeType, setCodeType] = useState(CodeType.CSS);
 
@@ -114,6 +149,7 @@ export default function EasingCode() {
           onClick={() => navigator.clipboard.writeText(transformedValue)}
           isStaticButton
           toast="Copied!"
+          errorToast="Copy failed"
         />
       </div>
       <div className="mt-3 flex flex-col items-start gap-4 @md:mt-6">

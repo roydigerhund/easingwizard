@@ -31,9 +31,9 @@ export default function OvershootEditor() {
     };
     const config = {
       style: overshootStyle,
-      accuracy: newState.editorAccuracy || editorAccuracy,
-      mass: newState.overshootMass || overshootMass,
-      damping: newState.overshootDamping || overshootDamping,
+      accuracy: newState.editorAccuracy ?? editorAccuracy,
+      mass: newState.overshootMass ?? overshootMass,
+      damping: newState.overshootDamping ?? overshootDamping,
     };
     const { easingValue, sampledPoints } = generateLinearEasing({
       type: EasingType.OVERSHOOT,

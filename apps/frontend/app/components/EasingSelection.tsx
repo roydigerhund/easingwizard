@@ -27,6 +27,7 @@ import {
   type WiggleCurveKey,
 } from 'easingwizard-core';
 import { useEasingStore } from '~/state/easing-store';
+import { getOvershootSelection } from '~/utils/overshoot-selection';
 import CardHeadline from './CardHeadline';
 import CurveIconTextButton from './CurveIconTextButton';
 
@@ -45,6 +46,8 @@ export default function EasingSelection() {
   const overshootStyle = useEasingStore((state) => state.overshootStyle);
   const overshootIsCustom = useEasingStore((state) => state.overshootIsCustom);
   const overshootCurve = useEasingStore((state) => state.overshootCurve);
+  const overshootMass = useEasingStore((state) => state.overshootMass);
+  const overshootDamping = useEasingStore((state) => state.overshootDamping);
   const setState = useEasingStore((state) => state.setState);
 
   const onBezierValueChange = (style: BezierStyleKey, curve: BezierCurveKey) => {
@@ -69,7 +72,11 @@ export default function EasingSelection() {
       accuracy: editorAccuracy,
       ...springFunctions[curve],
     });
-    const duration = suggestDuration(EasingType.SPRING, { ...springFunctions[curve], accuracy: editorAccuracy }, totalTime);
+    const duration = suggestDuration(
+      EasingType.SPRING,
+      { ...springFunctions[curve], accuracy: editorAccuracy },
+      totalTime,
+    );
     setState({
       springStiffness: springFunctions[curve].stiffness,
       springDamping: springFunctions[curve].damping,
@@ -122,32 +129,8 @@ export default function EasingSelection() {
   };
 
   const onOvershootValueChange = (style: OvershootStyleKey, curve?: OvershootCurveKey) => {
-    const resolvedCurve = curve || defaultOvershootCurve;
-    const { easingValue, sampledPoints } = generateLinearEasing({
-      type: EasingType.OVERSHOOT,
-      accuracy: editorAccuracy,
-      style,
-      ...overshootFunctions[style][resolvedCurve],
-    });
-    const duration = suggestDuration(EasingType.OVERSHOOT, { style, ...overshootFunctions[style][resolvedCurve], accuracy: editorAccuracy });
     setState(
-      curve
-        ? {
-            overshootStyle: style,
-            overshootDamping: overshootFunctions[style][curve].damping,
-            overshootMass: overshootFunctions[style][curve].mass,
-            overshootCurve: curve,
-            overshootValue: easingValue,
-            overshootPoints: sampledPoints,
-            overshootIsCustom: false,
-                  previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
-          }
-        : {
-            overshootStyle: style,
-            overshootValue: easingValue,
-            overshootPoints: sampledPoints,
-                  previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
-          },
+      getOvershootSelection({ style, curve, mass: overshootMass, damping: overshootDamping, accuracy: editorAccuracy }),
     );
   };
 

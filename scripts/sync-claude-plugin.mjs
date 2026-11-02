@@ -50,5 +50,5 @@ for (const component of components) {
 await stat(path.join(destination, '.claude-plugin/plugin.json'));
 console.log(git('diff', '--stat'));
 console.log(
-  'Plugin source synchronized. Review, commit and push this checkout, then update the marketplace source.sha to that commit.',
+  'Plugin source synchronized. Review, commit and push this checkout. The repository marketplace follows this branch; community directory updates are a separate publication step.',
 );

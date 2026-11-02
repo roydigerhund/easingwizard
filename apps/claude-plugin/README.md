@@ -8,28 +8,34 @@ The plugin preserves intentional standard easings, motion tokens, and reduced-mo
 
 Requires Node.js 22.14 or newer and `npx` on your PATH. The plugin launches a pinned version of `@easingwizard/mcp-server`; the first start downloads it from npm. Curve computation then runs locally without an API key or a hosted REST API.
 
-Install the published community release in Claude Code:
+Install the current release directly from the Easing Wizard marketplace in Claude Code:
 
 ```text
-/plugin install easing-wizard --marketplace anthropics/claude-plugins-community
+/plugin install easingwizard --marketplace roydigerhund/easingwizard-claude-plugin
 ```
 
 The one-step command requires Claude Code 2.1.275 or later. The terminal equivalent requires 2.1.292 or later:
 
 ```bash
-claude plugin install easing-wizard --marketplace anthropics/claude-plugins-community
+claude plugin install easingwizard --marketplace roydigerhund/easingwizard-claude-plugin
 ```
 
 For older clients, use the two-step flow:
 
 ```text
-/plugin marketplace add anthropics/claude-plugins-community
-/plugin install easing-wizard@claude-community
+/plugin marketplace add roydigerhund/easingwizard-claude-plugin
+/plugin install easingwizard@easingwizard
 ```
 
-Run `/reload-plugins` in an existing session, then `/mcp` to confirm the bundled server is connected. The install ID is `easing-wizard`; the manifest's `easingwizard` name supplies the skill namespace.
+Run `/reload-plugins` in an existing session, then `/mcp` to confirm the bundled server is connected. The install ID is `easingwizard@easingwizard`; skills use the `/easingwizard:` namespace.
 
-This checkout prepares plugin **1.1.0**, pinned to MCP **1.2.0**. The community command installs the version its catalog currently references. Publish MCP 1.2.0, synchronize the separate plugin repository, and update the community catalog's commit pin before advertising this new release.
+The current plugin release is **1.1.0**, pinned to the published MCP **1.2.0** package. The marketplace in this repository points directly to this plugin, so it does not depend on a community catalog update.
+
+### Switching from the community release
+
+If you installed `easing-wizard@claude-community`, open `/plugin`, select **Installed**, and disable or uninstall that entry in its existing scope before installing from this repository. Keep only one Easing Wizard plugin enabled to avoid duplicate skills and MCP servers.
+
+The community catalog uses a separate commit pin and can lag behind this repository. Use the installation commands above for the current release.
 
 ## Use
 
@@ -53,7 +59,7 @@ node scripts/package-plugins.mjs
 
 The final command creates deterministic ZIPs and `SHA256SUMS` in `dist/plugins/`. Build outputs are ignored by Git. Plugin validation checks manifests, MCP version pins, generated-file drift, tool namespaces, and packaged references; it does not prove a real model has completed the workflows correctly.
 
-Once the pinned npm package is available, `claude --plugin-dir ./apps/claude-plugin` loads this directory for a development session without a marketplace installation. Exercise a recommendation, an audit of a `linear` spinner, and an explicitly requested improvement with reduced motion enabled. The optional startup hint uses Bash; the skills and MCP server do not depend on it.
+`claude --plugin-dir ./apps/claude-plugin` loads this directory for a development session without a marketplace installation. Exercise a recommendation, an audit of a `linear` spinner, and an explicitly requested improvement with reduced motion enabled. The optional startup hint uses Bash; the skills and MCP server do not depend on it.
 
 ## Shared source and releases
 

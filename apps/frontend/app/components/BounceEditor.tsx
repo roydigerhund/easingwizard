@@ -31,10 +31,10 @@ export default function BounceEditor() {
       ...state,
     };
     const config = {
-      accuracy: newState.editorAccuracy || editorAccuracy,
-      bounces: newState.bounceBounces || bounceBounces,
-      mass: newState.bounceMass || bounceMass,
-      damping: newState.bounceDamping || bounceDamping,
+      accuracy: newState.editorAccuracy ?? editorAccuracy,
+      bounces: newState.bounceBounces ?? bounceBounces,
+      mass: newState.bounceMass ?? bounceMass,
+      damping: newState.bounceDamping ?? bounceDamping,
     };
     const { easingValue, sampledPoints } = generateLinearEasing({
       type: EasingType.BOUNCE,
