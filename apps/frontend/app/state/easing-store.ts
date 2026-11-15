@@ -112,7 +112,6 @@ type EasingAction = {
   setState: (state: Partial<EasingState>) => void;
   updateCurve: (state: Partial<EasingState>, options?: { resetDuration: boolean }) => void;
   setPreviewDuration: (duration: number) => void;
-  resetPreviewDuration: () => void;
   restoreState: (state: Partial<EasingState>, manualDuration?: boolean) => void;
   getCurrentState: () => EasingState;
 };
@@ -152,10 +151,6 @@ export const useEasingStore = create<EasingStore>((set, get) => ({
       return { ...patch, ...regenerated, previewDuration, previewDurationIsManual };
     }),
   setPreviewDuration: (previewDuration) => set({ previewDuration, previewDurationIsManual: true }),
-  resetPreviewDuration: () => {
-    const previewDuration = getSuggestedMidpoint(get());
-    if (previewDuration !== undefined) set({ previewDuration, previewDurationIsManual: false });
-  },
   restoreState: (patch, manualDuration) =>
     set((state) => {
       const restored = { ...state, ...patch };
@@ -170,7 +165,6 @@ export const useEasingStore = create<EasingStore>((set, get) => ({
       setState: _state,
       updateCurve: _curve,
       setPreviewDuration: _duration,
-      resetPreviewDuration: _suggested,
       restoreState: _restore,
       getCurrentState: _current,
       previewDurationIsManual: _manual,

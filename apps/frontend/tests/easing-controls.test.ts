@@ -53,15 +53,26 @@ test('selecting an Overshoot preset replaces custom parameters consistently', ()
   assert.equal(restored.output.css, state.overshootValue);
 });
 
-test('Spring edits preserve a manually set duration until the suggestion is selected', () => {
-  const { setEasingType, restoreState, updateCurve, setPreviewDuration, resetPreviewDuration, getCurrentState } =
-    useEasingStore.getState();
+test('Spring edits update the suggested duration and preserve a manually set duration', () => {
+  const { setEasingType, restoreState, updateCurve, setPreviewDuration, getCurrentState } = useEasingStore.getState();
   restoreState(defaultEasingState);
   setEasingType('SPRING');
 
   const initial = getCurrentState();
   updateCurve({ springMass: 4.5, springIsCustom: true });
-  assert.notEqual(getCurrentState().previewDuration, initial.previewDuration);
+  const state = getCurrentState();
+  const { min, max } = suggestDuration(
+    'SPRING',
+    {
+      mass: state.springMass,
+      stiffness: state.springStiffness,
+      damping: state.springDamping,
+      accuracy: state.editorAccuracy,
+    },
+    state.springTotalTime,
+  );
+  assert.equal(state.previewDuration, Math.round((min + max) / 2 / 25) * 25);
+  assert.notEqual(state.previewDuration, initial.previewDuration);
 
   setPreviewDuration(450);
   updateCurve({ springMass: 4.6 });
@@ -71,15 +82,7 @@ test('Spring edits preserve a manually set duration until the suggestion is sele
   assert.equal(getCurrentState().previewDuration, 450);
   assert.equal(getCurrentState().springMass, 4.6);
 
-  resetPreviewDuration();
-  const state = getCurrentState();
-  const { min, max } = suggestDuration(
-    'SPRING',
-    { mass: 4.6, stiffness: 40, damping: 12, accuracy: 'ULTRA' },
-    state.springTotalTime,
-  );
-  assert.equal(state.previewDuration, Math.round((min + max) / 2 / 25) * 25);
-  assert.equal(useEasingStore.getState().previewDurationIsManual, false);
+  assert.equal(useEasingStore.getState().previewDurationIsManual, true);
 });
 
 test('restored manual durations survive editing and reset on a new basis', () => {

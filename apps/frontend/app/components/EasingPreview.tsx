@@ -33,9 +33,7 @@ export default function EasingPreview() {
   const setState = useEasingStore((state) => state.setState);
   const easingType = useEasingStore((state) => state.easingType);
   const previewDuration = useEasingStore((state) => state.previewDuration);
-  const previewDurationIsManual = useEasingStore((state) => state.previewDurationIsManual);
   const setPreviewDuration = useEasingStore((state) => state.setPreviewDuration);
-  const resetPreviewDuration = useEasingStore((state) => state.resetPreviewDuration);
   const previewPlayMode = useEasingStore((state) => state.previewPlayMode);
   const previewShowLinear = useEasingStore((state) => state.previewShowLinear);
   const previewAnimationType = useEasingStore((state) => state.previewAnimationType);
@@ -174,41 +172,21 @@ export default function EasingPreview() {
             </IconButton>
           </div>
         </div>
-        <div className="flex flex-col gap-1">
-          <Slider
-            label="Duration"
-            value={previewDuration}
-            onChange={(value) => {
-              if (value !== previewDuration) {
-                setHidePreviewElement(true);
-                setCounter(0);
-              }
-              setPreviewDuration(value);
-            }}
-            min={100}
-            max={easingType === EasingType.SPRING ? 4000 : 2000}
-            step={25}
-            suggestedRange={suggestedRange}
-          />
-          {suggestedRange && (
-            <button
-              type="button"
-              className={classNames(
-                'min-h-7 self-end rounded-sm px-1 text-xs',
-                previewDurationIsManual
-                  ? 'text-zinc-300 underline underline-offset-4 hover:text-zinc-100'
-                  : 'text-zinc-400',
-              )}
-              aria-disabled={!previewDurationIsManual}
-              tabIndex={previewDurationIsManual ? 0 : -1}
-              onClick={() => {
-                if (previewDurationIsManual) resetPreviewDuration();
-              }}
-            >
-              {previewDurationIsManual ? 'Use suggested duration' : 'Using suggested duration'}
-            </button>
-          )}
-        </div>
+        <Slider
+          label="Duration"
+          value={previewDuration}
+          onChange={(value) => {
+            if (value !== previewDuration) {
+              setHidePreviewElement(true);
+              setCounter(0);
+            }
+            setPreviewDuration(value);
+          }}
+          min={100}
+          max={easingType === EasingType.SPRING ? 4000 : 2000}
+          step={25}
+          suggestedRange={suggestedRange}
+        />
         <div className="relative grid grid-cols-5 gap-4 self-start">
           {Object.values(AnimationType).map((type) => (
             <IconButton
