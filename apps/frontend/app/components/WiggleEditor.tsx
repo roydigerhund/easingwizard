@@ -1,11 +1,4 @@
-import {
-  type EasingState,
-  EasingType,
-  generateLinearEasing,
-  generateWiggleSVGPolyline,
-  LinearEasingAccuracy,
-  suggestDuration,
-} from 'easingwizard-core';
+import { generateWiggleSVGPolyline, LinearEasingAccuracy } from 'easingwizard-core';
 import { useEasingStore } from '~/state/easing-store';
 import EditorBase from './EditorBase';
 import EditorBaseLine from './EditorBaseLine';
@@ -19,35 +12,7 @@ export default function WiggleEditor() {
   const wiggleWiggles = useEasingStore((state) => state.wiggleWiggles);
   const wigglePoints = useEasingStore((state) => state.wigglePoints);
   const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
-  const setState = useEasingStore((state) => state.setState);
-
-  const handleChange = (state: Partial<EasingState>) => {
-    const newState: Partial<EasingState> = {
-      wiggleWiggles,
-      wiggleMass,
-      wiggleDamping,
-      // If editorAccuracy is not provided, we assume it's a custom curve
-      ...(state.editorAccuracy ? {} : { wiggleIsCustom: true }),
-      ...state,
-    };
-    const config = {
-      accuracy: newState.editorAccuracy ?? editorAccuracy,
-      wiggles: newState.wiggleWiggles ?? wiggleWiggles,
-      mass: newState.wiggleMass ?? wiggleMass,
-      damping: newState.wiggleDamping ?? wiggleDamping,
-    };
-    const { easingValue, sampledPoints } = generateLinearEasing({
-      type: EasingType.WIGGLE,
-      ...config,
-    });
-    const duration = suggestDuration(EasingType.WIGGLE, config);
-    setState({
-      ...newState,
-      wiggleValue: easingValue,
-      wigglePoints: sampledPoints,
-      previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
-    });
-  };
+  const updateCurve = useEasingStore((state) => state.updateCurve);
 
   return (
     <div className="col-span-2">
@@ -63,7 +28,7 @@ export default function WiggleEditor() {
         <Slider
           label="Wiggles"
           value={wiggleWiggles}
-          onChange={(value) => handleChange({ wiggleWiggles: value })}
+          onChange={(value) => updateCurve({ wiggleWiggles: value, wiggleIsCustom: true })}
           min={1}
           max={10}
           step={1}
@@ -72,7 +37,7 @@ export default function WiggleEditor() {
           label="Mass"
           hint="Affects duration"
           value={wiggleMass}
-          onChange={(value) => handleChange({ wiggleMass: value })}
+          onChange={(value) => updateCurve({ wiggleMass: value, wiggleIsCustom: true })}
           min={1}
           max={5}
           step={0.1}
@@ -80,7 +45,7 @@ export default function WiggleEditor() {
         <Slider
           label="Damping"
           value={wiggleDamping}
-          onChange={(value) => handleChange({ wiggleDamping: value })}
+          onChange={(value) => updateCurve({ wiggleDamping: value, wiggleIsCustom: true })}
           min={0}
           max={100}
           step={1}
@@ -90,7 +55,7 @@ export default function WiggleEditor() {
           label="Accuracy"
           value={editorAccuracy}
           options={Object.values(LinearEasingAccuracy).map((value) => value)}
-          onChange={(value) => handleChange({ editorAccuracy: value })}
+          onChange={(value) => updateCurve({ editorAccuracy: value })}
         />
       </InputGroup>
     </div>

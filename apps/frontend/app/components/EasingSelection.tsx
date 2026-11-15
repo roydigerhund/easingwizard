@@ -7,7 +7,6 @@ import {
   createCubicBezierString,
   defaultOvershootCurve,
   EasingType,
-  generateLinearEasing,
   humanize,
   isBezierStyle,
   isOvershootStyle,
@@ -15,7 +14,6 @@ import {
   overshootFunctions,
   springCalculations,
   springFunctions,
-  suggestDuration,
   wiggleCalculations,
   wiggleFunctions,
   type BezierCurveKey,
@@ -33,7 +31,6 @@ import CurveIconTextButton from './CurveIconTextButton';
 
 export default function EasingSelection() {
   const easingType = useEasingStore((state) => state.easingType);
-  const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
   const bezierStyle = useEasingStore((state) => state.bezierStyle);
   const bezierCurve = useEasingStore((state) => state.bezierCurve);
   const bezierIsCustom = useEasingStore((state) => state.bezierIsCustom);
@@ -49,6 +46,7 @@ export default function EasingSelection() {
   const overshootMass = useEasingStore((state) => state.overshootMass);
   const overshootDamping = useEasingStore((state) => state.overshootDamping);
   const setState = useEasingStore((state) => state.setState);
+  const updateCurve = useEasingStore((state) => state.updateCurve);
 
   const onBezierValueChange = (style: BezierStyleKey, curve: BezierCurveKey) => {
     const value = bezierFunctions[style][curve]!;
@@ -67,71 +65,43 @@ export default function EasingSelection() {
   };
 
   const onSpringValueChange = (curve: SpringCurveKey) => {
-    const { easingValue, sampledPoints, totalTime } = generateLinearEasing({
-      type: EasingType.SPRING,
-      accuracy: editorAccuracy,
-      ...springFunctions[curve],
-    });
-    const duration = suggestDuration(
-      EasingType.SPRING,
-      { ...springFunctions[curve], accuracy: editorAccuracy },
-      totalTime,
+    if (!springIsCustom && springCurve === curve) return;
+    const { stiffness, damping, mass } = springFunctions[curve];
+    updateCurve(
+      {
+        springCurve: curve,
+        springStiffness: stiffness,
+        springDamping: damping,
+        springMass: mass,
+        springIsCustom: false,
+      },
+      { resetDuration: true },
     );
-    setState({
-      springStiffness: springFunctions[curve].stiffness,
-      springDamping: springFunctions[curve].damping,
-      springMass: springFunctions[curve].mass,
-      springCurve: curve,
-      springValue: easingValue,
-      springPoints: sampledPoints,
-      springTotalTime: totalTime,
-      springIsCustom: false,
-      previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
-    });
   };
 
   const onBounceValueChange = (curve: BounceCurveKey) => {
-    const { easingValue, sampledPoints } = generateLinearEasing({
-      type: EasingType.BOUNCE,
-      accuracy: editorAccuracy,
-      ...bounceFunctions[curve],
-    });
-    const duration = suggestDuration(EasingType.BOUNCE, { ...bounceFunctions[curve], accuracy: editorAccuracy });
-    setState({
-      bounceBounces: bounceFunctions[curve].bounces,
-      bounceMass: bounceFunctions[curve].mass,
-      bounceDamping: bounceFunctions[curve].damping,
-      bounceCurve: curve,
-      bounceValue: easingValue,
-      bouncePoints: sampledPoints,
-      bounceIsCustom: false,
-      previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
-    });
+    if (!bounceIsCustom && bounceCurve === curve) return;
+    const { bounces, mass, damping } = bounceFunctions[curve];
+    updateCurve(
+      { bounceCurve: curve, bounceBounces: bounces, bounceMass: mass, bounceDamping: damping, bounceIsCustom: false },
+      { resetDuration: true },
+    );
   };
 
   const onWiggleValueChange = (curve: WiggleCurveKey) => {
-    const { easingValue, sampledPoints } = generateLinearEasing({
-      type: EasingType.WIGGLE,
-      accuracy: editorAccuracy,
-      ...wiggleFunctions[curve],
-    });
-    const duration = suggestDuration(EasingType.WIGGLE, { ...wiggleFunctions[curve], accuracy: editorAccuracy });
-    setState({
-      wiggleDamping: wiggleFunctions[curve].damping,
-      wiggleMass: wiggleFunctions[curve].mass,
-      wiggleWiggles: wiggleFunctions[curve].wiggles,
-      wiggleCurve: curve,
-      wiggleValue: easingValue,
-      wigglePoints: sampledPoints,
-      wiggleIsCustom: false,
-      previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
-    });
+    if (!wiggleIsCustom && wiggleCurve === curve) return;
+    const { wiggles, mass, damping } = wiggleFunctions[curve];
+    updateCurve(
+      { wiggleCurve: curve, wiggleWiggles: wiggles, wiggleMass: mass, wiggleDamping: damping, wiggleIsCustom: false },
+      { resetDuration: true },
+    );
   };
 
   const onOvershootValueChange = (style: OvershootStyleKey, curve?: OvershootCurveKey) => {
-    setState(
-      getOvershootSelection({ style, curve, mass: overshootMass, damping: overshootDamping, accuracy: editorAccuracy }),
-    );
+    if (style === overshootStyle && (overshootIsCustom ? curve === undefined : curve === overshootCurve)) return;
+    updateCurve(getOvershootSelection({ style, curve, mass: overshootMass, damping: overshootDamping }), {
+      resetDuration: true,
+    });
   };
 
   return (

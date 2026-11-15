@@ -1,15 +1,17 @@
 import {
   createCurveResponseFromId,
+  decodeState,
   defaultEasingState,
   encodeState,
   generateLinearEasing,
   overshootFunctions,
   reduceStateForShare,
+  rehydrateShareState,
   suggestDuration,
-  type EasingState,
 } from 'easingwizard-core';
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { useEasingStore } from '../app/state/easing-store';
 import { getOvershootSelection } from '../app/utils/overshoot-selection';
 import { parseSliderInput, stepPrecision } from '../app/utils/slider-input';
 
@@ -17,8 +19,10 @@ test('custom Overshoot style changes preserve controls, curve, duration, and sha
   for (const style of ['IN', 'OUT', 'IN_OUT'] as const) {
     for (const damping of [40, 0]) {
       const config = { style, mass: 2, damping, accuracy: 'HIGH' as const };
-      const patch = getOvershootSelection(config);
-      const state: EasingState = { ...defaultEasingState, easingType: 'OVERSHOOT', ...patch };
+      const { restoreState, updateCurve, getCurrentState } = useEasingStore.getState();
+      restoreState({ ...defaultEasingState, easingType: 'OVERSHOOT', editorAccuracy: config.accuracy });
+      updateCurve(getOvershootSelection(config), { resetDuration: true });
+      const state = getCurrentState();
       assert.equal(state.overshootMass, 2);
       assert.equal(state.overshootDamping, damping);
       assert.equal(state.overshootIsCustom, true);
@@ -36,14 +40,66 @@ test('custom Overshoot style changes preserve controls, curve, duration, and sha
 
 test('selecting an Overshoot preset replaces custom parameters consistently', () => {
   const curve = 'SOFT';
-  const patch = getOvershootSelection({ style: 'IN', curve, mass: 4, damping: 12, accuracy: 'HIGH' });
+  const patch = getOvershootSelection({ style: 'IN', curve, mass: 4, damping: 12 });
   assert.equal(patch.overshootIsCustom, false);
   assert.equal(patch.overshootCurve, curve);
   assert.equal(patch.overshootMass, overshootFunctions.IN[curve].mass);
   assert.equal(patch.overshootDamping, overshootFunctions.IN[curve].damping);
-  const state: EasingState = { ...defaultEasingState, easingType: 'OVERSHOOT', ...patch };
+  const { restoreState, updateCurve, getCurrentState } = useEasingStore.getState();
+  restoreState({ ...defaultEasingState, easingType: 'OVERSHOOT', editorAccuracy: 'HIGH' });
+  updateCurve(patch, { resetDuration: true });
+  const state = getCurrentState();
   const restored = createCurveResponseFromId(encodeState(reduceStateForShare(state)));
   assert.equal(restored.output.css, state.overshootValue);
+});
+
+test('Spring edits preserve a manually set duration until the suggestion is selected', () => {
+  const { setEasingType, restoreState, updateCurve, setPreviewDuration, resetPreviewDuration, getCurrentState } =
+    useEasingStore.getState();
+  restoreState(defaultEasingState);
+  setEasingType('SPRING');
+
+  const initial = getCurrentState();
+  updateCurve({ springMass: 4.5, springIsCustom: true });
+  assert.notEqual(getCurrentState().previewDuration, initial.previewDuration);
+
+  setPreviewDuration(450);
+  updateCurve({ springMass: 4.6 });
+  updateCurve({ springStiffness: 40, springDamping: 12 });
+  updateCurve({ editorAccuracy: 'ULTRA' });
+  setEasingType('SPRING');
+  assert.equal(getCurrentState().previewDuration, 450);
+  assert.equal(getCurrentState().springMass, 4.6);
+
+  resetPreviewDuration();
+  const state = getCurrentState();
+  const { min, max } = suggestDuration(
+    'SPRING',
+    { mass: 4.6, stiffness: 40, damping: 12, accuracy: 'ULTRA' },
+    state.springTotalTime,
+  );
+  assert.equal(state.previewDuration, Math.round((min + max) / 2 / 25) * 25);
+  assert.equal(useEasingStore.getState().previewDurationIsManual, false);
+});
+
+test('restored manual durations survive editing and reset on a new basis', () => {
+  const { setEasingType, restoreState, updateCurve, setPreviewDuration, getCurrentState } = useEasingStore.getState();
+  restoreState(defaultEasingState);
+  setEasingType('SPRING');
+  setPreviewDuration(450);
+  const saved = encodeState(reduceStateForShare(getCurrentState()));
+  restoreState(rehydrateShareState(decodeState(saved)));
+
+  updateCurve({ springMass: 4.6, springIsCustom: true });
+  assert.equal(getCurrentState().previewDuration, 450);
+  updateCurve({ springMass: 1.5 }, { resetDuration: true });
+  assert.equal(useEasingStore.getState().previewDurationIsManual, false);
+  assert.notEqual(getCurrentState().previewDuration, 450);
+
+  setPreviewDuration(1700);
+  setEasingType('BOUNCE');
+  assert.equal(useEasingStore.getState().previewDurationIsManual, false);
+  assert.notEqual(getCurrentState().previewDuration, 1700);
 });
 
 const bezierInput = { min: -1, max: 2, step: 0.001 };

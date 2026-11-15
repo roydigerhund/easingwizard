@@ -1,11 +1,4 @@
-import {
-  type EasingState,
-  EasingType,
-  generateLinearEasing,
-  generateSpringSVGPolyline,
-  LinearEasingAccuracy,
-  suggestDuration,
-} from 'easingwizard-core';
+import { generateSpringSVGPolyline, LinearEasingAccuracy } from 'easingwizard-core';
 import { useEasingStore } from '~/state/easing-store';
 import EditorBase from './EditorBase';
 import EditorBaseLine from './EditorBaseLine';
@@ -19,36 +12,7 @@ export default function SpringEditor() {
   const springMass = useEasingStore((state) => state.springMass);
   const springPoints = useEasingStore((state) => state.springPoints);
   const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
-  const setState = useEasingStore((state) => state.setState);
-
-  const handleChange = (state: Partial<EasingState>) => {
-    const newState: Partial<EasingState> = {
-      springStiffness,
-      springDamping,
-      springMass,
-      // If editorAccuracy is not provided, we assume it's a custom curve
-      ...(state.editorAccuracy ? {} : { springIsCustom: true }),
-      ...state,
-    };
-    const config = {
-      accuracy: newState.editorAccuracy ?? editorAccuracy,
-      stiffness: newState.springStiffness ?? springStiffness,
-      damping: newState.springDamping ?? springDamping,
-      mass: newState.springMass ?? springMass,
-    };
-    const { easingValue, sampledPoints, totalTime } = generateLinearEasing({
-      type: EasingType.SPRING,
-      ...config,
-    });
-    const duration = suggestDuration(EasingType.SPRING, config, totalTime);
-    setState({
-      ...newState,
-      springValue: easingValue,
-      springPoints: sampledPoints,
-      springTotalTime: totalTime,
-      previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
-    });
-  };
+  const updateCurve = useEasingStore((state) => state.updateCurve);
 
   return (
     <div className="relative col-span-2">
@@ -64,7 +28,7 @@ export default function SpringEditor() {
         <Slider
           label="Mass"
           value={springMass}
-          onChange={(value) => handleChange({ springMass: value })}
+          onChange={(value) => updateCurve({ springMass: value, springIsCustom: true })}
           min={1}
           max={5}
           step={0.1}
@@ -72,7 +36,7 @@ export default function SpringEditor() {
         <Slider
           label="Stiffness"
           value={springStiffness}
-          onChange={(value) => handleChange({ springStiffness: value })}
+          onChange={(value) => updateCurve({ springStiffness: value, springIsCustom: true })}
           min={0}
           max={100}
           step={1}
@@ -80,7 +44,7 @@ export default function SpringEditor() {
         <Slider
           label="Damping"
           value={springDamping}
-          onChange={(value) => handleChange({ springDamping: value })}
+          onChange={(value) => updateCurve({ springDamping: value, springIsCustom: true })}
           min={0}
           max={100}
           step={1}
@@ -89,7 +53,7 @@ export default function SpringEditor() {
           label="Accuracy"
           value={editorAccuracy}
           options={Object.values(LinearEasingAccuracy).map((value) => value)}
-          onChange={(value) => handleChange({ editorAccuracy: value })}
+          onChange={(value) => updateCurve({ editorAccuracy: value })}
         />
       </InputGroup>
     </div>

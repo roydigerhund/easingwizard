@@ -19,7 +19,7 @@ import SpringEditor from '~/components/SpringEditor';
 import Toast from '~/components/Toast';
 import WiggleEditor from '~/components/WiggleEditor';
 import { classNames } from '~/css/class-names';
-import { LOCALSTORAGE_KEY, useEasingStore } from '~/state/easing-store';
+import { LOCALSTORAGE_KEY, MANUAL_DURATION_STORAGE_KEY, useEasingStore } from '~/state/easing-store';
 import { focusIntegrationTarget, isIntegrationHash } from '~/utils/integration-navigation';
 import type { Route } from './+types/home';
 
@@ -33,7 +33,7 @@ export default function Index() {
   const location = useLocation();
   const navigate = useNavigate();
   const easingType = useEasingStore((state) => state.easingType);
-  const setState = useEasingStore((state) => state.setState);
+  const restoreState = useEasingStore((state) => state.restoreState);
   const [showUI, setShowUI] = useState(false);
   const [restoredFromStorage, setRestoredFromStorage] = useState(false);
   const initialized = useRef(false);
@@ -56,14 +56,14 @@ export default function Index() {
         // Legacy sharing mode
         const newState = rehydrateShareStateLegacy(searchParams);
 
-        setState(newState);
+        restoreState(newState);
         didRestoreFromShareLink = true;
       } else if (hasCurveHash) {
         // V0
         // in new sharing mode, we use fragment with a minified code, like #a1b2c3d4e5
         const decodedState = decodeState(location.hash.slice(1));
         const rehydratedState = rehydrateShareState(decodedState);
-        setState(rehydratedState);
+        restoreState(rehydratedState);
         didRestoreFromShareLink = true;
       }
     } catch (error) {
@@ -75,13 +75,15 @@ export default function Index() {
       try {
         const saved = localStorage.getItem(LOCALSTORAGE_KEY);
         if (saved) {
+          const isManual = localStorage.getItem(MANUAL_DURATION_STORAGE_KEY) === saved;
           const decoded = decodeState(saved);
           const rehydrated = rehydrateShareState(decoded);
-          setState(rehydrated);
+          restoreState(rehydrated, isManual ? true : undefined);
           setRestoredFromStorage(true);
         }
       } catch {
         localStorage.removeItem(LOCALSTORAGE_KEY);
+        localStorage.removeItem(MANUAL_DURATION_STORAGE_KEY);
       }
     }
 
@@ -97,7 +99,7 @@ export default function Index() {
       );
     }
     if (initialLoad) setShowUI(true);
-  }, [location, navigate, setState]);
+  }, [location, navigate, restoreState]);
 
   useEffect(() => {
     if (!showUI || !isIntegrationHash(location.hash)) return;

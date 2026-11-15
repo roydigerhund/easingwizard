@@ -1,11 +1,4 @@
-import {
-  EasingType,
-  generateBounceSVGPolyline,
-  generateLinearEasing,
-  LinearEasingAccuracy,
-  suggestDuration,
-  type EasingState,
-} from 'easingwizard-core';
+import { generateBounceSVGPolyline, LinearEasingAccuracy } from 'easingwizard-core';
 import { useEasingStore } from '~/state/easing-store';
 import EditorBase from './EditorBase';
 import EditorBaseLine from './EditorBaseLine';
@@ -19,35 +12,7 @@ export default function BounceEditor() {
   const bounceDamping = useEasingStore((state) => state.bounceDamping);
   const bouncePoints = useEasingStore((state) => state.bouncePoints);
   const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
-  const setState = useEasingStore((state) => state.setState);
-
-  const handleChange = (state: Partial<EasingState>) => {
-    const newState: Partial<EasingState> = {
-      bounceBounces,
-      bounceMass,
-      bounceDamping,
-      // If editorAccuracy is not provided, we assume it's a custom curve
-      ...(state.editorAccuracy ? {} : { bounceIsCustom: true }),
-      ...state,
-    };
-    const config = {
-      accuracy: newState.editorAccuracy ?? editorAccuracy,
-      bounces: newState.bounceBounces ?? bounceBounces,
-      mass: newState.bounceMass ?? bounceMass,
-      damping: newState.bounceDamping ?? bounceDamping,
-    };
-    const { easingValue, sampledPoints } = generateLinearEasing({
-      type: EasingType.BOUNCE,
-      ...config,
-    });
-    const duration = suggestDuration(EasingType.BOUNCE, config);
-    setState({
-      ...newState,
-      bounceValue: easingValue,
-      bouncePoints: sampledPoints,
-      previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
-    });
-  };
+  const updateCurve = useEasingStore((state) => state.updateCurve);
 
   return (
     <div className="col-span-2">
@@ -63,7 +28,7 @@ export default function BounceEditor() {
         <Slider
           label="Bounces"
           value={bounceBounces}
-          onChange={(value) => handleChange({ bounceBounces: value })}
+          onChange={(value) => updateCurve({ bounceBounces: value, bounceIsCustom: true })}
           min={1}
           max={10}
           step={1}
@@ -72,7 +37,7 @@ export default function BounceEditor() {
           label="Mass"
           hint="Affects duration"
           value={bounceMass}
-          onChange={(value) => handleChange({ bounceMass: value })}
+          onChange={(value) => updateCurve({ bounceMass: value, bounceIsCustom: true })}
           min={1}
           max={5}
           step={0.1}
@@ -80,7 +45,7 @@ export default function BounceEditor() {
         <Slider
           label="Damping"
           value={bounceDamping}
-          onChange={(value) => handleChange({ bounceDamping: value })}
+          onChange={(value) => updateCurve({ bounceDamping: value, bounceIsCustom: true })}
           min={0}
           max={100}
           step={1}
@@ -90,7 +55,7 @@ export default function BounceEditor() {
           label="Accuracy"
           value={editorAccuracy}
           options={Object.values(LinearEasingAccuracy).map((value) => value)}
-          onChange={(value) => handleChange({ editorAccuracy: value })}
+          onChange={(value) => updateCurve({ editorAccuracy: value })}
         />
       </InputGroup>
     </div>

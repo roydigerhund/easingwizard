@@ -1,11 +1,4 @@
-import {
-  EasingType,
-  generateLinearEasing,
-  generateOvershootSVGPolyline,
-  LinearEasingAccuracy,
-  suggestDuration,
-  type EasingState,
-} from 'easingwizard-core';
+import { generateOvershootSVGPolyline, LinearEasingAccuracy } from 'easingwizard-core';
 import { useEasingStore } from '~/state/easing-store';
 import EditorBase from './EditorBase';
 import EditorBaseLine from './EditorBaseLine';
@@ -14,39 +7,11 @@ import Slider from './Slider';
 import StepSlider from './StepSlider';
 
 export default function OvershootEditor() {
-  const overshootStyle = useEasingStore((state) => state.overshootStyle);
   const overshootDamping = useEasingStore((state) => state.overshootDamping);
   const overshootMass = useEasingStore((state) => state.overshootMass);
   const overshootPoints = useEasingStore((state) => state.overshootPoints);
   const editorAccuracy = useEasingStore((state) => state.editorAccuracy);
-  const setState = useEasingStore((state) => state.setState);
-
-  const handleChange = (state: Partial<EasingState>) => {
-    const newState: Partial<EasingState> = {
-      overshootMass,
-      overshootDamping,
-      // If editorAccuracy is not provided, we assume it's a custom curve
-      ...(state.editorAccuracy ? {} : { overshootIsCustom: true }),
-      ...state,
-    };
-    const config = {
-      style: overshootStyle,
-      accuracy: newState.editorAccuracy ?? editorAccuracy,
-      mass: newState.overshootMass ?? overshootMass,
-      damping: newState.overshootDamping ?? overshootDamping,
-    };
-    const { easingValue, sampledPoints } = generateLinearEasing({
-      type: EasingType.OVERSHOOT,
-      ...config,
-    });
-    const duration = suggestDuration(EasingType.OVERSHOOT, config);
-    setState({
-      ...newState,
-      overshootValue: easingValue,
-      overshootPoints: sampledPoints,
-      previewDuration: Math.round((duration.min + duration.max) / 2 / 25) * 25,
-    });
-  };
+  const updateCurve = useEasingStore((state) => state.updateCurve);
 
   return (
     <div className="col-span-2">
@@ -62,7 +27,7 @@ export default function OvershootEditor() {
         <Slider
           label="Mass"
           value={overshootMass}
-          onChange={(value) => handleChange({ overshootMass: value })}
+          onChange={(value) => updateCurve({ overshootMass: value, overshootIsCustom: true })}
           min={1}
           max={5}
           step={0.1}
@@ -70,7 +35,7 @@ export default function OvershootEditor() {
         <Slider
           label="Damping"
           value={overshootDamping}
-          onChange={(value) => handleChange({ overshootDamping: value })}
+          onChange={(value) => updateCurve({ overshootDamping: value, overshootIsCustom: true })}
           min={0}
           max={100}
           step={1}
@@ -80,7 +45,7 @@ export default function OvershootEditor() {
           label="Accuracy"
           value={editorAccuracy}
           options={Object.values(LinearEasingAccuracy).map((value) => value)}
-          onChange={(value) => handleChange({ editorAccuracy: value })}
+          onChange={(value) => updateCurve({ editorAccuracy: value })}
         />
       </InputGroup>
     </div>
